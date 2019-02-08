@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/res">
+        <file alias="canvas">canvas.jpg</file>
+        <file alias="exit">exit.png</file>
+        <file alias="help">help.jpg</file>
+        <file alias="settings">settings.png</file>
+    </qresource>
+</RCC>

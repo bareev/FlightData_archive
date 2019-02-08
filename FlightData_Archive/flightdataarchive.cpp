@@ -9,7 +9,6 @@ FlightDataArchive::FlightDataArchive()
 
 FlightDataArchive::~FlightDataArchive()
 {
-
 }
 
 void FlightDataArchive::init()
@@ -37,10 +36,31 @@ void FlightDataArchive::init()
 
   rootContext()->setContextProperty("window", this);
   setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
+
+  genSets.setFileName(contentPath + QString("\\config\\config.ini"));
+  genSets.init();
+
 }
 
 //закрытие приложения
 void FlightDataArchive::quit()
 {
     QApplication::quit();
+}
+
+//закрыть или сделать неактивным
+void FlightDataArchive::slCloseOrEnable(closeEnable t)
+{
+    switch (t)
+    {
+    case none:
+        setEnabled(true);
+        break;
+    case closeT:
+        quit();
+        break;
+    case enableT:
+        setEnabled(false);
+        break;
+    }
 }

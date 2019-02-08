@@ -1,16 +1,15 @@
 import QtQuick 1.1
 
 
-Rectangle {
+Image {
     // Идентификатор, по нему будет происходить
     // обращение к свойствам этого элемента
     id: canvas;
 
-    height: 400;
-    width: 600;
+    height: 466;
+    width: 819;
 
-    // Цвет фона, черный
-    color: "white";
+    source: "qrc:///res/canvas";
 
     // Изменять размер под размеры
     // родительского элемента
@@ -34,18 +33,56 @@ Rectangle {
         // Отступ между элементами
         spacing: 4;
 
+        Text {
+            id: captionText;
+            height: 35;
+            width: canvas.width - 120;
+            text: qsTr("ИНСТРУМЕНТ ХРАНЕНИЯ ПОЛЁТНЫХ ДАННЫХ");
+            font.family: "Helvetica";
+            font.pointSize: 21;
+            style: Text.Sunken;
+            color: "blue";
+            horizontalAlignment: Text.AlignHCenter;
+            verticalAlignment: Text.AlignVCenter;
+
+        }
+
         WindowButton {
-        // Кнопка закрытия окна
-        id: exit;
+            // Кнопка вызова настроек
+            id: settButton;
 
-        source: "exit.png";
+            source: "qrc:///res/settings";
 
-        function callback()
-        {
-            window.quit();
+            function callback()
+            {
+                //window.quit();
+            }
         }
+
+        WindowButton {
+            // Кнопка вызова справки
+            id: helpButton;
+
+            source: "qrc:///res/help";
+
+            function callback()
+            {
+                //window.quit();
+            }
         }
-     }
+
+        WindowButton {
+            // Кнопка закрытия окна
+            id: exit;
+
+            source: "qrc:///res/exit";
+
+            function callback()
+            {
+                window.quit();
+            }
+        }
+    }
 }
 
 
