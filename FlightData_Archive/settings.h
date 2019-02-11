@@ -9,17 +9,18 @@ class Settings : public Message
 {
 public:
     Settings();
-    void init();
+    int init();
 
     void setFileName(QString _fn){fileNameSetts = _fn; return;}
     QString getFileName(){return fileNameSetts;}
 
-    QVariant getValue(QString param);
-    int setValue(QVariant val);
+    GenSet getValue(){return generalSet;}
+    void setValue(GenSet _s){generalSet = _s; return;}
     
 private:
     QString fileNameSetts;
-    QSettings generalSets;
+    QSettings fileSets;
+    GenSet generalSet;
 
 };
 

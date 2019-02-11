@@ -4,12 +4,14 @@
 #include <QMessageBox>
 #include <structs.h>
 
-class Message : public QObject
+class Message
 {
-    Q_OBJECT
+
 public:
     Message();
     void ShowMessageBox(int code, msgType type);
+    closeEnable getState(){return msg_cl;}
+    void setState(closeEnable ce_){msg_cl = ce_; return;}
 
 private:
     QMessageBox msg;

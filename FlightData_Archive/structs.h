@@ -1,5 +1,8 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
+#include <QString>
+#define SUCCESS 0
+
 
 enum msgType
 {
@@ -15,6 +18,12 @@ enum closeEnable
     closeT,
     enableT,
     enableAll
+};
+
+
+struct GenSet
+{
+    QString dataBasePath;
 };
 
 

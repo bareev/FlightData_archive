@@ -55,7 +55,7 @@ Image {
 
             function callback()
             {
-                //window.quit();
+                window.showSets();
             }
         }
 

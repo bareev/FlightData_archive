@@ -15,16 +15,21 @@ TEMPLATE = app
 SOURCES += main.cpp\
         flightdataarchive.cpp \
     settings.cpp \
-    message.cpp
+    message.cpp \
+    settingswindow.cpp
 
 HEADERS  += flightdataarchive.h \
     settings.h \
     message.h \
-    structs.h
+    structs.h \
+    settingswindow.h
 
 OTHER_FILES += \
     mainWindow.qml \
-    WindowButton.qml
+    WindowButton.qml \
+    settingsWindow.qml
 
 RESOURCES += \
     resource.qrc
+
+FORMS +=
