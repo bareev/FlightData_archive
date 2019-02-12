@@ -10,7 +10,9 @@ Message::Message()
     errorsString.clear();
     errorsString.append("Не удаётся открыть файл основных настроек /config/config.ini. Возможно он не существует или доступен только для чтения");
     errorsString.append("Не настроена директория с данными. Используется путь по умолчанию");
+    errorsString.append("Не удалось загрузить основную форму. Возможно не найден файл mainWindow.qml");
     errorsString.append("Не удалось загрузить форму настроек. Возможно не найден файл settingsWindow.qml");
+    errorsString.append("Не удалось загрузить форму кнопок. Возможно не найден файл WindowButton.qml");
 }
 
 void Message::ShowMessageBox(int code, msgType type)

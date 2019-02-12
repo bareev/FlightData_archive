@@ -1,10 +1,16 @@
 #include "flightdataarchive.h"
 #include <QDeclarativeContext>
 #include <QApplication>
+#include <QFile>
 
 
 FlightDataArchive::FlightDataArchive()
 {
+    qmlFiles.clear();
+    qmlFiles.append("mainWindow.qml");
+    qmlFiles.append("settingsWindow.qml");
+    qmlFiles.append("WindowButton.qml");
+
     init();
 }
 
@@ -25,6 +31,14 @@ void FlightDataArchive::init()
   // В релизе это путь к папке, в которой расположено приложение
   contentPath = QApplication::applicationDirPath();
 #endif
+
+  int errIdx;
+  bool resqml = checkAllQMlFiles(contentPath, &errIdx);
+  if (!resqml && errIdx != -1)
+  {
+      ShowMessageBox(errIdx + 2, critical);
+      ::exit(0);
+  }
 
   setFocusPolicy(Qt::StrongFocus);
   // Изменять размеры QML объекта под размеры окна
@@ -48,6 +62,32 @@ void FlightDataArchive::init()
   res = ws.init(contentPath);
   if (res == SUCCESS)
       hide();
+
+  connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
+}
+
+//проверка всех файлов
+bool FlightDataArchive::checkAllQMlFiles(QString dir, int *idx)
+{
+    *idx = -1;
+    bool op = true;
+    for (int i = 0; i < qmlFiles.length(); i++)
+    {
+        //проверка валидности файла настроек
+        QFile sets(dir.append("\\").append(qmlFiles.at(i)));
+        bool op = sets.open(QIODevice::ReadWrite);
+        if (!op || !sets.isReadable() || !sets.isWritable())
+        {
+            op = false;
+            *idx = i;
+            if (sets.isOpen())
+                sets.close();
+            break;
+        }
+        if (sets.isOpen())
+            sets.close();
+    }
+    return op;
 }
 
 //закрытие приложения

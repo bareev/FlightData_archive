@@ -1,5 +1,6 @@
 #include "settingswindow.h"
 #include <QDeclarativeContext>
+#include <QFileDialog>
 
 SettingsWindow::SettingsWindow()
 {
@@ -30,7 +31,7 @@ int SettingsWindow::init()
     }
     else
     {
-        ShowMessageBox(2, error);
+        ShowMessageBox(3, error);
         return -1;
     }
 
@@ -40,4 +41,20 @@ int SettingsWindow::init(QString _absDir)
 {
     setAbsDir(_absDir);
     return init();
+}
+
+void SettingsWindow::closeSets()
+{
+    emit onClose();
+    return;
+}
+
+void SettingsWindow::openDir()
+{
+    QString res = QFileDialog::getOpenFileName(this, tr("Выберите директорию с данными"), QDir::currentPath(), tr("Директории"));
+    if (!res.isEmpty())
+    {
+        QObject *textInputs = findChild<QObject*>("absDirInput");
+        textInputs->setProperty("text", QUrl(res));
+    }
 }

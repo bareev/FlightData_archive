@@ -22,6 +22,10 @@ private:
     Settings genSets;
     void slCloseOrEnable(closeEnable);
     SettingsWindow ws;
+    bool checkAllQMlFiles(QString dir, int* idx);
+    QStringList qmlFiles;
+
+public slots:
     void closeSets();
 };
 

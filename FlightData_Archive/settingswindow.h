@@ -18,11 +18,16 @@ public:
     int init();
     int init(QString _absDir);
     ~SettingsWindow();
-
     void setAbsDir(QString _absDir){absDir = _absDir; return;}
+    Q_INVOKABLE void closeSets();
+    Q_INVOKABLE void openDir();
 
 private:
     QString absDir;
+
+
+signals:
+    void onClose();
 
 };
 
