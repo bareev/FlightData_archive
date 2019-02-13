@@ -52,7 +52,7 @@ Image {
             width: canvas_set.width;
             text: qsTr("Директория хранения данных:");
             font.family: "Helvetica";
-            font.pointSize: 16;
+            font.pointSize: 14;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
             verticalAlignment: Text.AlignBottom;
@@ -73,20 +73,25 @@ Image {
             {
 
                 id: textInputRow;
-                height: 20;
+                height: 18;
                 width: canvas_set.width - 32;
                 color: "white";
                 TextInput {
                     objectName: "absDirInput";
+                    id: absDirInput;
                     visible: true;
-                    height: 20;
+                    height: 18;
                     width: canvas_set.width - 32;
-                    text: qsTr("temp");
                     font.family: "Helvetica";
-                    font.pointSize: 12;
+                    font.pointSize: 10;
                     color: "black";
                     horizontalAlignment: Text.AlignLeft;
                     cursorVisible: true;
+                    Connections {
+                        target: windowSets;
+                        onTextChanged: {absDirInput.text = s}
+                        }
+
                 }
 
             }
@@ -151,4 +156,5 @@ Image {
 
 
     }
+
 }

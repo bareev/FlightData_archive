@@ -24,6 +24,11 @@ public:
 
 private:
     QString absDir;
+    QObject *object;
+    GenSet m_settings;
+
+signals:
+    void textChanged(QString s);
 
 
 signals:
