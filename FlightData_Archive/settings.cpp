@@ -1,11 +1,18 @@
 #include "settings.h"
 #include <QFile>
+#include <QObject>
 
 Settings::Settings()
 { 
 }
 
-int Settings::init()
+Settings::~Settings()
+{
+    if (fileSets)
+        delete fileSets;
+}
+
+int Settings::initSets()
 {
     //проверка валидности файла настроек
     QFile sets(getFileName());
@@ -22,14 +29,14 @@ int Settings::init()
         return -1;
 
     //получаем данные
-    fileSets.setDefaultFormat(QSettings::IniFormat);
-    fileSets.setPath(QSettings::IniFormat, QSettings::SystemScope, getFileName());
-
-    QString dataBasePath = fileSets.value("GENERAL/DBPath", "").toString();
+    fileSets = new QSettings(getFileName(), QSettings::IniFormat);
+    fileSets->setIniCodec("UTF-8");
+    fileSets->sync();
+    QString dataBasePath = fileSets->value("general/DBPath", "").toString();
     if (dataBasePath.isEmpty())
     {
         ShowMessageBox(1, warning);
-        dataBasePath = QString("N:\\НПЦ Нижний Новгород\\Общий обмен\\_Отдел 104\\Бареев\\fly_data");
+        dataBasePath = QString::fromUtf8("N:/НПЦ Нижний Новгород/Общий обмен/_Отдел 104/Бареев/fly_data");
     }
 
     generalSet.dataBasePath = dataBasePath;
@@ -37,4 +44,11 @@ int Settings::init()
     setState(nonecl);
     return SUCCESS;
 
+}
+
+void Settings::writeAll()
+{
+    GenSet _s = getValue();
+    fileSets->setValue("general/DBPath", QString(_s.dataBasePath.toUtf8()));
+    return;
 }

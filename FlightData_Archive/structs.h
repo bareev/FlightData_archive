@@ -1,6 +1,6 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
-#include <QString>
+#include <QUrl>
 #define SUCCESS 0
 
 

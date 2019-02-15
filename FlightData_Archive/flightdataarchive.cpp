@@ -53,15 +53,18 @@ void FlightDataArchive::init()
   setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
 
   //читаем настройки, если что жёстко закрываем
-  genSets.setFileName(contentPath + QString("\\config\\config.ini"));
-  int res = genSets.init();
+  ws.setFileName(contentPath + QString("\\config\\config.ini"));
+  int res = ws.initSets();
   if (res != SUCCESS)
       ::exit(0);
 
   //инициализируем окно настроек
   res = ws.init(contentPath);
   if (res == SUCCESS)
+  {
+      ws.settingsToWindow(ws.getValue());
       hide();
+  }
 
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
 }

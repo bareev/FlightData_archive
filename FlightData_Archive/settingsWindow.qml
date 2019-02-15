@@ -126,7 +126,7 @@ Image {
             source: "qrc:///res/apply";
             function callback()
             {
-                windowSets.closeSets();
+                windowSets.saveSettings(absDirInput.text);
             }
         }
 

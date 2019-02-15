@@ -16,8 +16,11 @@ SettingsWindow::SettingsWindow(QString _absDir)
 
 SettingsWindow::~SettingsWindow()
 {
-    if (object)
-        delete object;
+}
+
+void SettingsWindow::settingsToWindow(GenSet _s)
+{
+    emit textChanged(_s.dataBasePath);
 }
 
 int SettingsWindow::init()
@@ -32,10 +35,8 @@ int SettingsWindow::init()
         setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
 
         //QQmlEngine engine;
-        QDeclarativeComponent component(rootContext()->engine(), QUrl::fromLocalFile(absDir + "/settingsWindow.qml"));
-        object = component.create();
-
-        emit textChanged(getValue().dataBasePath);
+        //QDeclarativeComponent component(rootContext()->engine(), QUrl::fromLocalFile(absDir + "/settingsWindow.qml"));
+        //object = component.create();
 
         return SUCCESS;
     }
@@ -61,23 +62,19 @@ void SettingsWindow::closeSets()
 
 void SettingsWindow::openDir()
 {
-    QString res = QFileDialog::getOpenFileName(this, tr("Выберите директорию с данными"), QDir::currentPath(), tr("Директории"));
+
+    QString res = QFileDialog::getExistingDirectory( this, trUtf8("Выбрать директорию с данными"), trUtf8("Директории"), QFileDialog::ShowDirsOnly );
     if (!res.isEmpty())
     {
-        QList<QObject*> textInputs = object->findChildren<QObject*>("absDirInput");
-        if (!textInputs.isEmpty())
-        {
-            int idx = -1;
-            for (int s = 0; s < textInputs.length(); s++)
-            {
-                if (textInputs.at(s)->objectName().compare("absDirInput", Qt::CaseInsensitive) == 0)
-                {
-                    idx = s;
-                    break;
-                }
-            }
-            if (idx != -1)
-                emit textChanged(res);
-        }
+        emit textChanged(res);
     }
+}
+
+void SettingsWindow::saveSettings(QString _s)
+{
+    GenSet structs;
+    structs = getValue();
+    structs.dataBasePath = _s;
+    setValue(structs);
+    writeAll();
 }

@@ -19,7 +19,6 @@ public:
     ~FlightDataArchive();
 
 private:
-    Settings genSets;
     void slCloseOrEnable(closeEnable);
     SettingsWindow ws;
     bool checkAllQMlFiles(QString dir, int* idx);

@@ -14,18 +14,20 @@ class SettingsWindow : public QDeclarativeView, public Settings
 
 public:
     SettingsWindow();
+    ~SettingsWindow();
     SettingsWindow(QString _absDir);
     int init();
-    int init(QString _absDir);
-    ~SettingsWindow();
+    int init(QString _absDir);   
     void setAbsDir(QString _absDir){absDir = _absDir; return;}
     Q_INVOKABLE void closeSets();
     Q_INVOKABLE void openDir();
+    void settingsToWindow(GenSet _s);
+    Q_INVOKABLE void saveSettings(QString _s);
 
 private:
     QString absDir;
-    QObject *object;
-    GenSet m_settings;
+    //QObject *object;
+
 
 signals:
     void textChanged(QString s);
