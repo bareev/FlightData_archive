@@ -24,6 +24,14 @@ enum closeEnable
 struct GenSet
 {
     QString dataBasePath;
+    QString dbFile;
+};
+
+struct sqlSets
+{
+    QString password;
+    QString dbName;
+    QString type;
 };
 
 

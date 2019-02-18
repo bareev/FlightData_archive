@@ -108,6 +108,68 @@ Image {
 
         }
 
+        //файл базы данных
+        Text {
+            id: dbPath;
+            height: 35;
+            width: canvas_set.width;
+            text: qsTr("Файл базы данных:");
+            font.family: "Helvetica";
+            font.pointSize: 14;
+            color: "black";
+            horizontalAlignment: Text.AlignLeft;
+            verticalAlignment: Text.AlignBottom;
+
+        }
+        Row {
+
+            anchors.left: parent.left;
+            anchors.leftMargin: 4;
+            anchors.rightMargin: 4;
+            anchors.top: dbPath.bottom;
+            anchors.topMargin: 4;
+            spacing: 4;
+            id: dbRow;
+
+            Rectangle
+            {
+
+                id: dbPathRow;
+                height: 18;
+                width: canvas_set.width - 32;
+                color: "white";
+                TextInput {
+                    objectName: "absDbInput";
+                    id: absDbInput;
+                    visible: true;
+                    height: 18;
+                    width: canvas_set.width - 32;
+                    font.family: "Helvetica";
+                    font.pointSize: 10;
+                    color: "black";
+                    horizontalAlignment: Text.AlignLeft;
+                    cursorVisible: true;
+                    Connections {
+                        target: windowSets;
+                        onTextChangedDB: {absDbInput.text = s}
+                        }
+
+                }
+
+            }
+            WindowButton {
+                height: 20;
+                width: 20;
+                id: openFileDialogDB;
+                source: "qrc:///res/openDir";
+                function callback()
+                {
+                    windowSets.openDirDB();
+                }
+            }
+
+        }
+
     }
 
     Row {
@@ -126,7 +188,7 @@ Image {
             source: "qrc:///res/apply";
             function callback()
             {
-                windowSets.saveSettings(absDirInput.text);
+                windowSets.saveSettings(absDirInput.text, absDbInput.text);
             }
         }
 

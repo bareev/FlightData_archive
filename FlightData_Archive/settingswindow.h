@@ -21,8 +21,9 @@ public:
     void setAbsDir(QString _absDir){absDir = _absDir; return;}
     Q_INVOKABLE void closeSets();
     Q_INVOKABLE void openDir();
+    Q_INVOKABLE void openDirDB();
     void settingsToWindow(GenSet _s);
-    Q_INVOKABLE void saveSettings(QString _s);
+    Q_INVOKABLE void saveSettings(QString _s, QString _s2);
 
 private:
     QString absDir;
@@ -31,6 +32,7 @@ private:
 
 signals:
     void textChanged(QString s);
+    void textChangedDB(QString s);
 
 
 signals:

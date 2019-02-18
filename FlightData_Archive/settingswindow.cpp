@@ -21,6 +21,7 @@ SettingsWindow::~SettingsWindow()
 void SettingsWindow::settingsToWindow(GenSet _s)
 {
     emit textChanged(_s.dataBasePath);
+    emit textChangedDB(_s.dbFile);
 }
 
 int SettingsWindow::init()
@@ -70,11 +71,22 @@ void SettingsWindow::openDir()
     }
 }
 
-void SettingsWindow::saveSettings(QString _s)
+void SettingsWindow::openDirDB()
+{
+
+    QString res = QFileDialog::getOpenFileName( this, trUtf8("Выбрать файл с данными"), trUtf8("Баззы данных"), "*.db" );
+    if (!res.isEmpty())
+    {
+        emit textChangedDB(res);
+    }
+}
+
+void SettingsWindow::saveSettings(QString _s, QString _s_dbFile)
 {
     GenSet structs;
     structs = getValue();
     structs.dataBasePath = _s;
+    structs.dbFile = _s_dbFile;
     setValue(structs);
     writeAll();
 }
