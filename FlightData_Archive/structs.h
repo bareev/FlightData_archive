@@ -32,6 +32,7 @@ struct sqlSets
     QString password;
     QString dbName;
     QString type;
+    QString user;
 };
 
 
