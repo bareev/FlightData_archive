@@ -20,13 +20,6 @@ enum closeEnable
     enableAll
 };
 
-
-struct GenSet
-{
-    QString dataBasePath;
-    QString dbFile;
-};
-
 struct sqlSets
 {
     QString password;
@@ -34,6 +27,15 @@ struct sqlSets
     QString type;
     QString user;
 };
+
+struct GenSet
+{
+    QString dataBasePath;
+    QString dbFile;
+    sqlSets database_param;
+};
+
+
 
 
 

@@ -24,6 +24,7 @@ private:
     QString fileNameSetts;
     QSettings* fileSets;
     GenSet generalSet;
+    QVariant readingParam(QString param, QVariant defaultVal, int numberError);
 
 };
 

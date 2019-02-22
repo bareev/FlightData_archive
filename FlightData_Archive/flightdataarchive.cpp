@@ -58,6 +58,16 @@ void FlightDataArchive::init()
   if (res != SUCCESS)
       ::exit(0);
 
+  //после инициализации устанавливаем настройки базы данных
+  m_db.setSqlSets(ws.getValue().database_param);
+
+  m_db.openDB();
+  if (!m_db.isActive())
+  {
+      ShowMessageBox(9, critical);
+      ::exit(0);
+  }
+
   //инициализируем окно настроек
   res = ws.init(contentPath);
   if (res == SUCCESS)
