@@ -1,9 +1,9 @@
 #include "dbmanager.h"
+#include <QSqlError>
 
 dbManager::dbManager()
 {
     state = false;
-    querry.clear();
 }
 
 bool dbManager::openDB(QString _dbName, QString _type, QString _user, QString _pass)
@@ -16,9 +16,6 @@ bool dbManager::openDB(QString _dbName, QString _type, QString _user, QString _p
     if (!res)
         return res;
 
-    loadPass(_pass);
-    loadUser(_user);
-
     if (!_dbName.isEmpty())
         dataBase_users.setDatabaseName(_dbName);
     else
@@ -26,6 +23,9 @@ bool dbManager::openDB(QString _dbName, QString _type, QString _user, QString _p
         res = false;
         return res;
     }
+
+    loadUser(_user);
+    loadPass(_pass);
 
     // Открываем базу данных
     res = dataBase_users.open();
@@ -67,8 +67,61 @@ void dbManager::closeDB()
 {
     dataBase_users.close();
     state = dataBase_users.isOpen()?true:false;
-    querry.clear();
     return;
+}
+
+bool dbManager::runSqlQuerry(QString querryStr)
+{
+    QSqlQuery q(dataBase_users);
+
+    if (!q.exec(querryStr))
+    {
+        le = q.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+int dbManager::checkTable(QString nameTable)
+{
+    if (!isActive() || nameTable.isEmpty())
+        return -1;
+
+    QStringList tables = dataBase_users.tables();
+
+    if (!tables.contains(nameTable))
+        return -1;
+
+    return SUCCESS;
+}
+
+int dbManager::createTableIfNeed(QString name, QVariantMap params)
+{
+    if (!isActive() || params.isEmpty() || name.isEmpty())
+        return -1;
+
+    QString querryString;
+    querryString.clear();
+
+    querryString.append("CREATE TABLE ").append(name).append(" ");
+    querryString.append("( ");
+
+    QStringList keys = params.uniqueKeys();
+    for (int i = 0; i < keys.length(); i++)
+    {
+        QString type = params.value(keys.at(i)).toString();
+        querryString.append(keys.at(i)).append(" ").append(type).append(", ");
+    }
+
+    //, space
+    querryString.chop(2);
+    querryString.append(" )");
+
+    if (!runSqlQuerry(querryString))
+        return -1;
+
+    return SUCCESS;
 }
 
 bool dbManager::loadDrive(QString _drive)
