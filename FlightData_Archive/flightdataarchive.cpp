@@ -26,7 +26,7 @@ void FlightDataArchive::init()
 
 #ifdef QT_DEBUG
   // В отладочной версии это абсолютный путь к папке проекта
-  contentPath = "D:\\progs_git\\FlightData_database\\FlightData_Archive";
+  contentPath = "D:\\progs_git\\FlightData_database_FB032019\\FlightData_Archive";
 #else
   // В релизе это путь к папке, в которой расположено приложение
   contentPath = QApplication::applicationDirPath();
