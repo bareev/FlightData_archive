@@ -26,7 +26,7 @@ void FlightDataArchive::init()
 
 #ifdef QT_DEBUG
   // В отладочной версии это абсолютный путь к папке проекта
-  contentPath = "D:\\progs_git\\FlightData_database - FB_FEB2019\\FlightData_Archive";
+  contentPath = "D:\\progs_git\\FlightData_database\\FlightData_Archive";
 #else
   // В релизе это путь к папке, в которой расположено приложение
   contentPath = QApplication::applicationDirPath();
@@ -58,8 +58,16 @@ void FlightDataArchive::init()
   if (res != SUCCESS)
       ::exit(0);
 
+  ///блок с базами данных
+
   //после инициализации устанавливаем настройки базы данных
   m_db.setSqlSets(ws.getValue().database_param);
+
+  //а есть ли такой файл?
+  if (!QFile(m_db.getSqlSets().dbName).open(QIODevice::ReadOnly))
+      ShowMessageBox(10, warning);
+  else
+      QFile(m_db.getSqlSets().dbName).close();
 
   m_db.openDB();
   if (!m_db.isActive())
@@ -67,6 +75,29 @@ void FlightDataArchive::init()
       ShowMessageBox(9, critical);
       ::exit(0);
   }
+
+  if (m_db.checkTable(GENERAL_DATABASE_NAME) != SUCCESS)
+  {
+      QVariantMap _map;
+      _map.clear();
+      _map["id_table"] = "INT";
+      _map["date"] = "DATETIME";
+      _map["type"] = "VARCHAR(5)";
+      _map["input_files_table"] = "VARCHAR(20)";
+      _map["output_files_table"] = "VARCHAR(20)";
+      _map["placeStr"] = "NVARCHAR";
+      _map["placeGeo"] = "GEOGRAPHY";
+      _map["description"] = "NVARCHAR";
+
+      res = m_db.createTableIfNeed(GENERAL_DATABASE_NAME, _map);
+
+      if (res != SUCCESS)
+      {
+
+      }
+  }
+
+  ///конец блока с базами данных
 
   //инициализируем окно настроек
   res = ws.init(contentPath);

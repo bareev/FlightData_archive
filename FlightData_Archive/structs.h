@@ -1,6 +1,10 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
-#include <QUrl>
+#include <QString>
+
+
+#define GENERAL_DATABASE_NAME "general_database_name"
+
 #define SUCCESS 0
 
 

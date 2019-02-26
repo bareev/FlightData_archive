@@ -4,6 +4,8 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <structs.h>
+#include <QStringList>
+#include <QVariantMap>
 
 class dbManager
 {
@@ -22,6 +24,9 @@ public:
     bool openDB(QString _dbName, QString _type, QString _user = "", QString _pass = "");
     bool isActive(){return state;}
     void closeDB();
+    int createTableIfNeed(QString nameTable, QVariantMap params);
+    int checkTable(QString nameTable);
+    QString lastError(){return le;}
 
 private:
     bool loadDrive();
@@ -35,8 +40,9 @@ private:
     bool loadUser(sqlSets _sets);
     QSqlDatabase dataBase_users;
     sqlSets structdB;
-    QSqlQuery querry;
     bool state;
+    bool runSqlQuerry(QString querry);
+    QString le;
 };
 
 #endif // DBMANAGER_H
