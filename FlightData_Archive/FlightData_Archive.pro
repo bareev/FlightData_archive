@@ -17,14 +17,16 @@ SOURCES += main.cpp\
     settings.cpp \
     message.cpp \
     settingswindow.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    tablemodel.cpp
 
 HEADERS  += flightdataarchive.h \
     settings.h \
     message.h \
     structs.h \
     settingswindow.h \
-    dbmanager.h
+    dbmanager.h \
+    tablemodel.h
 
 OTHER_FILES += \
     mainWindow.qml \

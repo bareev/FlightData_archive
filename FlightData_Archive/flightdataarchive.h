@@ -7,6 +7,7 @@
 #include <settings.h>
 #include <settingswindow.h>
 #include <dbmanager.h>
+#include <tablemodel.h>
 
 class FlightDataArchive : public QDeclarativeView, public Message
 {
@@ -25,6 +26,7 @@ private:
     bool checkAllQMlFiles(QString dir, int* idx);
     QStringList qmlFiles;
     dbManager m_db;
+    tableModel m_tbl;
 
 public slots:
     void closeSets();

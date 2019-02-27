@@ -97,6 +97,8 @@ void FlightDataArchive::init()
       }
   }
 
+  rootContext()->setContextProperty("tableModel", &m_tbl);
+
   ///конец блока с базами данных
 
   //инициализируем окно настроек

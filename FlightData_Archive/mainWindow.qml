@@ -83,6 +83,23 @@ Image {
             }
         }
     }
+
+    Item {
+        id: cell;
+        Text {
+            anchors.centerIn: parent
+            text: "styleData.value"
+        }
+    }
+
+    GridView {
+
+        delegate: cell;
+        model: tableModel;
+
+    }
+
+
 }
 
 
