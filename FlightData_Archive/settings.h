@@ -2,10 +2,11 @@
 #define SETTINGS_H
 
 #include <QSettings>
-#include <message.h>
+//#include <message.h>
 #include <QVariant>
+#include <structs.h>
 
-class Settings : public Message
+class Settings// : public Message
 {
 public:
     Settings();

@@ -1,15 +1,16 @@
 #ifndef FLIGHTDATAARCHIVE_H
 #define FLIGHTDATAARCHIVE_H
 
-#include <QDeclarativeView>
-#include <QObject>
-#include <message.h>
+#include <QtQuick/QQuickView>
+//#include <QObject>
+//#include <message.h>
 #include <settings.h>
 #include <settingswindow.h>
 #include <dbmanager.h>
 #include <tablemodel.h>
+//#include <QTableView>
 
-class FlightDataArchive : public QDeclarativeView, public Message
+class FlightDataArchive : public QQuickView//, public Message
 {
     Q_OBJECT
 
@@ -27,6 +28,7 @@ private:
     QStringList qmlFiles;
     dbManager m_db;
     tableModel m_tbl;
+    //QTableView tbl;
 
 public slots:
     void closeSets();

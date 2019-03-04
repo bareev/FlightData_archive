@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 Image {
 
@@ -6,6 +6,7 @@ Image {
     id: button;
 
     height: 35;
+source: "cancel.png"
     width: 35;
 
     // Область, обрабатывающая "мышиные" сообщения

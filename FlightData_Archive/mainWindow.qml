@@ -1,5 +1,5 @@
-import QtQuick 1.1
-
+import QtQuick 2.0
+import QtQuick.Controls 1.0
 
 Image {
     // Идентификатор, по нему будет происходить
@@ -10,10 +10,6 @@ Image {
     width: 819;
 
     source: "qrc:///res/canvas";
-
-    // Изменять размер под размеры
-    // родительского элемента
-    anchors.fill: parent;
 
     // Будет получать фокус ввода
     focus: true;
@@ -32,6 +28,8 @@ Image {
 
         // Отступ между элементами
         spacing: 4;
+
+        id: rowText;
 
         Text {
             id: captionText;
@@ -84,20 +82,43 @@ Image {
         }
     }
 
-    Item {
-        id: cell;
-        Text {
-            anchors.centerIn: parent
-            text: "styleData.value"
+    TableView {
+
+        y: 150;
+        width: canvas.width - 8;
+        height: canvas.height - 154;
+        anchors.topMargin: 4;
+        anchors.left: rowText.left;
+        anchors.leftMargin: 4;
+        anchors.rightMargin: 4;
+        anchors.bottomMargin: 4;
+
+        //@todo - убрать лишний столбец справа
+
+        TableViewColumn {
+            role: "date";    // Эти роли совпадают с названиями ролей в C++ модели
+            title: "Дата и время";
         }
+
+        TableViewColumn {
+            role: "type";    // Эти роли совпадают с названиями ролей в C++ модели
+            title: "Тип станции";
+        }
+
+        TableViewColumn {
+            role: "placeStr";  // Эти роли совпадают с названиями ролей в C++ модели
+            title: "Место полётов";
+        }
+
+        TableViewColumn {
+            role: "description"; // Эти роли совпадают с названиями ролей в C++ модели
+            title: "Описание";
+        }
+
+        // Устанавливаем модель в TableView
+        model: table
     }
 
-    GridView {
-
-        delegate: cell;
-        model: tableModel;
-
-    }
 
 
 }

@@ -1,8 +1,8 @@
 #include "settingswindow.h"
-#include <QDeclarativeContext>
-#include <QFileDialog>
-#include <QDeclarativeEngine>
-#include <QDeclarativeComponent>
+#include <QtQml/QQmlContext>
+//#include <QFileDialog>
+//#include <QDeclarativeEngine>
+//#include <QDeclarativeComponent>
 
 SettingsWindow::SettingsWindow()
 {
@@ -21,7 +21,7 @@ SettingsWindow::~SettingsWindow()
 void SettingsWindow::settingsToWindow(GenSet _s)
 {
     emit textChanged(_s.dataBasePath);
-    emit textChangedDB(_s.dbFile);
+    emit textChangedpath(_s.dbFile);
 }
 
 int SettingsWindow::init()
@@ -29,11 +29,11 @@ int SettingsWindow::init()
     if (!absDir.isEmpty())
     {
 
-        setFocusPolicy(Qt::StrongFocus);
-        setResizeMode(QDeclarativeView::SizeRootObjectToView);
+        //setFocusPolicy(Qt::StrongFocus);
+        setResizeMode(QQuickView::SizeRootObjectToView);
         setSource(QUrl::fromLocalFile(absDir + "/settingsWindow.qml"));
         rootContext()->setContextProperty("windowSets", this);
-        setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
+        //setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
 
         //QQmlEngine engine;
         //QDeclarativeComponent component(rootContext()->engine(), QUrl::fromLocalFile(absDir + "/settingsWindow.qml"));
@@ -43,7 +43,7 @@ int SettingsWindow::init()
     }
     else
     {
-        ShowMessageBox(3, error);
+        //ShowMessageBox(3, error);
         return -1;
     }
 
@@ -64,20 +64,20 @@ void SettingsWindow::closeSets()
 void SettingsWindow::openDir()
 {
 
-    QString res = QFileDialog::getExistingDirectory( this, trUtf8("Выбрать директорию с данными"), trUtf8("Директории"), QFileDialog::ShowDirsOnly );
-    if (!res.isEmpty())
+    //QString res = QFileDialog::getExistingDirectory( this, trUtf8("Выбрать директорию с данными"), trUtf8("Директории"), QFileDialog::ShowDirsOnly );
+    //if (!res.isEmpty())
     {
-        emit textChanged(res);
+        //emit textChanged(res);
     }
 }
 
 void SettingsWindow::openDirDB()
 {
 
-    QString res = QFileDialog::getOpenFileName( this, trUtf8("Выбрать файл с данными"), trUtf8("Баззы данных"), "*.db" );
-    if (!res.isEmpty())
+    //QString res = QFileDialog::getOpenFileName( this, trUtf8("Выбрать файл с данными"), trUtf8("Базы данных"), "*.db" );
+    //if (!res.isEmpty())
     {
-        emit textChangedDB(res);
+        //emit textChangedDB(res);
     }
 }
 

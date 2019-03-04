@@ -20,7 +20,7 @@ QVariant Settings::readingParam(QString param, QVariant defaultVal, int numberEr
     QVariant res = fileSets->value(param, def);
     if (res.isNull())
     {
-        ShowMessageBox(numberError, warning);
+        //ShowMessageBox(numberError, warning);
         res = defaultVal;
     }
 
@@ -34,13 +34,14 @@ int Settings::initSets()
     bool op = sets.open(QIODevice::ReadWrite);
     if (!op || !sets.isReadable() || !sets.isWritable())
     {
-        ShowMessageBox(0, critical);
+        op = false;
+        //ShowMessageBox(0, critical);
     }
     if (sets.isOpen())
         sets.close();
 
     //что возвращаем в итоге при инициализации
-    if (getState() != nonecl)
+    if (!op)
         return -1;
 
     //получаем данные
@@ -63,7 +64,7 @@ int Settings::initSets()
     generalSet.database_param.type = dbType;
     generalSet.database_param.user = dbUserName;
 
-    setState(nonecl);
+    //setState(nonecl);
     return SUCCESS;
 
 }

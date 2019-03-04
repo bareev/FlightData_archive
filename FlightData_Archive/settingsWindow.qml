@@ -1,34 +1,25 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 Image {
     // Идентификатор, по нему будет происходить
     // обращение к свойствам этого элемента
     id: canvas_set;
 
-    height: 233;
-    width: 410;
+    height: 416;
+    width: 720;
 
-    source: "qrc:///res/canvas";
-
-    // Изменять размер под размеры
-    // родительского элемента
-    anchors.fill: parent;
+    source: "qrc:///res/canvas"
 
     // Будет получать фокус ввода
     focus: true;
 
     Column {
 
-        // Правый край элемента выравнивается
-        // по правому краю родительского элемента
-        anchors.top: parent.top;
-        // Отступ справа, 4 пикселя
-        anchors.leftMargin: 4;
-        // Верхний край эелемента выравнивается
-        // по верхнему краю родительского элемента
         anchors.left: parent.left;
-        // Отступ сверху, 4 пикселя
+        anchors.top: parent.top;
+        anchors.fill: parent;
         anchors.topMargin: 4;
+        anchors.leftMargin: 4;
 
         // Отступ между элементами
         spacing: 4;
@@ -36,7 +27,7 @@ Image {
         Text {
             id: captionText;
             height: 35;
-            width: canvas_set.width;
+            width: parent.width;
             text: qsTr("ПАНЕЛЬ НАСТРОЕК");
             font.family: "Helvetica";
             font.pointSize: 21;
@@ -49,7 +40,7 @@ Image {
         Text {
             id: absDir;
             height: 35;
-            width: canvas_set.width;
+            width: parent.width;
             text: qsTr("Директория хранения данных:");
             font.family: "Helvetica";
             font.pointSize: 14;
@@ -64,8 +55,6 @@ Image {
             anchors.left: parent.left;
             anchors.leftMargin: 4;
             anchors.rightMargin: 4;
-            anchors.top: absDir.bottom;
-            anchors.topMargin: 4;
             spacing: 4;
             id: inputDir;
 
@@ -77,7 +66,6 @@ Image {
                 width: canvas_set.width - 32;
                 color: "white";
                 TextInput {
-                    objectName: "absDirInput";
                     id: absDirInput;
                     visible: true;
                     height: 18;
@@ -86,11 +74,11 @@ Image {
                     font.pointSize: 10;
                     color: "black";
                     horizontalAlignment: Text.AlignLeft;
-                    cursorVisible: true;
+                    cursorVisible: false; //@todo - курсор в начале строки, чтобы текст выравнивался по краю
                     Connections {
-                        target: windowSets;
-                        onTextChanged: {absDirInput.text = s}
-                        }
+                        target: windowSets
+                        onTextChanged: {absDirInput.text = qsTr(s)}
+                    }
 
                 }
 
@@ -112,9 +100,9 @@ Image {
         Text {
             id: dbPath;
             height: 35;
-            width: canvas_set.width;
+            width: parent.width;
             text: qsTr("Файл базы данных:");
-            font.family: "Helvetica";
+            font.family: "Arial Narrow"
             font.pointSize: 14;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
@@ -126,10 +114,9 @@ Image {
             anchors.left: parent.left;
             anchors.leftMargin: 4;
             anchors.rightMargin: 4;
-            anchors.top: dbPath.bottom;
-            anchors.topMargin: 4;
             spacing: 4;
             id: dbRow;
+
 
             Rectangle
             {
@@ -139,7 +126,6 @@ Image {
                 width: canvas_set.width - 32;
                 color: "white";
                 TextInput {
-                    objectName: "absDbInput";
                     id: absDbInput;
                     visible: true;
                     height: 18;
@@ -148,11 +134,11 @@ Image {
                     font.pointSize: 10;
                     color: "black";
                     horizontalAlignment: Text.AlignLeft;
-                    cursorVisible: true;
+                    cursorVisible: false; //@todo - курсор в начале строки, чтобы текст выравнивался по краю
                     Connections {
-                        target: windowSets;
-                        onTextChangedDB: {absDbInput.text = s}
-                        }
+                        target: windowSets
+                        onTextChangedpath: {absDbInput.text = qsTr(s)}
+                    }
 
                 }
 

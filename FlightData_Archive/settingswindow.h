@@ -1,14 +1,14 @@
 #ifndef SETTINGSWINDOW_H
 #define SETTINGSWINDOW_H
 
-#include <QDeclarativeView>
+#include <QtQuick/QQuickView>
 #include <settings.h>
 
 namespace Ui {
 class SettingsWindow;
 }
 
-class SettingsWindow : public QDeclarativeView, public Settings
+class SettingsWindow : public QQuickView, public Settings
 {
     Q_OBJECT
 
@@ -29,13 +29,9 @@ private:
     QString absDir;
     //QObject *object;
 
-
 signals:
-    void textChanged(QString s);
-    void textChangedDB(QString s);
-
-
-signals:
+    void textChanged(const QString& s);
+    void textChangedpath(const QString& s);
     void onClose();
 
 };

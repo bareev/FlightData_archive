@@ -1,11 +1,29 @@
 #ifndef TABLEMODEL_H
 #define TABLEMODEL_H
-#include <QSqlTableModel>
+#include <QSqlQueryModel>
 
-class tableModel : public QSqlTableModel
+class tableModel : public QSqlQueryModel
 {
 public:
-    tableModel();
+    explicit tableModel();
+
+    // Перечисляем все роли, которые будут использоваться в TableView
+    enum Roles {
+        DateTimeRole = Qt::UserRole + 1,    // дата и время
+        TypeRole,                       // тип станции
+        PlaceRole,                     // место полётов
+        MessageRole                     // сообщение
+    };
+
+    // Переопределяем метод, который будет возвращать данные
+    Q_INVOKABLE QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+
+protected:
+    /* хешированная таблица ролей для колонок.
+     * Метод используется в дебрях базового класса QAbstractItemModel,
+     * от которого наследован класс QSqlQueryModel
+     * */
+    QHash<int, QByteArray> roleNames() const;
 };
 
 #endif // TABLEMODEL_H
