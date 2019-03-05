@@ -166,36 +166,27 @@ Image {
         anchors.bottomMargin: 4;
         spacing: 4;
 
-        WindowButton {
-            // Кнопка закрытия окна
-            height: 30;
-            width: 86;
+        WindowButtonText {
             id: applySets;
-            source: "qrc:///res/apply";
+            text: "Применить";
             function callback()
             {
                 windowSets.saveSettings(absDirInput.text, absDbInput.text);
             }
         }
 
-        WindowButton {
-            // Кнопка закрытия окна
-            height: 30;
-            width: 86;
+        WindowButtonText {
             id: okSets;
-            source: "qrc:///res/ok";
+            text: "OK";
             function callback()
             {
                 windowSets.closeSets();
             }
         }
 
-        WindowButton {
-            // Кнопка закрытия окна
-            height: 30;
-            width: 86;
+        WindowButtonText {
             id: exitSets;
-            source: "qrc:///res/cancel";
+            text: "Отмена";
             function callback()
             {
                 windowSets.closeSets();

@@ -4,9 +4,9 @@
         <file alias="exit">exit.png</file>
         <file alias="help">help.jpg</file>
         <file alias="settings">settings.png</file>
-        <file alias="apply">apply.jpg</file>
-        <file alias="cancel">cancel.png</file>
-        <file alias="ok">ok.png</file>
         <file alias="openDir">openDir.jpg</file>
+        <file alias="apply">cancel.png</file>
+        <file>ok.png</file>
+        <file>apply.jpg</file>
     </qresource>
 </RCC>

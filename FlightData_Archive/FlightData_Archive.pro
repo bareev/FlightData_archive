@@ -31,7 +31,8 @@ HEADERS  += flightdataarchive.h \
 OTHER_FILES += \
     mainWindow.qml \
     WindowButton.qml \
-    settingsWindow.qml
+    settingsWindow.qml \
+    WindowButtonText.qml
 
 RESOURCES += \
     resource.qrc

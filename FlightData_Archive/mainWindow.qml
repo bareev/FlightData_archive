@@ -6,7 +6,7 @@ Image {
     // обращение к свойствам этого элемента
     id: canvas;
 
-    height: 466;
+    height: 496;
     width: 819;
 
     source: "qrc:///res/canvas";
@@ -82,11 +82,60 @@ Image {
         }
     }
 
+    Grid {
+        anchors.left: parent.left;
+        anchors.leftMargin: 4;
+        anchors.rightMargin: 4;
+        anchors.top: rowText.bottom;
+        anchors.topMargin: 4;
+        spacing: 4;
+        id: gridFilter;
+
+        Column {
+            id: columnChB;
+            Text {
+                text: qsTr("Выберите фильтры отображения");
+                id: txtF;
+                font.family: "Helvetica";
+                font.pointSize: 12;
+                style: Text.Sunken;
+            }
+
+            CheckBox {
+                text: qsTr("По времени");
+                id: timeFilter;
+                checked: false;
+            }
+
+            CheckBox {
+                text: qsTr("По типу станции");
+                id: typeFilter;
+                checked: false;
+            }
+
+            CheckBox {
+                text: qsTr("По месту испытаний");
+                id: placeFilter;
+                checked: false;
+            }
+
+            CheckBox {
+                text: qsTr("По координатам");
+                id: coordFilter;
+                checked: false;
+            }
+
+        }
+        Column {
+
+        }
+    }
+
     TableView {
 
         y: 150;
         width: canvas.width - 8;
-        height: canvas.height - 154;
+        height: canvas.height - 194;
         anchors.topMargin: 4;
         anchors.left: rowText.left;
         anchors.leftMargin: 4;
@@ -97,26 +146,60 @@ Image {
 
         TableViewColumn {
             role: "date";    // Эти роли совпадают с названиями ролей в C++ модели
-            title: "Дата и время";
+            title: qsTr("Дата и время");
         }
 
         TableViewColumn {
             role: "type";    // Эти роли совпадают с названиями ролей в C++ модели
-            title: "Тип станции";
+            title: qsTr("Тип станции");
         }
 
         TableViewColumn {
             role: "placeStr";  // Эти роли совпадают с названиями ролей в C++ модели
-            title: "Место полётов";
+            title: qsTr("Место полётов");
         }
 
         TableViewColumn {
             role: "description"; // Эти роли совпадают с названиями ролей в C++ модели
-            title: "Описание";
+            title: qsTr("Описание");
         }
 
         // Устанавливаем модель в TableView
-        model: table
+        model: table;
+    }
+
+    Row {
+        anchors.right: parent.right;
+        anchors.rightMargin: 4;
+        anchors.bottom: parent.bottom;
+        anchors.topMargin: 4;
+        spacing: 4;
+
+        id: rowButtons;
+
+        WindowButtonText {
+            text: qsTr("Добавить");
+            id: buttonAdd;
+            function callback()
+            {
+            }
+        }
+
+        WindowButtonText {
+            text: qsTr("Запаковать");
+            id: buttonArchive;
+            function callback()
+            {
+            }
+        }
+
+        WindowButtonText {
+            text: qsTr("Распаковать");
+            id: buttonUnPack;
+            function callback()
+            {
+            }
+        }
     }
 
 

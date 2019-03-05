@@ -6,7 +6,6 @@ Image {
     id: button;
 
     height: 35;
-source: "cancel.png"
     width: 35;
 
     // Область, обрабатывающая "мышиные" сообщения
