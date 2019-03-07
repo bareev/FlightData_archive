@@ -28,7 +28,7 @@ private:
     QStringList qmlFiles;
     dbManager m_db;
     tableModel m_tbl;
-    //QTableView tbl;
+    int checkTablesDB(QString *res);
 
 public slots:
     void closeSets();

@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Window 2.0
 
 Image {
     // Идентификатор, по нему будет происходить
@@ -88,17 +89,18 @@ Image {
         anchors.rightMargin: 4;
         anchors.top: rowText.bottom;
         anchors.topMargin: 4;
-        spacing: 4;
         id: gridFilter;
+        spacing: 15;
 
         Column {
             id: columnChB;
+            spacing: 4;
             Text {
                 text: qsTr("Выберите фильтры отображения");
                 id: txtF;
                 font.family: "Helvetica";
-                font.pointSize: 12;
-                style: Text.Sunken;
+                font.pointSize: 10;
+                font.bold: true;
             }
 
             CheckBox {
@@ -127,7 +129,66 @@ Image {
 
         }
         Column {
+            id: columnParams;
+            spacing: 1;
+            Text {
+                text: qsTr("Параметры фильтров отображения");
+                id: txtP;
+                font.family: "Helvetica";
+                font.pointSize: 10;
+                font.bold: true;
+            }
 
+            Row
+            {
+                anchors.left: parent.left;
+                id: rowTime;
+                spacing: 4;
+
+                TextEditWidget {
+                    id: timestart;
+                    width: 130;
+                    inputMethodHints: Qt.ImhDigitsOnly;
+                    inputMask: "9999-99-99 99:99:99";
+                    text: Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss");
+                    validator: RegExpValidator { regExp: /^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$ /; }
+                }
+                TextEditWidget {
+                    id: timeend;
+                    width: 130;
+                    inputMethodHints: Qt.ImhDigitsOnly;
+                    inputMask: "9999-99-99 99:99:99";
+                    text: Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss");
+                    validator: RegExpValidator { regExp: /^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$ /; }
+                }
+            }
+
+            ComboBox {
+                id: type;
+                width: 130;
+            }
+
+            ComboBox {
+                id: place;
+                width: 130;
+            }
+
+            TextEditWidget {
+                id: coords;
+                width: 130;
+            }
+
+        }
+
+        Column {
+            id: columnButton;
+            WindowButtonText {
+                text: qsTr("Фильтровать");
+                id: buttonFilter;
+                function callback()
+                {
+                }
+            }
         }
     }
 

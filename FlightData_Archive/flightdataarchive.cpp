@@ -12,6 +12,8 @@ FlightDataArchive::FlightDataArchive()
     qmlFiles.append("mainWindow.qml");
     qmlFiles.append("settingsWindow.qml");
     qmlFiles.append("WindowButton.qml");
+    qmlFiles.append("WindowButtonText.qml");
+    qmlFiles.append("TextEditWidget.qml");
 
     init();
 }
@@ -80,33 +82,53 @@ void FlightDataArchive::init()
       ::exit(0);
   }
 
-  if (m_db.checkTable(GENERAL_DATABASE_NAME) != SUCCESS)
+  //проверка базы данных на наличие таблиц
+  QString resStr;
+  res = checkTablesDB(&resStr);
+  if (res != SUCCESS)
   {
-      QVariantMap _map;
-      _map.clear();
-      _map["id_table"] = "INT";
-      _map["date"] = "DATETIME";
-      _map["type"] = "VARCHAR(5)";
-      _map["input_files_table"] = "VARCHAR(20)";
-      _map["output_files_table"] = "VARCHAR(20)";
-      _map["placeStr"] = "NVARCHAR";
-      _map["placeGeo"] = "GEOGRAPHY";
-      _map["description"] = "NVARCHAR";
-
-      res = m_db.createTableIfNeed(GENERAL_DATABASE_NAME, _map);
-
-      if (res != SUCCESS)
-      {
-          //ShowMessageBox(11, error);
-      }
+      //ShowMessageBox(9, critical);
   }
 
   m_tbl.setQuery(QSqlQuery(QString("SELECT date, type, placeStr, description FROM %1;").arg(GENERAL_DATABASE_NAME)));
 
   rootContext()->setContextProperty("table", &m_tbl);
 
-  //tbl.setModel(m_tbl);
-  //tbl.setupViewport();
+  //выберем все типы станций и места испытаний
+  QSqlQuery q;
+  q.clear();
+  QString types;
+  types.clear();
+  QStringList result, resPlaces;
+  result.clear();
+  resPlaces.clear();
+
+  types.append("SELECT string FROM ").append(RLS_TYPE_DATABASE_NAME);
+  if (m_db.runSqlQuerryReturn(types, &q))
+  {
+      while (q.next())
+          result.append(q.value(0).toString());
+  }
+  else
+  {
+      /// @todo - ошибка чтения
+  }
+
+  types.clear();
+  q.clear();
+  types.append("SELECT plcae FROM ").append(PLACE_DATABASE_NAME);
+  if (m_db.runSqlQuerryReturn(types, &q))
+  {
+      while (q.next())
+          resPlaces.append(q.value(0).toString());
+  }
+  else
+  {
+      /// @todo - ошибка чтения
+  }
+
+
+
   ///конец блока с базами данных
 
   //инициализируем окно настроек
@@ -118,6 +140,85 @@ void FlightDataArchive::init()
   }
 
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
+}
+
+
+//проверка и создание таблиц
+int FlightDataArchive::checkTablesDB(QString *resName)
+{
+    resName->clear();
+    int res = -1;
+
+    if (m_db.checkTable(GENERAL_DATABASE_NAME) != SUCCESS)
+    {
+        QVariantMap _map;
+        _map.clear();
+        _map["id_table"] = "INT";
+        _map["date"] = "DATETIME";
+        _map["type"] = "NVARCHAR(5)";
+        _map["input_files_table"] = "NVARCHAR(20)";
+        _map["output_files_table"] = "NVARCHAR(20)";
+        _map["placeStr"] = "NVARCHAR(20)";
+        _map["placeGeo"] = "GEOGRAPHY";
+        _map["description"] = "NVARCHAR";
+
+        QStringList autoInc;
+        autoInc.clear();
+        autoInc.append("id_table");
+
+        res = m_db.createTableIfNeed(GENERAL_DATABASE_NAME, _map, autoInc);
+
+        if (res != SUCCESS)
+        {
+            resName->append(GENERAL_DATABASE_NAME);
+            return -1;
+        }
+    }
+
+    if (m_db.checkTable(RLS_TYPE_DATABASE_NAME) != SUCCESS)
+    {
+        QVariantMap _map;
+        _map.clear();
+        _map["id_type"] = "INT";
+        _map["type"] = "NVARCHAR(5)";
+        _map["string"] = "NVARCHAR(50)";
+        _map["description"] = "NVARCHAR";
+
+        QStringList autoInc;
+        autoInc.clear();
+        autoInc.append("id_type");
+
+        res = m_db.createTableIfNeed(RLS_TYPE_DATABASE_NAME, _map, autoInc);
+
+        if (res != SUCCESS)
+        {
+            resName->append(RLS_TYPE_DATABASE_NAME);
+            return -1;
+        }
+    }
+
+    if (m_db.checkTable(PLACE_DATABASE_NAME) != SUCCESS)
+    {
+        QVariantMap _map;
+        _map.clear();
+        _map["id_place"] = "INT";
+        _map["place"] = "NVARCHAR(20)";
+        _map["description"] = "NVARCHAR";
+
+        QStringList autoInc;
+        autoInc.clear();
+        autoInc.append("id_place");
+
+        res = m_db.createTableIfNeed(PLACE_DATABASE_NAME, _map, autoInc);
+
+        if (res != SUCCESS)
+        {
+            resName->append(PLACE_DATABASE_NAME);
+            return -1;
+        }
+    }
+
+    return SUCCESS;
 }
 
 //проверка всех файлов

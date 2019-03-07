@@ -25,8 +25,10 @@ public:
     bool isActive(){return state;}
     void closeDB();
     int createTableIfNeed(QString nameTable, QVariantMap params);
+    int createTableIfNeed(QString nameTable, QVariantMap params, QStringList namesNotNullAutoIncrement);
     int checkTable(QString nameTable);
     QString lastError(){return le;}
+    bool runSqlQuerryReturn(QString querry, QSqlQuery *q);
 
 private:
     bool loadDrive();

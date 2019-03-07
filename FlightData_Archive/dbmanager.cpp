@@ -70,6 +70,20 @@ void dbManager::closeDB()
     return;
 }
 
+bool dbManager::runSqlQuerryReturn(QString querryStr, QSqlQuery *query)
+{
+    QSqlQuery q(dataBase_users);
+
+    if (!q.exec(querryStr))
+    {
+        le = q.lastError().text();
+        return false;
+    }
+
+    *query = q;
+    return true;
+}
+
 bool dbManager::runSqlQuerry(QString querryStr)
 {
     QSqlQuery q(dataBase_users);
@@ -122,6 +136,44 @@ int dbManager::createTableIfNeed(QString name, QVariantMap params)
         return -1;
 
     return SUCCESS;
+}
+
+//с не убывающей последовательностью!!!
+int dbManager::createTableIfNeed(QString name, QVariantMap params, QStringList namesNotNull)
+{
+
+    if (namesNotNull.isEmpty())
+        return createTableIfNeed(name, params);
+    else
+    {
+        if (!isActive() || params.isEmpty() || name.isEmpty())
+            return -1;
+
+        QString querryString;
+        querryString.clear();
+
+        querryString.append("CREATE TABLE ").append(name).append(" ");
+        querryString.append("( ");
+
+        QStringList keys = params.uniqueKeys();
+        for (int i = 0; i < keys.length(); i++)
+        {
+            QString type = params.value(keys.at(i)).toString();
+            if (namesNotNull.contains(keys.at(i), Qt::CaseInsensitive))
+                querryString.append(keys.at(i)).append(" ").append(type).append(" NOT NULL PRIMARY KEY, ");
+            else
+                querryString.append(keys.at(i)).append(" ").append(type).append(", ");
+        }
+
+        //, space
+        querryString.chop(2);
+        querryString.append(" )");
+
+        if (!runSqlQuerry(querryString))
+            return -1;
+
+        return SUCCESS;
+    }
 }
 
 bool dbManager::loadDrive(QString _drive)

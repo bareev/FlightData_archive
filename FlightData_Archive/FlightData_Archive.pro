@@ -32,7 +32,8 @@ OTHER_FILES += \
     mainWindow.qml \
     WindowButton.qml \
     settingsWindow.qml \
-    WindowButtonText.qml
+    WindowButtonText.qml \
+    TextEditWidget.qml
 
 RESOURCES += \
     resource.qrc

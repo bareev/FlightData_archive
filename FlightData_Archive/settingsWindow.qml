@@ -39,11 +39,11 @@ Image {
 
         Text {
             id: absDir;
-            height: 35;
+            height: 25;
             width: parent.width;
             text: qsTr("Директория хранения данных:");
             font.family: "Helvetica";
-            font.pointSize: 14;
+            font.pointSize: 12;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
             verticalAlignment: Text.AlignBottom;
@@ -58,31 +58,17 @@ Image {
             spacing: 4;
             id: inputDir;
 
-            Rectangle
+            TextEditWidget
             {
-
-                id: textInputRow;
-                height: 18;
                 width: canvas_set.width - 32;
-                color: "white";
-                TextInput {
-                    id: absDirInput;
-                    visible: true;
-                    height: 18;
-                    width: canvas_set.width - 32;
-                    font.family: "Helvetica";
-                    font.pointSize: 10;
-                    color: "black";
-                    horizontalAlignment: Text.AlignLeft;
-                    cursorVisible: false; //@todo - курсор в начале строки, чтобы текст выравнивался по краю
-                    Connections {
-                        target: windowSets
-                        onTextChanged: {absDirInput.text = qsTr(s)}
-                    }
-
+                id: absDirInput;
+                Connections {
+                    target: windowSets
+                    onTextChanged: {absDirInput.text = qsTr(s)}
                 }
 
             }
+
             WindowButton {
                 height: 20;
                 width: 20;
@@ -99,11 +85,11 @@ Image {
         //файл базы данных
         Text {
             id: dbPath;
-            height: 35;
+            height: 25;
             width: parent.width;
             text: qsTr("Файл базы данных:");
             font.family: "Arial Narrow"
-            font.pointSize: 14;
+            font.pointSize: 12;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
             verticalAlignment: Text.AlignBottom;
@@ -117,32 +103,17 @@ Image {
             spacing: 4;
             id: dbRow;
 
-
-            Rectangle
+            TextEditWidget
             {
-
-                id: dbPathRow;
-                height: 18;
                 width: canvas_set.width - 32;
-                color: "white";
-                TextInput {
-                    id: absDbInput;
-                    visible: true;
-                    height: 18;
-                    width: canvas_set.width - 32;
-                    font.family: "Helvetica";
-                    font.pointSize: 10;
-                    color: "black";
-                    horizontalAlignment: Text.AlignLeft;
-                    cursorVisible: false; //@todo - курсор в начале строки, чтобы текст выравнивался по краю
-                    Connections {
-                        target: windowSets
-                        onTextChangedpath: {absDbInput.text = qsTr(s)}
-                    }
-
+                id: absDbInput;
+                Connections {
+                    target: windowSets
+                    onTextChangedpath: {absDbInput.text = qsTr(s)}
                 }
 
             }
+
             WindowButton {
                 height: 20;
                 width: 20;
