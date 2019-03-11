@@ -2,13 +2,11 @@
 #define FLIGHTDATAARCHIVE_H
 
 #include <QtQuick/QQuickView>
-//#include <QObject>
-//#include <message.h>
 #include <settings.h>
 #include <settingswindow.h>
 #include <dbmanager.h>
 #include <tablemodel.h>
-//#include <QTableView>
+#include <addwindow.h>
 
 class FlightDataArchive : public QQuickView//, public Message
 {
@@ -19,11 +17,13 @@ public:
     void init();
     Q_INVOKABLE void quit();
     Q_INVOKABLE void showSets();
+    Q_INVOKABLE void showAdd();
     ~FlightDataArchive();
 
 private:
     void slCloseOrEnable(closeEnable);
     SettingsWindow ws;
+    AddWindow wa;
     bool checkAllQMlFiles(QString dir, int* idx);
     QStringList qmlFiles;
     dbManager m_db;
@@ -32,6 +32,7 @@ private:
 
 public slots:
     void closeSets();
+    void closeAdd();
 };
 
 #endif // FLIGHTDATAARCHIVE_H

@@ -14,6 +14,7 @@ FlightDataArchive::FlightDataArchive()
     qmlFiles.append("WindowButton.qml");
     qmlFiles.append("WindowButtonText.qml");
     qmlFiles.append("TextEditWidget.qml");
+    qmlFiles.append("windowAddNew.qml");
 
     init();
 }
@@ -140,6 +141,13 @@ void FlightDataArchive::init()
   }
 
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
+
+
+  //инициализируем окно добавления нового полёта
+  res = wa.init(contentPath);
+  if (res == SUCCESS)
+      hide();
+  connect(&wa, SIGNAL(onClose()), this, SLOT(closeSets()));
 }
 
 
@@ -218,6 +226,28 @@ int FlightDataArchive::checkTablesDB(QString *resName)
         }
     }
 
+    if (m_db.checkTable(STATE_POINTS_DATABASE_NAME) != SUCCESS)
+    {
+        QVariantMap _map;
+        _map.clear();
+        _map["id_coords"] = "INT";
+        _map["name_coords"] = "NVARCHAR(20)";
+        _map["coords"] = "GEOGRAPHY";
+        _map["description"] = "NVARCHAR";
+
+        QStringList autoInc;
+        autoInc.clear();
+        autoInc.append("id_coords");
+
+        res = m_db.createTableIfNeed(STATE_POINTS_DATABASE_NAME, _map, autoInc);
+
+        if (res != SUCCESS)
+        {
+            resName->append(STATE_POINTS_DATABASE_NAME);
+            return -1;
+        }
+    }
+
     return SUCCESS;
 }
 
@@ -258,11 +288,26 @@ void FlightDataArchive::showSets()
     ws.show();
 }
 
+//показываем добавить новый полёт
+void FlightDataArchive::showAdd()
+{
+    slCloseOrEnable(enableT);
+    wa.show();
+}
+
 //закрытие настроек
 void FlightDataArchive::closeSets()
 {
     slCloseOrEnable(nonecl);
     ws.hide();
+}
+
+
+//закрытие настроек
+void FlightDataArchive::closeAdd()
+{
+    slCloseOrEnable(nonecl);
+    wa.hide();
 }
 
 //закрыть или сделать неактивным

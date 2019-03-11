@@ -27,7 +27,6 @@ public:
 
 private:
     QString absDir;
-    //QObject *object;
 
 signals:
     void textChanged(const QString& s);

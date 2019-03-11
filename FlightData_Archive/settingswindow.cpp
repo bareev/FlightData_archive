@@ -1,8 +1,6 @@
 #include "settingswindow.h"
 #include <QtQml/QQmlContext>
 //#include <QFileDialog>
-//#include <QDeclarativeEngine>
-//#include <QDeclarativeComponent>
 
 SettingsWindow::SettingsWindow()
 {
@@ -28,16 +26,9 @@ int SettingsWindow::init()
 {
     if (!absDir.isEmpty())
     {
-
-        //setFocusPolicy(Qt::StrongFocus);
         setResizeMode(QQuickView::SizeRootObjectToView);
         setSource(QUrl::fromLocalFile(absDir + "/settingsWindow.qml"));
         rootContext()->setContextProperty("windowSets", this);
-        //setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
-
-        //QQmlEngine engine;
-        //QDeclarativeComponent component(rootContext()->engine(), QUrl::fromLocalFile(absDir + "/settingsWindow.qml"));
-        //object = component.create();
 
         return SUCCESS;
     }

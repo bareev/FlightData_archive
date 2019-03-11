@@ -6,6 +6,7 @@
 #define GENERAL_DATABASE_NAME "general_database_name"
 #define RLS_TYPE_DATABASE_NAME "rls_type_database_name"
 #define PLACE_DATABASE_NAME "place_database_name"
+#define STATE_POINTS_DATABASE_NAME "state_points_database_name"
 
 #define SUCCESS 0
 

@@ -173,7 +173,7 @@ Image {
                 width: 130;
             }
 
-            TextEditWidget {
+            ComboBox {
                 id: coords;
                 width: 130;
             }
@@ -243,6 +243,7 @@ Image {
             id: buttonAdd;
             function callback()
             {
+                window.showAdd();
             }
         }
 
