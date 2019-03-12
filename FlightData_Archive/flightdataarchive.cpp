@@ -15,6 +15,7 @@ FlightDataArchive::FlightDataArchive()
     qmlFiles.append("WindowButtonText.qml");
     qmlFiles.append("TextEditWidget.qml");
     qmlFiles.append("windowAddNew.qml");
+    qmlFiles.append("tableModelDescription.qml");
 
     init();
 }

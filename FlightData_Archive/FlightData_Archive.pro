@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     settingswindow.cpp \
     dbmanager.cpp \
     tablemodel.cpp \
-    addwindow.cpp
+    addwindow.cpp \
+    descriptionfiles.cpp
 
 HEADERS  += flightdataarchive.h \
     settings.h \
@@ -28,7 +29,8 @@ HEADERS  += flightdataarchive.h \
     settingswindow.h \
     dbmanager.h \
     tablemodel.h \
-    addwindow.h
+    addwindow.h \
+    descriptionfiles.h
 
 OTHER_FILES += \
     mainWindow.qml \
@@ -36,7 +38,8 @@ OTHER_FILES += \
     settingsWindow.qml \
     WindowButtonText.qml \
     TextEditWidget.qml \
-    windowAddNew.qml
+    windowAddNew.qml \
+    tableModelDescription.qml
 
 RESOURCES += \
     resource.qrc

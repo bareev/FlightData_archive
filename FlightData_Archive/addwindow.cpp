@@ -32,6 +32,23 @@ int AddWindow::init()
         return -1;
     }
 
+    int res = w_dsc_input.init(absDir);
+    if (res != SUCCESS)
+    {
+        //
+        return -1;
+    }
+    w_dsc_input.hide();
+
+    res = w_dsc_output.init(absDir);
+    if (res != SUCCESS)
+    {
+        //
+        return -1;
+    }
+    w_dsc_output.hide();
+
+
 }
 
 int AddWindow::init(QString _absDir)
@@ -44,4 +61,9 @@ void AddWindow::closeSets()
 {
     emit onClose();
     return;
+}
+
+void AddWindow::showDescription(int idx, QStringList list)
+{
+    (idx == 0?w_dsc_input.showResize(list):w_dsc_output.showResize(list));
 }

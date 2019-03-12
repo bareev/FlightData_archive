@@ -209,4 +209,34 @@ Image {
         }
     }
 
+
+    Row {
+
+        anchors.right: parent.right;
+        anchors.rightMargin: 4;
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: 4;
+        spacing: 4;
+
+        WindowButtonText {
+            id: okSets;
+            text: "Запись";
+            function callback()
+            {
+                windowAdd.showDescription(0, inputFilesT.text.split(";"));
+            }
+        }
+
+        WindowButtonText {
+            id: exitSets;
+            text: "Отмена";
+            function callback()
+            {
+                windowAdd.closeSets();
+            }
+        }
+
+
+    }
+
 }
