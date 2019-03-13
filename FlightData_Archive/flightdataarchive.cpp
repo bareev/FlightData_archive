@@ -148,7 +148,18 @@ void FlightDataArchive::init()
   res = wa.init(contentPath);
   if (res == SUCCESS)
       hide();
+
   connect(&wa, SIGNAL(onClose()), this, SLOT(closeSets()));
+
+  //инициализация окна добавления и описания входных и выходных файлов
+  res = wa.w_dsc_input.init(contentPath);
+  if (res == SUCCESS)
+      wa.w_dsc_input.hide();
+
+  res = wa.w_dsc_output.init(contentPath);
+  if (res == SUCCESS)
+      wa.w_dsc_output.hide();
+
 }
 
 

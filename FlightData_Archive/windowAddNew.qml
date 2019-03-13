@@ -138,7 +138,7 @@ Image {
 
                 Text {
                     id: inputFiles;
-                    text: qsTr("Исходные файлы             ");
+                    text: qsTr("Исходные файлы         ");
                     font.family: "Helvetica";
                     font.pointSize: 10;
 
@@ -159,7 +159,7 @@ Image {
 
                 Text {
                     id: outputFiles;
-                    text: qsTr("Выходные файлы             ");
+                    text: qsTr("Выходные файлы         ");
                     font.family: "Helvetica";
                     font.pointSize: 10;
 

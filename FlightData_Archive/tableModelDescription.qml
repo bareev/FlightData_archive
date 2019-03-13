@@ -9,36 +9,51 @@ Image {
     // Будет получать фокус ввода
     focus: true;
 
-    ListView {
-        id: listView1;
-        // Размещаем его в оставшейся части окна приложения
-        anchors.top: parent.top;
-        anchors.left: parent.left;
-        anchors.topMargin: 4;
-        anchors.leftMargin: 4;
+    ScrollView {
 
-        delegate: Column {
-            id: item
-            anchors.left: parent.left;
+        id: scroll;
+        height: parent.height;
+        width: parent.width;
+
+        ListView {
+            id: listView1;
+            // Размещаем его в оставшейся части окна приложения
+            spacing: 48;
             anchors.top: parent.top;
-            spacing: 4;
-
-            Text {
-                id: txt1;
-                text: idtext;
-                font.family: "Helvetica";
-                font.pointSize: 9;
+            anchors.left: parent.left;
+            anchors.margins: 4;
+            height: scroll.height + 100;
+            delegate: comp;
+            // Сама модель, в которой будут содержаться все элементы
+            model: ListModel {
+                id: listModel_i; // задаём ей id для обращения
             }
 
-            TextEditWidget {
-                id: txtEdit1;
-                text: qsTr("Описание файла ... ");
-            }
         }
+    }
 
-        // Сама модель, в которой будут содержаться все элементы
-        model: ListModel {
-            id: listModel; // задаём ей id для обращения
+    Component {
+        id: comp;
+        Item {
+            id: item1;
+
+            Column {
+                id: item;
+                width: scroll.width - 30;
+                spacing: 1;
+                Text {
+                    id: txt1;
+                    text: filename;
+                    font.family: "Helvetica";
+                    font.pointSize: 9;
+                    width: parent.width;
+                }
+                TextEditWidget {
+                    id: txtEdit1;
+                    text: qsTr("Описание файла ") + yparam;
+                    width: parent.width;
+                }
+            }
         }
     }
 
@@ -47,14 +62,13 @@ Image {
         onAddNewRow: newItems(s);
     }
 
-
     function newItems(qlist)
     {
-        for (i = 0; i < qlist.length(); i++)
+        listModel_i.clear();
+        for (var i = 0; i < qlist.length; i++)
         {
-            listModel.append({idtext: qsTr(qlist.at(i))});
+            listModel_i.append({filename: qsTr(qlist[i])});
         }
     }
-
 
 }

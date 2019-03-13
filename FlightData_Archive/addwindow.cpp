@@ -32,23 +32,6 @@ int AddWindow::init()
         return -1;
     }
 
-    int res = w_dsc_input.init(absDir);
-    if (res != SUCCESS)
-    {
-        //
-        return -1;
-    }
-    w_dsc_input.hide();
-
-    res = w_dsc_output.init(absDir);
-    if (res != SUCCESS)
-    {
-        //
-        return -1;
-    }
-    w_dsc_output.hide();
-
-
 }
 
 int AddWindow::init(QString _absDir)

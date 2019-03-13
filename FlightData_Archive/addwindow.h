@@ -23,10 +23,11 @@ public:
     Q_INVOKABLE void closeSets();
     Q_INVOKABLE void showDescription(int idx, QStringList s);
 
-private:
-    QString absDir;
     descriptionFiles w_dsc_input;
     descriptionFiles w_dsc_output;
+
+private:
+    QString absDir;
 
 
 signals:
