@@ -220,23 +220,42 @@ Image {
 
         WindowButtonText {
             id: okSets;
-            text: "Запись";
+            text: qsTr("Нет действия");
             function callback()
             {
-                windowAdd.showDescription(0, inputFilesT.text.split(";"));
+                var stroka = [inputFilesT.text, outputFilesT.text];
+                for (var k = 0; k < 2; k++)
+                {
+                    windowAdd.showDescription(k, stroka[k].split(";"));
+                }
             }
         }
 
         WindowButtonText {
             id: exitSets;
-            text: "Отмена";
+            text: qsTr("Отмена");
             function callback()
             {
                 windowAdd.closeSets();
             }
         }
 
+        Connections {
+            target: windowAdd;
+            onParamTextChanged: txtFunc(ft);
+        }
+
 
     }
 
+    function txtFunc(ft)
+    {
+        okSets.enabled = true;
+        if (ft === 1)
+            okSets.text = qsTr("Записать");
+        else if (ft === 2)
+            okSets.text = qsTr("Обновить");
+        else
+            okSets.enabled = false;
+    }
 }

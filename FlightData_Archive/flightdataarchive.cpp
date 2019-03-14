@@ -154,11 +154,17 @@ void FlightDataArchive::init()
   //инициализация окна добавления и описания входных и выходных файлов
   res = wa.w_dsc_input.init(contentPath);
   if (res == SUCCESS)
+  {
       wa.w_dsc_input.hide();
+      wa.w_dsc_input.setInputOutput(INPUT_FILES);
+  }
 
   res = wa.w_dsc_output.init(contentPath);
   if (res == SUCCESS)
+  {
       wa.w_dsc_output.hide();
+      wa.w_dsc_output.setInputOutput(OUTPUT_FILES);
+  }
 
 }
 
@@ -304,6 +310,7 @@ void FlightDataArchive::showSets()
 void FlightDataArchive::showAdd()
 {
     slCloseOrEnable(enableT);
+    wa.setftype(newRecord);
     wa.show();
 }
 

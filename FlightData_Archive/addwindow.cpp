@@ -5,6 +5,7 @@
 AddWindow::AddWindow()
 {
     absDir.clear();
+    f_type = noneRecord;
 }
 
 AddWindow::AddWindow(QString _absDir)
@@ -48,5 +49,5 @@ void AddWindow::closeSets()
 
 void AddWindow::showDescription(int idx, QStringList list)
 {
-    (idx == 0?w_dsc_input.showResize(list):w_dsc_output.showResize(list));
+    (idx == INPUT_FILES?w_dsc_input.showResize(list, getftype()):w_dsc_output.showResize(list, getftype()));
 }

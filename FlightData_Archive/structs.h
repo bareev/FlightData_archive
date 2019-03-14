@@ -10,6 +10,16 @@
 
 #define SUCCESS 0
 
+#define INPUT_FILES 0
+#define OUTPUT_FILES 1
+
+//режим редактирования или записи нового
+enum formType
+{
+    noneRecord = 0,
+    newRecord,
+    updateRecord
+};
 
 enum msgType
 {

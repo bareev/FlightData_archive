@@ -4,6 +4,7 @@
 #include <QtQuick/QQuickView>
 #include <QObject>
 #include <descriptionfiles.h>
+#include <structs.h>
 
 namespace Ui {
 class AddWindow;
@@ -26,12 +27,17 @@ public:
     descriptionFiles w_dsc_input;
     descriptionFiles w_dsc_output;
 
+    formType getftype(){return f_type;}
+    void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
+
 private:
     QString absDir;
+    formType f_type;
 
 
 signals:
     void onClose();
+    void paramTextChanged(int ft);
 
 };
 

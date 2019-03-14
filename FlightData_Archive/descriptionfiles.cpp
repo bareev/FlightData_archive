@@ -6,6 +6,8 @@
 descriptionFiles::descriptionFiles()
 {
     absDir.clear();
+    f_type = noneRecord;
+    input_output = -1;
 }
 
 descriptionFiles::descriptionFiles(QString _absDir)
@@ -47,9 +49,10 @@ void descriptionFiles::closeSets()
     return;
 }
 
-void descriptionFiles::showResize(QStringList s)
+void descriptionFiles::showResize(QStringList s, formType f)
 {
     emit addNewRow(s);
+    setftype(f);
     show();
 }
 

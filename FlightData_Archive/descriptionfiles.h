@@ -3,6 +3,7 @@
 
 #include <QtQuick/QQuickView>
 #include <QObject>
+#include <structs.h>
 
 namespace Ui {
 class descriptionFiles;
@@ -20,15 +21,23 @@ public:
     int init(QString _absDir);
     void setAbsDir(QString _absDir){absDir = _absDir; return;}
     Q_INVOKABLE void closeSets();
-    void showResize(QStringList s);
+    void showResize(QStringList s, formType f);
+
+    formType getftype(){return f_type;}
+    void setftype(formType ft){f_type = ft; return;}
+
+    void setInputOutput(int p){input_output = p; emit iochange(p); return;}
+    int getInputOutput(){return input_output;}
 
 private:
     QString absDir;
-
+    formType f_type;
+    int input_output;
 
 signals:
     void onClose();
     void addNewRow(QStringList s);
+    void iochange(int p);
 
 };
 
