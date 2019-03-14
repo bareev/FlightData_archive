@@ -30,6 +30,8 @@ public:
     formType getftype(){return f_type;}
     void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
 
+    Q_INVOKABLE int waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, QString inf, QString ouf, QString mes);
+
 private:
     QString absDir;
     formType f_type;
@@ -38,7 +40,7 @@ private:
 signals:
     void onClose();
     void paramTextChanged(int ft);
-
+    void newRecordToDB(QVariantMap _map);
 };
 
 #endif // ADDWINDOW_H

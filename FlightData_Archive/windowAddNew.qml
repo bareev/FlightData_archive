@@ -223,10 +223,16 @@ Image {
             text: qsTr("Нет действия");
             function callback()
             {
-                var stroka = [inputFilesT.text, outputFilesT.text];
-                for (var k = 0; k < 2; k++)
+                var res = windowAdd.waitForWritetoDB(timestart.text, typecb.currentText, placecb.currentText, coordCB.currentText, inputFilesT.text, outputFilesT.text, textArea.text);
+                if (res === 0)
                 {
-                    windowAdd.showDescription(k, stroka[k].split(";"));
+                    windowAdd.closeSets();
+
+                    var stroka = [inputFilesT.text, outputFilesT.text];
+                    for (var k = 0; k < 2; k++)
+                    {
+                        windowAdd.showDescription(k, stroka[k].split(";"));
+                    }
                 }
             }
         }
