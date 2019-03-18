@@ -68,7 +68,6 @@ int AddWindow::waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, 
     _map["ts"] = ts;
     _map["message"] = mes;
 
-    emit newRecordToDB(_map);
-
+    emit writeNewDB(_map);
     return SUCCESS;
 }

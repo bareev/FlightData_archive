@@ -29,7 +29,7 @@ Image {
     ScrollView {
 
         id: scroll;
-        height: parent.height;
+        height: parent.height - 50;
         width: parent.width;
         anchors.top: captionText.bottom;
 
@@ -40,7 +40,7 @@ Image {
             anchors.top: parent.top;
             anchors.left: parent.left;
             anchors.margins: 4;
-            height: scroll.height;
+            height: scroll.height + listView1.spacing;
             delegate: comp;
             // Сама модель, в которой будут содержаться все элементы
             model: ListModel {
@@ -48,6 +48,51 @@ Image {
             }
 
         }
+    }
+
+    Row {
+
+        anchors.right: parent.right;
+        anchors.rightMargin: 4;
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: 4;
+        spacing: 4;
+
+        WindowButtonText {
+            id: okSets;
+            text: qsTr("Нет действия");
+            function callback()
+            {
+                tableModelDesc.closeSets();
+            }
+        }
+
+        WindowButtonText {
+            id: exitSets;
+            text: qsTr("Отмена");
+            function callback()
+            {
+                tableModelDesc.closeSets();
+            }
+        }
+
+        Connections {
+            target: tableModelDesc;
+            onParamTextChanged: txtFunc(ft);
+        }
+
+
+    }
+
+    function txtFunc(ft)
+    {
+        okSets.enabled = true;
+        if (ft === 1)
+            okSets.text = qsTr("Записать");
+        else if (ft === 2)
+            okSets.text = qsTr("Обновить");
+        else
+            okSets.enabled = false;
     }
 
     Component {

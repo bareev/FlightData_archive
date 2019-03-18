@@ -29,15 +29,21 @@ public:
     void setInputOutput(int p){input_output = p; emit iochange(p); return;}
     int getInputOutput(){return input_output;}
 
+public slots:
+    void onNewDBName(QString name);
+
 private:
     QString absDir;
     formType f_type;
     int input_output;
+    bool readyWrite;
+    QString basename;
 
 signals:
     void onClose();
     void addNewRow(QStringList s);
     void iochange(int p);
+    void paramTextChanged(int ft);
 
 };
 

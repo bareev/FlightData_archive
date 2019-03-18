@@ -33,6 +33,13 @@ private:
 public slots:
     void closeSets();
     void closeAdd();
+    void closeWi();
+    void closeWo();
+    int onWriteNewDB(QVariantMap _map);
+
+signals:
+    void iChanged(QString s);
+    void oChanged(QString s);
 };
 
 #endif // FLIGHTDATAARCHIVE_H

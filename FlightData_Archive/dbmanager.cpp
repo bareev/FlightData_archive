@@ -84,6 +84,139 @@ bool dbManager::runSqlQuerryReturn(QString querryStr, QSqlQuery *query)
     return true;
 }
 
+bool dbManager::runSqlQuerryReturnBindValues(QString querryStr, QVariantMap values, QSqlQuery *query)
+{
+
+    if (values.isEmpty())
+        return runSqlQuerryReturn(querryStr, query);
+
+    else
+    {
+        QSqlQuery q(dataBase_users);
+        q.prepare(querryStr);
+        QStringList keys = values.keys();
+
+        for (int i = 0; i < keys.length(); i++)
+            q.addBindValue(values.value(keys.at(i)));
+
+        if (!q.exec())
+        {
+            le = q.lastError().text();
+            return false;
+        }
+
+        *query = q;
+        return true;
+    }
+}
+
+
+//запрос select
+bool dbManager::selectParamsFromTable(QStringList params, QString tableName, QSqlQuery *q)
+{
+    QVariantMap whereParams;
+    whereParams.clear();
+
+    return selectParamsFromTableWhereParams(params, tableName, whereParams, q);
+}
+
+
+//запрос select
+bool dbManager::selectParamsFromTable(QString params, QString tableName, QSqlQuery *q)
+{
+    QStringList paramsList;
+    paramsList.clear();
+    paramsList.append(params);
+
+    return selectParamsFromTable(paramsList, tableName, q);
+}
+
+//запрос select
+bool dbManager::selectParamsFromTableWhereParams(QString params, QString tableName, QVariantMap whereParams, QSqlQuery *q)
+{
+    QStringList paramList;
+    paramList.clear();
+    paramList.append(params);
+
+    return selectParamsFromTableWhereParams(paramList, tableName, whereParams, q);
+}
+
+//запрос select
+bool dbManager::selectParamsFromTableWhereParams(QStringList params, QString tableName, QVariantMap whereParams, QSqlQuery *q)
+{
+    if (params.isEmpty() || tableName.isEmpty())
+        return false;
+
+    QString runquery;
+    runquery.clear();
+
+    runquery.append("SELECT ");
+    for (int i = 0; i < params.length(); i++)
+        runquery.append(params.at(i)).append(", ");
+
+    //запятую и пробел
+    runquery.chop(2);
+    runquery.append(" FROM ").append(tableName);
+
+    if (!whereParams.isEmpty())
+    {
+        QStringList keys = whereParams.keys();
+        runquery.append(" WHERE (");
+        for (int i = 0; i < keys.length(); i++)
+            runquery.append(keys.at(i)).append("=? AND ");
+        runquery.chop(5);
+        runquery.append(")");
+    }
+
+    return runSqlQuerryReturnBindValues(runquery, whereParams, q);
+}
+
+bool dbManager::insertParamsInTable(QVariantMap _map, QString tableName)
+{
+    if (_map.isEmpty() || tableName.isEmpty())
+        return false;
+
+    QString runquery;
+    runquery.clear();
+
+    runquery.append("INSERT INTO ").append(tableName).append(" (");
+
+    QStringList keys = _map.keys();
+    for (int i = 0; i < keys.length(); i++)
+        runquery.append(keys.at(i)).append(", ");
+
+    runquery.chop(2);
+    runquery.append(") VALUES (");
+
+    for (int i = 0; i < keys.length(); i++)
+        runquery.append("?, ");
+
+    runquery.chop(2);
+    runquery.append(")");
+
+    QSqlQuery q(dataBase_users);
+    q.clear();
+    q.prepare(runquery);
+
+    for (int i = 0; i < keys.length(); i++)
+        q.addBindValue(_map.value(keys.at(i)));
+
+    return runSqlQuerry(q);
+}
+
+
+bool dbManager::runSqlQuerry(QSqlQuery querryStr)
+{
+
+    if (!querryStr.exec())
+    {
+        le = querryStr.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
 bool dbManager::runSqlQuerry(QString querryStr)
 {
     QSqlQuery q(dataBase_users);
@@ -160,7 +293,7 @@ int dbManager::createTableIfNeed(QString name, QVariantMap params, QStringList n
         {
             QString type = params.value(keys.at(i)).toString();
             if (namesNotNull.contains(keys.at(i), Qt::CaseInsensitive))
-                querryString.append(keys.at(i)).append(" ").append(type).append(" NOT NULL PRIMARY KEY, ");
+                querryString.append(keys.at(i)).append(" ").append(type).append(" PRIMARY KEY AUTOINCREMENT NOT NULL, ");
             else
                 querryString.append(keys.at(i)).append(" ").append(type).append(", ");
         }

@@ -23,14 +23,13 @@ public:
     void setAbsDir(QString _absDir){absDir = _absDir; return;}
     Q_INVOKABLE void closeSets();
     Q_INVOKABLE void showDescription(int idx, QStringList s);
+    Q_INVOKABLE int waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, QString inf, QString ouf, QString mes);
 
     descriptionFiles w_dsc_input;
     descriptionFiles w_dsc_output;
 
     formType getftype(){return f_type;}
     void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
-
-    Q_INVOKABLE int waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, QString inf, QString ouf, QString mes);
 
 private:
     QString absDir;
@@ -40,7 +39,7 @@ private:
 signals:
     void onClose();
     void paramTextChanged(int ft);
-    void newRecordToDB(QVariantMap _map);
+    void writeNewDB(QVariantMap param);
 };
 
 #endif // ADDWINDOW_H

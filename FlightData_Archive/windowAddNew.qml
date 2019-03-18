@@ -234,6 +234,10 @@ Image {
                         windowAdd.showDescription(k, stroka[k].split(";"));
                     }
                 }
+                else
+                {
+                    ///@warning  - параметры
+                }
             }
         }
 

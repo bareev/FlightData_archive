@@ -8,6 +8,7 @@ descriptionFiles::descriptionFiles()
     absDir.clear();
     f_type = noneRecord;
     input_output = -1;
+    readyWrite = false;
 }
 
 descriptionFiles::descriptionFiles(QString _absDir)
@@ -17,6 +18,13 @@ descriptionFiles::descriptionFiles(QString _absDir)
 
 descriptionFiles::~descriptionFiles()
 {
+}
+
+
+void descriptionFiles::onNewDBName(QString name)
+{
+    readyWrite = true;
+    basename = name;
 }
 
 int descriptionFiles::init()
@@ -49,10 +57,12 @@ void descriptionFiles::closeSets()
     return;
 }
 
-void descriptionFiles::showResize(QStringList s, formType f)
+void descriptionFiles::showResize(QStringList s, formType ft)
 {
     emit addNewRow(s);
-    setftype(f);
+    setftype(ft);
+    emit paramTextChanged((int)ft);
+    readyWrite = false;
     show();
 }
 
