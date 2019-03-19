@@ -88,7 +88,7 @@ Image {
         anchors.leftMargin: 4;
         anchors.rightMargin: 4;
         anchors.top: rowText.bottom;
-        anchors.topMargin: 4;
+        anchors.topMargin: 15;
         id: gridFilter;
         spacing: 15;
 
@@ -182,6 +182,14 @@ Image {
 
         Column {
             id: columnButton;
+            spacing: 1;
+            Text {
+                text: qsTr("Применить фильтры отображения");
+                id: txtBtn;
+                font.family: "Helvetica";
+                font.pointSize: 10;
+                font.bold: true;
+            }
             WindowButtonText {
                 text: qsTr("Фильтровать");
                 id: buttonFilter;
@@ -190,13 +198,15 @@ Image {
                 }
             }
         }
+
     }
+
 
     TableView {
 
-        y: 150;
+        y: 160;
         width: canvas.width - 8;
-        height: canvas.height - 194;
+        height: canvas.height - 205;
         anchors.topMargin: 4;
         anchors.left: rowText.left;
         anchors.leftMargin: 4;

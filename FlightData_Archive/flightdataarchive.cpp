@@ -28,6 +28,9 @@ FlightDataArchive::~FlightDataArchive()
 void FlightDataArchive::init()
 {
 
+  //это обновление таблицы
+  connect(this, SIGNAL(updateView()), this, SLOT(onUpdateView()));
+
   // Путь к папке, содержащей QML файлы
   QString contentPath;
 
@@ -56,7 +59,7 @@ void FlightDataArchive::init()
   // Загрузить QML файл
   setSource(QUrl::fromLocalFile(contentPath + "/mainWindow.qml"));
 
-  rootContext() ->setContextProperty("window", this);
+  rootContext()->setContextProperty("window", this);
 
   //setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
 
@@ -93,7 +96,8 @@ void FlightDataArchive::init()
       //ShowMessageBox(9, critical);
   }
 
-  m_tbl.setQuery(QSqlQuery(QString("SELECT date, type, placeStr, description FROM %1;").arg(GENERAL_DATABASE_NAME)));
+  //заполним таблицу
+  emit updateView();
 
   rootContext()->setContextProperty("table", &m_tbl);
 
@@ -138,10 +142,6 @@ void FlightDataArchive::init()
       /// @todo - ошибка чтения
   }
 
-
-
-
-
   ///конец блока с базами данных
 
   //инициализируем окно настроек
@@ -154,13 +154,12 @@ void FlightDataArchive::init()
 
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
 
-
   //инициализируем окно добавления нового полёта
   res = wa.init(contentPath);
   if (res == SUCCESS)
       hide();
 
-  connect(&wa, SIGNAL(onClose()), this, SLOT(closeSets()));
+  connect(&wa, SIGNAL(onClose()), this, SLOT(closeAdd()));
   connect(&wa, SIGNAL(writeNewDB(QVariantMap)), this, SLOT(onWriteNewDB(QVariantMap)));
 
   //инициализация окна добавления и описания входных и выходных файлов
@@ -184,6 +183,13 @@ void FlightDataArchive::init()
   connect(this, SIGNAL(iChanged(QString)), &wa.w_dsc_input, SLOT(onNewDBName(QString)));
   connect(this, SIGNAL(oChanged(QString)), &wa.w_dsc_output, SLOT(onNewDBName(QString)));
 
+}
+
+//обновим таблицу
+void FlightDataArchive::onUpdateView()
+{
+    m_tbl.setQuery(QSqlQuery(QString("SELECT date, type, placeStr, description FROM %1;").arg(GENERAL_DATABASE_NAME)));
+    return;
 }
 
 void FlightDataArchive::closeWi()
@@ -290,6 +296,7 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         {
             emit iChanged(nameInput);
             emit oChanged(nameOutput);
+            emit updateView();
             ///@warning  - message;
         }
 

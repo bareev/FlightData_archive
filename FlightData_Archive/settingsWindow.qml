@@ -39,11 +39,11 @@ Image {
 
         Text {
             id: absDir;
-            height: 25;
+            height: 15;
             width: parent.width;
             text: qsTr("Директория хранения данных:");
             font.family: "Helvetica";
-            font.pointSize: 12;
+            font.pointSize: 9;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
             verticalAlignment: Text.AlignBottom;
@@ -53,8 +53,6 @@ Image {
         Row {
 
             anchors.left: parent.left;
-            anchors.leftMargin: 4;
-            anchors.rightMargin: 4;
             spacing: 4;
             id: inputDir;
 
@@ -85,11 +83,11 @@ Image {
         //файл базы данных
         Text {
             id: dbPath;
-            height: 25;
+            height: 15;
             width: parent.width;
             text: qsTr("Файл базы данных:");
             font.family: "Arial Narrow"
-            font.pointSize: 12;
+            font.pointSize: 9;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
             verticalAlignment: Text.AlignBottom;
@@ -98,8 +96,6 @@ Image {
         Row {
 
             anchors.left: parent.left;
-            anchors.leftMargin: 4;
-            anchors.rightMargin: 4;
             spacing: 4;
             id: dbRow;
 
@@ -127,6 +123,99 @@ Image {
 
         }
 
+        //Тип базы данных
+        Text {
+            id: dbType;
+            height: 15;
+            width: parent.width;
+            text: qsTr("Тип базы данных:");
+            font.family: "Arial Narrow"
+            font.pointSize: 9;
+            color: "black";
+            horizontalAlignment: Text.AlignLeft;
+            verticalAlignment: Text.AlignBottom;
+        }
+        TextEditWidget
+        {
+            width: canvas_set.width - 32;
+            id: dbTypeInput;
+            //Connections {
+            //    target: windowSets
+                //onTextChangedpath: {absDbInput.text = qsTr(s)}
+            //}
+        }
+
+        //Пользователь базы данных
+        Text {
+            id: dbUser;
+            height: 15;
+            width: parent.width;
+            text: qsTr("Пользователь базы данных:");
+            font.family: "Arial Narrow"
+            font.pointSize: 9;
+            color: "black";
+            horizontalAlignment: Text.AlignLeft;
+            verticalAlignment: Text.AlignBottom;
+        }
+        TextEditWidget
+        {
+            width: canvas_set.width - 32;
+            id: dbUserInput;
+            //Connections {
+            //    target: windowSets
+                //onTextChangedpath: {absDbInput.text = qsTr(s)}
+            //}
+        }
+
+        //Пароль базы данных
+        Text {
+            id: dbPass;
+            height: 20;
+            width: parent.width;
+            text: qsTr("Пароль базы данных:");
+            font.family: "Arial Narrow"
+            font.pointSize: 9;
+            color: "black";
+            horizontalAlignment: Text.AlignLeft;
+            verticalAlignment: Text.AlignBottom;
+        }
+        TextEditWidget
+        {
+            width: canvas_set.width - 32;
+            id: dbPassInput;
+            //Connections {
+            //    target: windowSets
+                //onTextChangedpath: {absDbInput.text = qsTr(s)}
+            //}
+        }
+
+        Row {
+            id: buttonsPl;
+            spacing: 4;
+            //anchors.left: absDbInput.left;
+            //anchors.top: absDbInput.bottom;
+            //anchors.topMargin: 4;
+            //anchors.leftMargin: 4;
+
+            WindowButtonText {
+                id: types;
+                text: qsTr("Редактор\nтипов станции");
+            }
+
+            WindowButtonText {
+                id: places;
+                text: qsTr("Редактор\nмест полётов");
+            }
+
+            WindowButtonText {
+                id: coords;
+                text: qsTr("Редактор\nточек стояния");
+            }
+        }
+
+
+
+
     }
 
     Row {
@@ -139,7 +228,7 @@ Image {
 
         WindowButtonText {
             id: applySets;
-            text: "Применить";
+            text: qsTr("Применить");
             function callback()
             {
                 windowSets.saveSettings(absDirInput.text, absDbInput.text);
@@ -157,7 +246,7 @@ Image {
 
         WindowButtonText {
             id: exitSets;
-            text: "Отмена";
+            text: qsTr("Отмена");
             function callback()
             {
                 windowSets.closeSets();
