@@ -21,6 +21,14 @@ enum formType
     updateRecord
 };
 
+enum WhoEdit
+{
+    noneEdit = 0,
+    rlsEdit,
+    placeEdit,
+    tsEdit
+};
+
 enum msgType
 {
     none,

@@ -145,7 +145,7 @@ void FlightDataArchive::init()
   ///конец блока с базами данных
 
   //инициализируем окно настроек
-  res = ws.init(contentPath);
+  res = ws.init(contentPath, "/settingsWindow.qml", "windowSets");
   if (res == SUCCESS)
   {
       ws.settingsToWindow(ws.getValue());
@@ -155,7 +155,7 @@ void FlightDataArchive::init()
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
 
   //инициализируем окно добавления нового полёта
-  res = wa.init(contentPath);
+  res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
   if (res == SUCCESS)
       hide();
 
@@ -163,14 +163,14 @@ void FlightDataArchive::init()
   connect(&wa, SIGNAL(writeNewDB(QVariantMap)), this, SLOT(onWriteNewDB(QVariantMap)));
 
   //инициализация окна добавления и описания входных и выходных файлов
-  res = wa.w_dsc_input.init(contentPath);
+  res = wa.w_dsc_input.init(contentPath, "/tableModelDescription.qml", "tableModelDesc");
   if (res == SUCCESS)
   {
       wa.w_dsc_input.hide();
       wa.w_dsc_input.setInputOutput(INPUT_FILES);
   }
 
-  res = wa.w_dsc_output.init(contentPath);
+  res = wa.w_dsc_output.init(contentPath, "/tableModelDescription.qml", "tableModelDesc");
   if (res == SUCCESS)
   {
       wa.w_dsc_output.hide();

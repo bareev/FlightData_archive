@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     dbmanager.cpp \
     tablemodel.cpp \
     addwindow.cpp \
-    descriptionfiles.cpp
+    descriptionfiles.cpp \
+    wcore.cpp \
+    editwindow.cpp
 
 HEADERS  += flightdataarchive.h \
     settings.h \
@@ -30,7 +32,9 @@ HEADERS  += flightdataarchive.h \
     dbmanager.h \
     tablemodel.h \
     addwindow.h \
-    descriptionfiles.h
+    descriptionfiles.h \
+    wcore.h \
+    editwindow.h
 
 OTHER_FILES += \
     mainWindow.qml \

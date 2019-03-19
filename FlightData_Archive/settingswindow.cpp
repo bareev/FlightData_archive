@@ -1,55 +1,10 @@
 #include "settingswindow.h"
-#include <QtQml/QQmlContext>
-//#include <QFileDialog>
-
-SettingsWindow::SettingsWindow()
-{
-    absDir.clear();
-}
-
-SettingsWindow::SettingsWindow(QString _absDir)
-{
-    setAbsDir(_absDir);
-}
-
-SettingsWindow::~SettingsWindow()
-{
-}
+#include <settings.h>
 
 void SettingsWindow::settingsToWindow(GenSet _s)
 {
     emit textChanged(_s.dataBasePath);
     emit textChangedpath(_s.dbFile);
-}
-
-int SettingsWindow::init()
-{
-    if (!absDir.isEmpty())
-    {
-        setResizeMode(QQuickView::SizeRootObjectToView);
-        setSource(QUrl::fromLocalFile(absDir + "/settingsWindow.qml"));
-        rootContext()->setContextProperty("windowSets", this);
-
-        return SUCCESS;
-    }
-    else
-    {
-        //ShowMessageBox(3, error);
-        return -1;
-    }
-
-}
-
-int SettingsWindow::init(QString _absDir)
-{
-    setAbsDir(_absDir);
-    return init();
-}
-
-void SettingsWindow::closeSets()
-{
-    emit onClose();
-    return;
 }
 
 void SettingsWindow::openDir()

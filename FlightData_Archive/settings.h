@@ -12,13 +12,10 @@ public:
     Settings();
     ~Settings();
     int initSets();
-
     void setFileName(QString _fn){fileNameSetts = _fn; return;}
     QString getFileName(){return fileNameSetts;}
-
     GenSet getValue(){return generalSet;}
     void setValue(GenSet _s){generalSet = _s; return;}
-
     void writeAll();
     
 private:

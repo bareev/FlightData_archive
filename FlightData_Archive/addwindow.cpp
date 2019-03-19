@@ -4,48 +4,47 @@
 
 AddWindow::AddWindow()
 {
-    absDir.clear();
     f_type = noneRecord;
 }
 
-AddWindow::AddWindow(QString _absDir)
-{
-    setAbsDir(_absDir);
-}
+//AddWindow::AddWindow(QString _absDir)
+//{
+//    setAbsDir(_absDir);
+//}
 
-AddWindow::~AddWindow()
-{
-}
+//AddWindow::~AddWindow()
+//{
+//}
 
-int AddWindow::init()
-{
-    if (!absDir.isEmpty())
-    {
-        setResizeMode(QQuickView::SizeRootObjectToView);
-        setSource(QUrl::fromLocalFile(absDir + "/windowAddNew.qml"));
-        rootContext()->setContextProperty("windowAdd", this);
+//int AddWindow::init()
+//{
+//    if (!absDir.isEmpty())
+//    {
+//        setResizeMode(QQuickView::SizeRootObjectToView);
+//        setSource(QUrl::fromLocalFile(absDir + "/windowAddNew.qml"));
+//        rootContext()->setContextProperty("windowAdd", this);
 
-        return SUCCESS;
-    }
-    else
-    {
-        //ShowMessageBox(3, error);
-        return -1;
-    }
+//        return SUCCESS;
+//    }
+//    else
+//    {
+//        //ShowMessageBox(3, error);
+//        return -1;
+//    }
 
-}
+//}
 
-int AddWindow::init(QString _absDir)
-{
-    setAbsDir(_absDir);
-    return init();
-}
+//int AddWindow::init(QString _absDir)
+//{
+//    setAbsDir(_absDir);
+//    return init();
+//}
 
-void AddWindow::closeSets()
-{
-    emit onClose();
-    return;
-}
+//void AddWindow::closeSets()
+//{
+//    emit onClose();
+//    return;
+//}
 
 void AddWindow::showDescription(int idx, QStringList list)
 {

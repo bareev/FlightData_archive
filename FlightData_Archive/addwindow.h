@@ -2,26 +2,19 @@
 #define ADDWINDOW_H
 
 #include <QtQuick/QQuickView>
-#include <QObject>
 #include <descriptionfiles.h>
-#include <structs.h>
+#include <wcore.h>
 
 namespace Ui {
 class AddWindow;
 }
 
-class AddWindow : public QQuickView
+class AddWindow : public Wcore
 {
     Q_OBJECT
 
 public:
     AddWindow();
-    ~AddWindow();
-    AddWindow(QString _absDir);
-    int init();
-    int init(QString _absDir);
-    void setAbsDir(QString _absDir){absDir = _absDir; return;}
-    Q_INVOKABLE void closeSets();
     Q_INVOKABLE void showDescription(int idx, QStringList s);
     Q_INVOKABLE int waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, QString inf, QString ouf, QString mes);
 
@@ -32,12 +25,9 @@ public:
     void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
 
 private:
-    QString absDir;
     formType f_type;
 
-
 signals:
-    void onClose();
     void paramTextChanged(int ft);
     void writeNewDB(QVariantMap param);
 };
