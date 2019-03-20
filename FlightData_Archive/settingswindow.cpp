@@ -36,3 +36,11 @@ void SettingsWindow::saveSettings(QString _s, QString _s_dbFile)
     setValue(structs);
     writeAll();
 }
+
+
+void SettingsWindow::openButtonSets(int n)
+{
+    ew.setEdit((WhoEdit)n);
+    ew.show();
+    return;
+}

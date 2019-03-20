@@ -43,7 +43,8 @@ OTHER_FILES += \
     WindowButtonText.qml \
     TextEditWidget.qml \
     windowAddNew.qml \
-    tableModelDescription.qml
+    tableModelDescription.qml \
+    editObjectWindow.qml
 
 RESOURCES += \
     resource.qrc

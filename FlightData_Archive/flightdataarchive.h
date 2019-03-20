@@ -32,6 +32,7 @@ private:
 
 public slots:
     void closeSets();
+    void closeSetsE();
     void closeAdd();
     void closeWi();
     void closeWo();

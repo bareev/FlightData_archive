@@ -16,6 +16,7 @@ FlightDataArchive::FlightDataArchive()
     qmlFiles.append("TextEditWidget.qml");
     qmlFiles.append("windowAddNew.qml");
     qmlFiles.append("tableModelDescription.qml");
+    qmlFiles.append("editObjectWindow.qml");
 
     init();
 }
@@ -152,7 +153,15 @@ void FlightDataArchive::init()
       hide();
   }
 
+  res = ws.ew.init(contentPath, "/editObjectWindow.qml", "windowSetsType");
+  if (res == SUCCESS)
+  {
+      ws.ew.hide();
+      ws.ew.setEdit(noneEdit);
+  }
+
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
+  connect(&ws.ew, SIGNAL(onClose()), this, SLOT(closeSetsE()));
 
   //инициализируем окно добавления нового полёта
   res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
@@ -458,6 +467,13 @@ void FlightDataArchive::closeSets()
 {
     slCloseOrEnable(nonecl);
     ws.hide();
+}
+
+//закрытие настроек
+void FlightDataArchive::closeSetsE()
+{
+    slCloseOrEnable(nonecl);
+    ws.ew.hide();
 }
 
 

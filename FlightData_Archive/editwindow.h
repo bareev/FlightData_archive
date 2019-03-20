@@ -12,7 +12,7 @@ class EditWindow : public Wcore
 
 public:
     EditWindow();
-    void setEdit(WhoEdit e){m_edit = e; return;}
+    void setEdit(WhoEdit e){m_edit = e; emit newState((int) e); return;}
     WhoEdit getEdit(){return m_edit;}
 
 public slots:
@@ -21,7 +21,7 @@ private:
     WhoEdit m_edit;
 
 signals:
-
+    void newState(int e);
 };
 
 #endif // EDITWINDOW_H

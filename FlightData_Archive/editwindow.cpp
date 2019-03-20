@@ -1,5 +1,7 @@
 #include "editwindow.h"
 
-editWindow::editWindow()
+EditWindow::EditWindow():
+    m_edit(noneEdit)
 {
 }
+

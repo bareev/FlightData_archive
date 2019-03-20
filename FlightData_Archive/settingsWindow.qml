@@ -200,16 +200,25 @@ Image {
             WindowButtonText {
                 id: types;
                 text: qsTr("Редактор\nтипов станции");
+                function callback() {
+                    windowSets.openButtonSets(1)
+            }
             }
 
             WindowButtonText {
                 id: places;
                 text: qsTr("Редактор\nмест полётов");
+                function callback() {
+                    windowSets.openButtonSets(2)
+            }
             }
 
             WindowButtonText {
                 id: coords;
                 text: qsTr("Редактор\nточек стояния");
+                function callback() {
+                    windowSets.openButtonSets(3)
+            }
             }
         }
 
