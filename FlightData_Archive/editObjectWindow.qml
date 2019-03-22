@@ -3,8 +3,8 @@ import QtQuick.Controls 1.0
 
 Image {
     id: canvas_set;
-    height: 400;
-    width: 500;
+    height: 372;
+    width: 465;
     source: "qrc:///res/canvas"
     // Будет получать фокус ввода
     focus: true;
@@ -54,27 +54,9 @@ Image {
                 checked: true;
                 id: isNew;
                 width: 150;
-                text: qsTr("Ввести новый тип данных");
+                text: qsTr("ВВЕСТИ НОВУЮ ЗАПИСЬ");
             }
 
-        }
-
-        Row {
-            //anchors.top:
-            spacing: 4;
-            id: rt;
-
-            Text {
-                id: newType;
-                text: qsTr("Сокращение");
-                width: 150;
-            }
-
-            TextEditWidget {
-                id: twt;
-                width: 150;
-                text: qsTr("");
-            }
         }
 
         Row {
@@ -84,7 +66,7 @@ Image {
 
             Text {
                 id: newName;
-                text: qsTr("Наименование");
+                text: qsTr("Наименование (20 символов)");
                 width: 150;
             }
 
@@ -96,9 +78,28 @@ Image {
         }
 
         Row {
+            id: pts;
+            spacing: 4;
+
+            Text {
+                id: newCoordPl;
+                text: qsTr("Местоположение");
+                width: 150;
+            }
+
+            ComboBox {
+                id: ptscb;
+                enabled: true;
+                width: 150;
+            }
+
+        }
+
+        Row {
             //anchors.top:
             spacing: 4;
             id: rowC;
+            enabled: true;
 
             Text {
                 id: newCoord;
@@ -110,6 +111,14 @@ Image {
                 id: twla;
                 width: 150;
                 text: qsTr("");
+                validator: DoubleValidator;
+                /*Keys.onPressed:
+                {
+                    if ((event.key !== Qt.Key_Period) || (event.key !== Qt.Key_NumberSign))
+                    {
+                        event.accepted = false;
+                    }
+                }*/
             }
 
             TextEditWidget {
@@ -150,6 +159,56 @@ Image {
 
     }
 
+    Row {
+        anchors.margins: 4;
+        anchors.right: parent.right;
+        anchors.bottom: parent.bottom;
+        spacing: 4;
+
+        WindowButtonText {
+            id: apply;
+            text: qsTr("Применить");
+            function callback()
+            {
+                var res = windowSetsType.newDBWrite(isNew.checked, cb.currentText, twn.text, ptscb.currentText, twla.text, twlo.text, newDesc.text);
+                if (res === 0)
+                {
+                    windowSetsType.closeSets();
+                }
+            }
+        }
+
+        WindowButtonText {
+            id: ok;
+            text: qsTr("OK");
+            function callback()
+            {
+                var res = windowSetsType.newDBWrite(isNew.checked, cb.currentText, twn.text, ptscb.currentText, twla.text, twlo.text, newDesc.text);
+            }
+        }
+
+        WindowButtonText {
+            id: cancel;
+            text: qsTr("Отмена");
+            function callback()
+            {
+                windowSetsType.closeSets();
+            }
+        }
+
+        WindowButtonText {
+            id: delrec;
+            text: "Удалить";
+            function callback()
+            {
+                windowSetsType.closeSets();
+            }
+            visible: !(isNew.checked);
+
+        }
+
+    }
+
     Connections {
         target: windowSetsType;
         onNewState: generalf(e);
@@ -163,25 +222,25 @@ Image {
             case 1:
                 captionText.text = qsTr("НАСТРОЙКИ ТИПОВ СТАНЦИЙ");
                 typeCaption.text = qsTr("Выбор типов станций");
-                rowC.enabled = false;
+                rowC.enabled = pts.enabled = false;
             break;
 
             case 2:
                 captionText.text = qsTr("НАСТРОЙКИ МЕСТ ПОЛЁТОВ");
                 typeCaption.text = qsTr("Выбор мест полётов");
-                rowC.enabled = false;
+                rowC.enabled = pts.enabled = false;
             break;
 
             case 3:
                 captionText.text = qsTr("НАСТРОЙКИ ТОЧЕК СТОЯНИЯ");
                 typeCaption.text = qsTr("Выбор точек стояния");
-                rowC.enabled = true;
+                rowC.enabled = pts.enabled = true;
             break;
 
             default:
                 captionText.text = qsTr("НАСТРОЙКИ ТИПОВ");
                 typeCaption.text = qsTr("Выбор типов");
-                rowC.enabled = false;
+                rowC.enabled = pts.enabled = false;
             break;
 
         }

@@ -5,3 +5,8 @@ EditWindow::EditWindow():
 {
 }
 
+int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QString currentP, QString currLat, QString currLon, QString currDesc)
+{
+    return SUCCESS;
+}
+

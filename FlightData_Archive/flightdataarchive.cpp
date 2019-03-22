@@ -111,7 +111,7 @@ void FlightDataArchive::init()
   resPlaces.clear();
   nameCoords.clear();
 
-  if (m_db.selectParamsFromTable("string", RLS_TYPE_DATABASE_NAME, &q))
+  if (m_db.selectParamsFromTable("type", RLS_TYPE_DATABASE_NAME, &q))
   {
       while (q.next())
           result.append(q.value(0).toString());
@@ -233,25 +233,25 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
             dateIO = _map.value("date").toString().left(10);
 
 
-        QString types;
-        types.clear();
+//        QString types;
+//        types.clear();
         QSqlQuery q;
         q.clear();
         QVariantMap tp;
         tp.clear();
 
         //база типов рлс
-        tp["string"] = _map.value("type").toString();
-        if (m_db.selectParamsFromTableWhereParams("type", RLS_TYPE_DATABASE_NAME, tp, &q))
-        {
-            while (q.next())
-                types.append(q.value(0).toString());
-        }
-        else
-        {
-            return -1;
-            ///@todo - error
-        }
+//        tp["string"] = _map.value("type").toString();
+//        if (m_db.selectParamsFromTableWhereParams("type", RLS_TYPE_DATABASE_NAME, tp, &q))
+//        {
+//            while (q.next())
+//                types.append(q.value(0).toString());
+//        }
+//        else
+//        {
+//            return -1;
+//            ///@todo - error
+//        }
 
         //база точек стояния
         tp.clear();
@@ -282,13 +282,13 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         }
 
         srand((unsigned int)QDateTime::currentDateTime().toTime_t());
-        QString nameInput = QString("i_%1_%2_%3").arg(dateIO).arg(types).arg(rand());
-        QString nameOutput = QString("o_%1_%2_%3").arg(dateIO).arg(types).arg(rand());
+        QString nameInput = QString("i_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
+        QString nameOutput = QString("o_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
 
 
         //формируем окончательный запрос
         newWrite["date"] = QDateTime::fromString(_map.value("date").toString(), "yyyy-MM-dd hh:mm:ss");
-        newWrite["type"] = types;
+        newWrite["type"] = _map.value("type").toString();;
         newWrite["input_files_table"] = nameInput;
         newWrite["output_files_table"] = nameOutput;
         newWrite["placeStr"] = _map.value("place").toString();
@@ -327,9 +327,9 @@ int FlightDataArchive::checkTablesDB(QString *resName)
         _map.clear();
         _map["id_table"] = "INTEGER";
         _map["date"] = "DATETIME";
-        _map["type"] = "NVARCHAR(5)";
-        _map["input_files_table"] = "NVARCHAR(20)";
-        _map["output_files_table"] = "NVARCHAR(20)";
+        _map["type"] = "NVARCHAR(20)";
+        _map["input_files_table"] = "NVARCHAR(60)";
+        _map["output_files_table"] = "NVARCHAR(60)";
         _map["placeStr"] = "NVARCHAR(20)";
         _map["latitude"] = "FLOAT";
         _map["longitude"] = "FLOAT";
@@ -353,8 +353,7 @@ int FlightDataArchive::checkTablesDB(QString *resName)
         QVariantMap _map;
         _map.clear();
         _map["id_type"] = "INTEGER";
-        _map["type"] = "NVARCHAR(5)";
-        _map["string"] = "NVARCHAR(50)";
+        _map["type"] = "NVARCHAR(20)";
         _map["description"] = "NVARCHAR";
 
         QStringList autoInc;
@@ -397,6 +396,7 @@ int FlightDataArchive::checkTablesDB(QString *resName)
         _map.clear();
         _map["id_coords"] = "INTEGER";
         _map["name_coords"] = "NVARCHAR(20)";
+        _map["parentPlace"] = "NVARCHAR(20)";
         _map["latitude"] = "FLOAT";
         _map["longitude"] = "FLOAT";
         _map["description"] = "NVARCHAR";

@@ -7,45 +7,6 @@ AddWindow::AddWindow()
     f_type = noneRecord;
 }
 
-//AddWindow::AddWindow(QString _absDir)
-//{
-//    setAbsDir(_absDir);
-//}
-
-//AddWindow::~AddWindow()
-//{
-//}
-
-//int AddWindow::init()
-//{
-//    if (!absDir.isEmpty())
-//    {
-//        setResizeMode(QQuickView::SizeRootObjectToView);
-//        setSource(QUrl::fromLocalFile(absDir + "/windowAddNew.qml"));
-//        rootContext()->setContextProperty("windowAdd", this);
-
-//        return SUCCESS;
-//    }
-//    else
-//    {
-//        //ShowMessageBox(3, error);
-//        return -1;
-//    }
-
-//}
-
-//int AddWindow::init(QString _absDir)
-//{
-//    setAbsDir(_absDir);
-//    return init();
-//}
-
-//void AddWindow::closeSets()
-//{
-//    emit onClose();
-//    return;
-//}
-
 void AddWindow::showDescription(int idx, QStringList list)
 {
     (idx == INPUT_FILES?w_dsc_input.showResize(list, getftype()):w_dsc_output.showResize(list, getftype()));
