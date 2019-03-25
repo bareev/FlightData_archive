@@ -13,6 +13,10 @@
 #define INPUT_FILES 0
 #define OUTPUT_FILES 1
 
+#define TYPE 1
+#define PLACE 2
+#define COORDS 3
+
 //режим редактирования или записи нового
 enum formType
 {

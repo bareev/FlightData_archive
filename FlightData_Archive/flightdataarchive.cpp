@@ -115,6 +115,8 @@ void FlightDataArchive::init()
   {
       while (q.next())
           result.append(q.value(0).toString());
+
+      emit rlsInfoRead(result, TYPE);
   }
   else
   {
@@ -126,6 +128,8 @@ void FlightDataArchive::init()
   {
       while (q.next())
           resPlaces.append(q.value(0).toString());
+
+      emit rlsInfoRead(resPlaces, PLACE);
   }
   else
   {
@@ -137,6 +141,8 @@ void FlightDataArchive::init()
   {
       while (q.next())
           nameCoords.append(q.value(0).toString());
+
+      emit rlsInfoRead(nameCoords, COORDS);
   }
   else
   {
@@ -162,6 +168,7 @@ void FlightDataArchive::init()
 
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
   connect(&ws.ew, SIGNAL(onClose()), this, SLOT(closeSetsE()));
+  connect(&ws.ew, SIGNAL(newRec(QVariantMap)), this, SLOT(onWriteNewType(QVariantMap)));
 
   //инициализируем окно добавления нового полёта
   res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
@@ -214,6 +221,113 @@ void FlightDataArchive::closeWo()
 }
 
 
+//запись нового типа в БД
+int FlightDataArchive::onWriteNewType(QVariantMap _map)
+{
+    QString dbName;
+    dbName.clear();
+
+    WhoEdit e = (WhoEdit)_map.value("who").toInt();
+
+    switch (e)
+    {
+    case rlsEdit:
+        dbName = RLS_TYPE_DATABASE_NAME;
+        break;
+    case placeEdit:
+        dbName = PLACE_DATABASE_NAME;
+        break;
+    case tsEdit:
+        dbName = STATE_POINTS_DATABASE_NAME;
+        break;
+    default:
+        return -1;
+        break;
+    }
+
+    if (m_db.checkTable(dbName) == SUCCESS)
+    {
+        QVariantMap newWrite;
+        newWrite.clear();
+
+        newWrite["description"] = _map.value("description").toString();
+        QString name = _map.value("name").toString();
+        QString id_name;
+        QString nn;
+        switch (e)
+        {
+        case rlsEdit:
+            newWrite["type"] = name;
+            id_name = "id_types";
+            nn = "type";
+            break;
+        case placeEdit:
+            newWrite["place"] = name;
+            id_name = "id_place";
+            nn = "place";
+            break;
+        case tsEdit:
+            newWrite["name_coords"] = name;
+            newWrite["latitude"] = _map.value("latitude").toFloat();
+            newWrite["longitude"] = _map.value("longitude").toFloat();
+            newWrite["parentPlace"] = _map.value("place").toString();
+            id_name = "id_coords";
+            nn = "name_coords";
+            break;
+        }
+
+        bool nw = _map.value("newWrite").toBool();
+        if (nw)
+        {
+            if (!m_db.insertParamsInTable(newWrite, dbName))
+            {
+                return -2;
+                ///@todo - error;
+            }
+            else
+            {
+                emit updateView();
+                ///@warning  - message;
+            }
+        }
+        else
+        {
+            int id = 0;
+            QVariantMap whereParams;
+            QVariantMap ids;
+            ids.clear();
+            whereParams.clear();
+            whereParams[nn] = name;
+            QSqlQuery q;
+            q.clear();
+            if (m_db.selectParamsFromTableWhereParams(id_name, dbName, whereParams, &q))
+            {
+                while (q.next())
+                    id = q.value(0).toInt();
+
+                ids[id_name] = id;
+                if (!m_db.updateParamsInTable(newWrite, dbName, ids))
+                {
+                    return -2;
+                    ///@todo - error;
+                }
+                else
+                {
+                    emit updateView();
+                    ///@warning  - message;
+                }
+            }
+        }
+
+
+    }
+    else
+        return -10;
+
+    return SUCCESS;
+}
+
+
 //запись новой строки в основную базу!!!
 int FlightDataArchive::onWriteNewDB(QVariantMap _map)
 {
@@ -232,26 +346,10 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         else
             dateIO = _map.value("date").toString().left(10);
 
-
-//        QString types;
-//        types.clear();
         QSqlQuery q;
         q.clear();
         QVariantMap tp;
         tp.clear();
-
-        //база типов рлс
-//        tp["string"] = _map.value("type").toString();
-//        if (m_db.selectParamsFromTableWhereParams("type", RLS_TYPE_DATABASE_NAME, tp, &q))
-//        {
-//            while (q.next())
-//                types.append(q.value(0).toString());
-//        }
-//        else
-//        {
-//            return -1;
-//            ///@todo - error
-//        }
 
         //база точек стояния
         tp.clear();
@@ -310,6 +408,8 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         }
 
     }
+    else
+        return -10;
 
     return SUCCESS;
 }

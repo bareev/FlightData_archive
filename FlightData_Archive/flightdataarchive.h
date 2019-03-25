@@ -37,12 +37,14 @@ public slots:
     void closeWi();
     void closeWo();
     int onWriteNewDB(QVariantMap _map);
+    int onWriteNewType(QVariantMap _map);
     void onUpdateView();
 
 signals:
     void iChanged(QString s);
     void oChanged(QString s);
     void updateView();
+    void rlsInfoRead(QStringList s, int t);
 };
 
 #endif // FLIGHTDATAARCHIVE_H

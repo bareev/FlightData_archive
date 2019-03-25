@@ -204,6 +204,35 @@ bool dbManager::insertParamsInTable(QVariantMap _map, QString tableName)
     return runSqlQuerry(q);
 }
 
+bool dbManager::updateParamsInTable(QVariantMap _map, QString tableName, QVariantMap where)
+{
+    if (_map.isEmpty() || tableName.isEmpty() || where.isEmpty())
+        return false;
+
+    QString runquery;
+    runquery.clear();
+
+    runquery.append("UPDATE ").append(tableName).append(" SET ");
+
+    QStringList keys = _map.keys();
+    for (int i = 0; i < keys.length(); i++)
+        runquery.append(keys.at(i)).append(" = ?, ");
+
+    runquery.chop(2);
+    runquery.append(" WHERE ").append(where.keys().at(0)).append(" = ?");
+
+    QSqlQuery q(dataBase_users);
+    q.clear();
+    q.prepare(runquery);
+
+    for (int i = 0; i < keys.length(); i++)
+        q.addBindValue(_map.value(keys.at(i)));
+
+    q.addBindValue(where.value(where.keys().at(0)));
+
+    return runSqlQuerry(q);
+}
+
 
 bool dbManager::runSqlQuerry(QSqlQuery querryStr)
 {

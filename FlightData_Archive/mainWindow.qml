@@ -166,16 +166,29 @@ Image {
             ComboBox {
                 id: type;
                 width: 130;
+                model: myModelType;
             }
 
             ComboBox {
                 id: place;
                 width: 130;
+                model: myModelPlace;
             }
 
             ComboBox {
                 id: coords;
                 width: 130;
+                model: myModelCoords;
+            }
+
+            ListModel {
+                id: myModelType;
+            }
+            ListModel {
+                id: myModelPlace;
+            }
+            ListModel {
+                id: myModelCoords;
             }
 
         }
@@ -271,6 +284,40 @@ Image {
             function callback()
             {
             }
+        }
+    }
+
+    Connections {
+        target: window;
+        onRlsInfoRead: infoCh(s, t);
+    }
+
+    function infoCh(s, t)
+    {
+        var i = 0;
+        switch (t)
+        {
+        case 1:
+            for (i = 0; i < s.length; i++)
+            {
+                myModelType.append({"text":s[i]});
+            }
+            break;
+        case 2:
+            for (i = 0; i < s.length; i++)
+            {
+                myModelPlace.append({"text":s[i]});
+            }
+            break;
+        case 3:
+            for (i = 0; i < s.length; i++)
+            {
+                myModelCoords.append({"text":s[i]});
+            }
+            break;
+        default:
+            break;
+
         }
     }
 
