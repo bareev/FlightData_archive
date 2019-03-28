@@ -48,6 +48,7 @@ Image {
                 id: cb;
                 enabled: !(isNew.checked);
                 width: 150;
+                model: tp;
             }
 
             CheckBox {
@@ -55,6 +56,10 @@ Image {
                 id: isNew;
                 width: 150;
                 text: qsTr("ВВЕСТИ НОВУЮ ЗАПИСЬ");
+            }
+
+            ListModel {
+                id: tp;
             }
 
         }
@@ -91,6 +96,11 @@ Image {
                 id: ptscb;
                 enabled: true;
                 width: 150;
+                model: pp;
+            }
+
+            ListModel {
+                id: pp;
             }
 
         }
@@ -207,6 +217,40 @@ Image {
 
         }
 
+    }
+
+    Connections {
+        target: windowSetsType;
+        onSigNewRecs: infoCh(s, t);
+    }
+
+    function infoCh(s, t)
+    {
+        var i = 0;
+        switch (t)
+        {
+        case 1:
+        case 2:
+        case 3:
+            tp.clear();
+            for (i = 0; i < s.length; i++)
+            {
+                tp.append({"text":s[i]});
+            }
+
+            if (t === 2)
+            {
+                pp.clear();
+                for (i = 0; i < s.length; i++)
+                {
+                    pp.append({"text":s[i]});
+                }
+            }
+            break;
+        default:
+            break;
+
+        }
     }
 
     Connections {

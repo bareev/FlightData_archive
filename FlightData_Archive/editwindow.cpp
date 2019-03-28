@@ -3,6 +3,18 @@
 EditWindow::EditWindow():
     m_edit(noneEdit)
 {
+    for (int i = 0; i < 4; i++)
+        comboboxes.append(QStringList(""));
+}
+
+void EditWindow::text()
+{
+    WhoEdit p = getEdit();
+    if (p != noneEdit)
+        emit sigNewRecs(getCB(p), (int)p);
+    if (p == tsEdit)
+        emit sigNewRecs(getCB(placeEdit), 2);
+    return;
 }
 
 int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QString currentP, QString currLat, QString currLon, QString currDesc)
@@ -52,5 +64,15 @@ int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QStrin
     emit newRec(_map);
 
     return SUCCESS;
+}
+
+//в combo-box'ы
+void EditWindow::newRecs(QStringList s, int t)
+{
+    WhoEdit type = WhoEdit(t);
+    if ((type != noneEdit))
+        setCB(type, s);
+
+    return;
 }
 

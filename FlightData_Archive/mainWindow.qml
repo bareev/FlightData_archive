@@ -298,18 +298,21 @@ Image {
         switch (t)
         {
         case 1:
+            myModelType.clear();
             for (i = 0; i < s.length; i++)
             {
                 myModelType.append({"text":s[i]});
             }
             break;
         case 2:
+            myModelPlace.clear();
             for (i = 0; i < s.length; i++)
             {
                 myModelPlace.append({"text":s[i]});
             }
             break;
         case 3:
+            myModelCoords.clear();
             for (i = 0; i < s.length; i++)
             {
                 myModelCoords.append({"text":s[i]});

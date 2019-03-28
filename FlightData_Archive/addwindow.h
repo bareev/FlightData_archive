@@ -24,12 +24,16 @@ public:
     formType getftype(){return f_type;}
     void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
 
+public slots:
+    void newRecs(QStringList s, int t);
+
 private:
     formType f_type;
 
 signals:
     void paramTextChanged(int ft);
     void writeNewDB(QVariantMap param);
+    void sigNewRecs(QStringList s, int t);
 };
 
 #endif // ADDWINDOW_H

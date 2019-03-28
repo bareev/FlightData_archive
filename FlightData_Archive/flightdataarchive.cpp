@@ -97,57 +97,7 @@ void FlightDataArchive::init()
       //ShowMessageBox(9, critical);
   }
 
-  //заполним таблицу
-  emit updateView();
-
   rootContext()->setContextProperty("table", &m_tbl);
-
-  //выберем все типы станций и места испытаний
-  QSqlQuery q;
-  q.clear();
-
-  QStringList result, resPlaces, nameCoords;
-  result.clear();
-  resPlaces.clear();
-  nameCoords.clear();
-
-  if (m_db.selectParamsFromTable("type", RLS_TYPE_DATABASE_NAME, &q))
-  {
-      while (q.next())
-          result.append(q.value(0).toString());
-
-      emit rlsInfoRead(result, TYPE);
-  }
-  else
-  {
-      /// @todo - ошибка чтения
-  }
-
-  q.clear();
-  if (m_db.selectParamsFromTable("place", PLACE_DATABASE_NAME, &q))
-  {
-      while (q.next())
-          resPlaces.append(q.value(0).toString());
-
-      emit rlsInfoRead(resPlaces, PLACE);
-  }
-  else
-  {
-      /// @todo - ошибка чтения
-  }
-
-  q.clear();
-  if (m_db.selectParamsFromTable("name_coords", STATE_POINTS_DATABASE_NAME, &q))
-  {
-      while (q.next())
-          nameCoords.append(q.value(0).toString());
-
-      emit rlsInfoRead(nameCoords, COORDS);
-  }
-  else
-  {
-      /// @todo - ошибка чтения
-  }
 
   ///конец блока с базами данных
 
@@ -169,6 +119,7 @@ void FlightDataArchive::init()
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
   connect(&ws.ew, SIGNAL(onClose()), this, SLOT(closeSetsE()));
   connect(&ws.ew, SIGNAL(newRec(QVariantMap)), this, SLOT(onWriteNewType(QVariantMap)));
+  connect(this, SIGNAL(rlsInfoRead(QStringList, int)), &ws.ew, SLOT(newRecs(QStringList,int)));
 
   //инициализируем окно добавления нового полёта
   res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
@@ -177,6 +128,10 @@ void FlightDataArchive::init()
 
   connect(&wa, SIGNAL(onClose()), this, SLOT(closeAdd()));
   connect(&wa, SIGNAL(writeNewDB(QVariantMap)), this, SLOT(onWriteNewDB(QVariantMap)));
+  connect(this, SIGNAL(rlsInfoRead(QStringList, int)), &wa, SLOT(newRecs(QStringList,int)));
+
+  //заполним главную таблицу
+  emit updateView();
 
   //инициализация окна добавления и описания входных и выходных файлов
   res = wa.w_dsc_input.init(contentPath, "/tableModelDescription.qml", "tableModelDesc");
@@ -205,6 +160,54 @@ void FlightDataArchive::init()
 void FlightDataArchive::onUpdateView()
 {
     m_tbl.setQuery(QSqlQuery(QString("SELECT date, type, placeStr, description FROM %1;").arg(GENERAL_DATABASE_NAME)));
+
+    //выберем все типы станций и места испытаний
+    QSqlQuery q;
+    q.clear();
+
+    QStringList result, resPlaces, nameCoords;
+    result.clear();
+    resPlaces.clear();
+    nameCoords.clear();
+
+    if (m_db.selectParamsFromTable("type", RLS_TYPE_DATABASE_NAME, &q))
+    {
+        while (q.next())
+            result.append(q.value(0).toString());
+
+        emit rlsInfoRead(result, TYPE);
+    }
+    else
+    {
+        /// @todo - ошибка чтения
+    }
+
+    q.clear();
+    if (m_db.selectParamsFromTable("place", PLACE_DATABASE_NAME, &q))
+    {
+        while (q.next())
+            resPlaces.append(q.value(0).toString());
+
+        emit rlsInfoRead(resPlaces, PLACE);
+    }
+    else
+    {
+        /// @todo - ошибка чтения
+    }
+
+    q.clear();
+    if (m_db.selectParamsFromTable("name_coords", STATE_POINTS_DATABASE_NAME, &q))
+    {
+        while (q.next())
+            nameCoords.append(q.value(0).toString());
+
+        emit rlsInfoRead(nameCoords, COORDS);
+    }
+    else
+    {
+        /// @todo - ошибка чтения
+    }
+
     return;
 }
 

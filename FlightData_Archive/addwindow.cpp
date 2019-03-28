@@ -31,3 +31,9 @@ int AddWindow::waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, 
     emit writeNewDB(_map);
     return SUCCESS;
 }
+
+void AddWindow::newRecs(QStringList s, int t)
+{
+    emit sigNewRecs(s, t);
+    return;
+}

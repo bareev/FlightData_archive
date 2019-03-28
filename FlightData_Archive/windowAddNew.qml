@@ -84,6 +84,11 @@ Image {
                 ComboBox {
                     id: typecb;
                     width: 130;
+                    model: cb_1;
+                }
+
+                ListModel {
+                    id: cb_1;
                 }
 
             }
@@ -105,6 +110,10 @@ Image {
                 ComboBox {
                     id: placecb;
                     width: 130;
+                    model: cb_2;
+                }
+                ListModel {
+                    id: cb_2;
                 }
 
             }
@@ -126,6 +135,10 @@ Image {
                 ComboBox {
                     id: coordCB;
                     width: 130;
+                    model: cb_3;
+                }
+                ListModel {
+                    id: cb_3;
                 }
 
             }
@@ -267,5 +280,42 @@ Image {
             okSets.text = qsTr("Обновить");
         else
             okSets.enabled = false;
+    }
+
+    Connections {
+        target: windowAdd;
+        onSigNewRecs: infoCh(s, t);
+    }
+
+    function infoCh(s, t)
+    {
+        var i = 0;
+        switch (t)
+        {
+        case 1:
+            cb_1.clear();
+            for (i = 0; i < s.length; i++)
+            {
+                cb_1.append({"text":s[i]});
+            }
+            break;
+        case 2:
+            cb_2.clear();
+            for (i = 0; i < s.length; i++)
+            {
+                cb_2.append({"text":s[i]});
+            }
+            break;
+        case 3:
+            cb_3.clear();
+            for (i = 0; i < s.length; i++)
+            {
+                cb_3.append({"text":s[i]});
+            }
+            break;
+        default:
+            break;
+
+        }
     }
 }
