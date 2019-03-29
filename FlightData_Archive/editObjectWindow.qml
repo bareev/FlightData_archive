@@ -237,14 +237,12 @@ Image {
             {
                 tp.append({"text":s[i]});
             }
-
-            if (t === 2)
+            break;
+        case 4:
+            pp.clear();
+            for (i = 0; i < s.length; i++)
             {
-                pp.clear();
-                for (i = 0; i < s.length; i++)
-                {
-                    pp.append({"text":s[i]});
-                }
+                pp.append({"text":s[i]});
             }
             break;
         default:

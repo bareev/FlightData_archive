@@ -2,6 +2,8 @@
 #define EDITWINDOW_H
 #include <wcore.h>
 
+#define ADDITIONAL_COMBO_BOX 4
+
 namespace Ui {
 class EditWindow;
 }

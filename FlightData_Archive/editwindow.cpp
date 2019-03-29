@@ -13,7 +13,7 @@ void EditWindow::text()
     if (p != noneEdit)
         emit sigNewRecs(getCB(p), (int)p);
     if (p == tsEdit)
-        emit sigNewRecs(getCB(placeEdit), 2);
+        emit sigNewRecs(getCB(placeEdit), ADDITIONAL_COMBO_BOX);
     return;
 }
 
