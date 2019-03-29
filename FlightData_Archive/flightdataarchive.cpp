@@ -129,6 +129,7 @@ void FlightDataArchive::init()
   connect(&wa, SIGNAL(onClose()), this, SLOT(closeAdd()));
   connect(&wa, SIGNAL(writeNewDB(QVariantMap)), this, SLOT(onWriteNewDB(QVariantMap)));
   connect(this, SIGNAL(rlsInfoRead(QStringList, int)), &wa, SLOT(newRecs(QStringList,int)));
+  connect(&wa, SIGNAL(updateFromMain(QString)), this, SLOT(updateTS(QString)));
 
   //заполним главную таблицу
   emit updateView();
@@ -154,6 +155,12 @@ void FlightDataArchive::init()
   connect(this, SIGNAL(iChanged(QString)), &wa.w_dsc_input, SLOT(onNewDBName(QString)));
   connect(this, SIGNAL(oChanged(QString)), &wa.w_dsc_output, SLOT(onNewDBName(QString)));
 
+}
+
+//а если из других форм пришел запрос, то другой сигнал
+void FlightDataArchive::updateTS(QString txt)
+{
+    ///@todo - связать с функцией ниже!!! - изменить немного сигнал rlsInfoRead (чтобы он обрабатывался в других формах тоже по другому)
 }
 
 //изменили позицию, а значит и ТС

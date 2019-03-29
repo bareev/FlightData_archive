@@ -40,6 +40,7 @@ public slots:
     int onWriteNewDB(QVariantMap _map);
     int onWriteNewType(QVariantMap _map);
     void onUpdateView();
+    void updateTS(QString);
 
 signals:
     void iChanged(QString s);

@@ -32,8 +32,16 @@ int AddWindow::waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, 
     return SUCCESS;
 }
 
+void AddWindow::loadNewCB(QString txt)
+{
+    if (!txt.isEmpty())
+        emit updateFromMain(txt);
+    return;
+}
+
 void AddWindow::newRecs(QStringList s, int t)
 {
-    emit sigNewRecs(s, t);
+    if ((t > 0) && (t < 3))
+        emit sigNewRecs(s, t);
     return;
 }

@@ -70,7 +70,7 @@ int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QStrin
 void EditWindow::newRecs(QStringList s, int t)
 {
     WhoEdit type = WhoEdit(t);
-    if ((type != noneEdit))
+    if ((type != noneEdit) && (type != tsEdit))
         setCB(type, s);
 
     return;

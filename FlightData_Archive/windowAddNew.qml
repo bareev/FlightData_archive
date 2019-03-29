@@ -129,6 +129,7 @@ Image {
                 model: ListModel {
                     id: cb_2;
                 }
+                onCurrentTextChanged: windowAdd.loadNewCB(placecb.currentText);
             }
 
             ComboBox {
