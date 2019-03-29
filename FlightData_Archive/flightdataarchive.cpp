@@ -156,6 +156,33 @@ void FlightDataArchive::init()
 
 }
 
+//изменили позицию, а значит и ТС
+void FlightDataArchive::onCurrentTextChanged(QString txt)
+{
+    if (!txt.isEmpty())
+    {
+        QStringList nameCoords;
+        QSqlQuery q;
+        q.clear();
+        QVariantMap WhereParams;
+        WhereParams.clear();
+        WhereParams["parentPlace"] = txt;
+        if (m_db.selectParamsFromTableWhereParams("name_coords", STATE_POINTS_DATABASE_NAME, WhereParams, &q))
+        {
+            while (q.next())
+                nameCoords.append(q.value(0).toString());
+
+            emit rlsInfoRead(nameCoords, COORDS);
+        }
+        else
+        {
+            /// @todo - ошибка чтения
+        }
+    }
+
+    return;
+}
+
 //обновим таблицу
 void FlightDataArchive::onUpdateView()
 {
@@ -165,10 +192,9 @@ void FlightDataArchive::onUpdateView()
     QSqlQuery q;
     q.clear();
 
-    QStringList result, resPlaces, nameCoords;
+    QStringList result, resPlaces;
     result.clear();
     resPlaces.clear();
-    nameCoords.clear();
 
     if (m_db.selectParamsFromTable("type", RLS_TYPE_DATABASE_NAME, &q))
     {
@@ -195,17 +221,10 @@ void FlightDataArchive::onUpdateView()
         /// @todo - ошибка чтения
     }
 
-    q.clear();
-    if (m_db.selectParamsFromTable("name_coords", STATE_POINTS_DATABASE_NAME, &q))
+    if (!resPlaces.isEmpty())
     {
-        while (q.next())
-            nameCoords.append(q.value(0).toString());
-
-        emit rlsInfoRead(nameCoords, COORDS);
-    }
-    else
-    {
-        /// @todo - ошибка чтения
+        //первый параметр по умолчанию
+        onCurrentTextChanged(resPlaces.at(0));
     }
 
     return;

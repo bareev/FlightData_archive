@@ -172,6 +172,7 @@ Image {
             ComboBox {
                 id: place;
                 width: 130;
+                onCurrentTextChanged: window.onCurrentTextChanged(place.currentText);
                 model: myModelPlace;
             }
 

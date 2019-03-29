@@ -18,6 +18,7 @@ public:
     Q_INVOKABLE void quit();
     Q_INVOKABLE void showSets();
     Q_INVOKABLE void showAdd();
+    Q_INVOKABLE void onCurrentTextChanged(QString txt);
     ~FlightDataArchive();
 
 private:
