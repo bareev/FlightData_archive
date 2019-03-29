@@ -1,0 +1,39 @@
+#ifndef ADDWINDOW_H
+#define ADDWINDOW_H
+
+#include <QtQuick/QQuickView>
+#include <descriptionfiles.h>
+#include <wcore.h>
+
+namespace Ui {
+class AddWindow;
+}
+
+class AddWindow : public Wcore
+{
+    Q_OBJECT
+
+public:
+    AddWindow();
+    Q_INVOKABLE void showDescription(int idx, QStringList s);
+    Q_INVOKABLE int waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, QString inf, QString ouf, QString mes);
+
+    descriptionFiles w_dsc_input;
+    descriptionFiles w_dsc_output;
+
+    formType getftype(){return f_type;}
+    void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
+
+public slots:
+    void newRecs(QStringList s, int t);
+
+private:
+    formType f_type;
+
+signals:
+    void paramTextChanged(int ft);
+    void writeNewDB(QVariantMap param);
+    void sigNewRecs(QStringList s, int t);
+};
+
+#endif // ADDWINDOW_H

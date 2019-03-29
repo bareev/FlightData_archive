@@ -25,8 +25,17 @@ public:
     bool isActive(){return state;}
     void closeDB();
     int createTableIfNeed(QString nameTable, QVariantMap params);
+    int createTableIfNeed(QString nameTable, QVariantMap params, QStringList namesNotNullAutoIncrement);
     int checkTable(QString nameTable);
     QString lastError(){return le;}
+    bool runSqlQuerryReturn(QString querry, QSqlQuery *q);
+    bool runSqlQuerryReturnBindValues(QString querryStr, QVariantMap values, QSqlQuery *query);
+    bool selectParamsFromTableWhereParams(QString params, QString tableName, QVariantMap whereParams, QSqlQuery *q);
+    bool selectParamsFromTableWhereParams(QStringList params, QString tableName, QVariantMap whereParams, QSqlQuery *q);
+    bool selectParamsFromTable(QStringList params, QString tableName, QSqlQuery *q);
+    bool selectParamsFromTable(QString params, QString tableName, QSqlQuery *q);
+    bool insertParamsInTable(QVariantMap _map, QString tableName);
+    bool updateParamsInTable(QVariantMap _map, QString tableName, QVariantMap id);
 
 private:
     bool loadDrive();
@@ -42,6 +51,7 @@ private:
     sqlSets structdB;
     bool state;
     bool runSqlQuerry(QString querry);
+    bool runSqlQuerry(QSqlQuery q);
     QString le;
 };
 

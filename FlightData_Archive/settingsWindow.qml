@@ -1,34 +1,25 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 Image {
     // Идентификатор, по нему будет происходить
     // обращение к свойствам этого элемента
     id: canvas_set;
 
-    height: 233;
-    width: 410;
+    height: 416;
+    width: 720;
 
-    source: "qrc:///res/canvas";
-
-    // Изменять размер под размеры
-    // родительского элемента
-    anchors.fill: parent;
+    source: "qrc:///res/canvas"
 
     // Будет получать фокус ввода
     focus: true;
 
     Column {
 
-        // Правый край элемента выравнивается
-        // по правому краю родительского элемента
-        anchors.top: parent.top;
-        // Отступ справа, 4 пикселя
-        anchors.leftMargin: 4;
-        // Верхний край эелемента выравнивается
-        // по верхнему краю родительского элемента
         anchors.left: parent.left;
-        // Отступ сверху, 4 пикселя
+        anchors.top: parent.top;
+        anchors.fill: parent;
         anchors.topMargin: 4;
+        anchors.leftMargin: 4;
 
         // Отступ между элементами
         spacing: 4;
@@ -36,7 +27,7 @@ Image {
         Text {
             id: captionText;
             height: 35;
-            width: canvas_set.width;
+            width: parent.width;
             text: qsTr("ПАНЕЛЬ НАСТРОЕК");
             font.family: "Helvetica";
             font.pointSize: 21;
@@ -48,11 +39,11 @@ Image {
 
         Text {
             id: absDir;
-            height: 35;
-            width: canvas_set.width;
+            height: 15;
+            width: parent.width;
             text: qsTr("Директория хранения данных:");
             font.family: "Helvetica";
-            font.pointSize: 14;
+            font.pointSize: 9;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
             verticalAlignment: Text.AlignBottom;
@@ -62,39 +53,20 @@ Image {
         Row {
 
             anchors.left: parent.left;
-            anchors.leftMargin: 4;
-            anchors.rightMargin: 4;
-            anchors.top: absDir.bottom;
-            anchors.topMargin: 4;
             spacing: 4;
             id: inputDir;
 
-            Rectangle
+            TextEditWidget
             {
-
-                id: textInputRow;
-                height: 18;
                 width: canvas_set.width - 32;
-                color: "white";
-                TextInput {
-                    objectName: "absDirInput";
-                    id: absDirInput;
-                    visible: true;
-                    height: 18;
-                    width: canvas_set.width - 32;
-                    font.family: "Helvetica";
-                    font.pointSize: 10;
-                    color: "black";
-                    horizontalAlignment: Text.AlignLeft;
-                    cursorVisible: true;
-                    Connections {
-                        target: windowSets;
-                        onTextChanged: {absDirInput.text = s}
-                        }
-
+                id: absDirInput;
+                Connections {
+                    target: windowSets
+                    onTextChanged: {absDirInput.text = qsTr(s)}
                 }
 
             }
+
             WindowButton {
                 height: 20;
                 width: 20;
@@ -111,11 +83,11 @@ Image {
         //файл базы данных
         Text {
             id: dbPath;
-            height: 35;
-            width: canvas_set.width;
+            height: 15;
+            width: parent.width;
             text: qsTr("Файл базы данных:");
-            font.family: "Helvetica";
-            font.pointSize: 14;
+            font.family: "Arial Narrow"
+            font.pointSize: 9;
             color: "black";
             horizontalAlignment: Text.AlignLeft;
             verticalAlignment: Text.AlignBottom;
@@ -124,39 +96,20 @@ Image {
         Row {
 
             anchors.left: parent.left;
-            anchors.leftMargin: 4;
-            anchors.rightMargin: 4;
-            anchors.top: dbPath.bottom;
-            anchors.topMargin: 4;
             spacing: 4;
             id: dbRow;
 
-            Rectangle
+            TextEditWidget
             {
-
-                id: dbPathRow;
-                height: 18;
                 width: canvas_set.width - 32;
-                color: "white";
-                TextInput {
-                    objectName: "absDbInput";
-                    id: absDbInput;
-                    visible: true;
-                    height: 18;
-                    width: canvas_set.width - 32;
-                    font.family: "Helvetica";
-                    font.pointSize: 10;
-                    color: "black";
-                    horizontalAlignment: Text.AlignLeft;
-                    cursorVisible: true;
-                    Connections {
-                        target: windowSets;
-                        onTextChangedDB: {absDbInput.text = s}
-                        }
-
+                id: absDbInput;
+                Connections {
+                    target: windowSets
+                    onTextChangedpath: {absDbInput.text = qsTr(s)}
                 }
 
             }
+
             WindowButton {
                 height: 20;
                 width: 20;
@@ -170,6 +123,108 @@ Image {
 
         }
 
+        //Тип базы данных
+        Text {
+            id: dbType;
+            height: 15;
+            width: parent.width;
+            text: qsTr("Тип базы данных:");
+            font.family: "Arial Narrow"
+            font.pointSize: 9;
+            color: "black";
+            horizontalAlignment: Text.AlignLeft;
+            verticalAlignment: Text.AlignBottom;
+        }
+        TextEditWidget
+        {
+            width: canvas_set.width - 32;
+            id: dbTypeInput;
+            //Connections {
+            //    target: windowSets
+                //onTextChangedpath: {absDbInput.text = qsTr(s)}
+            //}
+        }
+
+        //Пользователь базы данных
+        Text {
+            id: dbUser;
+            height: 15;
+            width: parent.width;
+            text: qsTr("Пользователь базы данных:");
+            font.family: "Arial Narrow"
+            font.pointSize: 9;
+            color: "black";
+            horizontalAlignment: Text.AlignLeft;
+            verticalAlignment: Text.AlignBottom;
+        }
+        TextEditWidget
+        {
+            width: canvas_set.width - 32;
+            id: dbUserInput;
+            //Connections {
+            //    target: windowSets
+                //onTextChangedpath: {absDbInput.text = qsTr(s)}
+            //}
+        }
+
+        //Пароль базы данных
+        Text {
+            id: dbPass;
+            height: 20;
+            width: parent.width;
+            text: qsTr("Пароль базы данных:");
+            font.family: "Arial Narrow"
+            font.pointSize: 9;
+            color: "black";
+            horizontalAlignment: Text.AlignLeft;
+            verticalAlignment: Text.AlignBottom;
+        }
+        TextEditWidget
+        {
+            width: canvas_set.width - 32;
+            id: dbPassInput;
+            //Connections {
+            //    target: windowSets
+                //onTextChangedpath: {absDbInput.text = qsTr(s)}
+            //}
+        }
+
+        Row {
+            id: buttonsPl;
+            spacing: 4;
+            //anchors.left: absDbInput.left;
+            //anchors.top: absDbInput.bottom;
+            //anchors.topMargin: 4;
+            //anchors.leftMargin: 4;
+
+            WindowButtonText {
+                id: types;
+                text: qsTr("Редактор\nтипов станции");
+                function callback() {
+                    windowSets.openButtonSets(1)
+            }
+            }
+
+            WindowButtonText {
+                id: places;
+                text: qsTr("Редактор\nмест полётов");
+                function callback() {
+                    windowSets.openButtonSets(2)
+            }
+            }
+
+            WindowButtonText {
+                id: coords;
+                text: qsTr("Редактор\nточек стояния");
+                function callback() {
+                    windowSets.openButtonSets(3)
+            }
+            }
+        }
+
+
+
+
     }
 
     Row {
@@ -180,36 +235,27 @@ Image {
         anchors.bottomMargin: 4;
         spacing: 4;
 
-        WindowButton {
-            // Кнопка закрытия окна
-            height: 30;
-            width: 86;
+        WindowButtonText {
             id: applySets;
-            source: "qrc:///res/apply";
+            text: qsTr("Применить");
             function callback()
             {
                 windowSets.saveSettings(absDirInput.text, absDbInput.text);
             }
         }
 
-        WindowButton {
-            // Кнопка закрытия окна
-            height: 30;
-            width: 86;
+        WindowButtonText {
             id: okSets;
-            source: "qrc:///res/ok";
+            text: "OK";
             function callback()
             {
                 windowSets.closeSets();
             }
         }
 
-        WindowButton {
-            // Кнопка закрытия окна
-            height: 30;
-            width: 86;
+        WindowButtonText {
             id: exitSets;
-            source: "qrc:///res/cancel";
+            text: qsTr("Отмена");
             function callback()
             {
                 windowSets.closeSets();
