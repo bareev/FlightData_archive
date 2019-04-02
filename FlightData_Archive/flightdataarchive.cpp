@@ -119,7 +119,8 @@ void FlightDataArchive::init()
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
   connect(&ws.ew, SIGNAL(onClose()), this, SLOT(closeSetsE()));
   connect(&ws.ew, SIGNAL(newRec(QVariantMap)), this, SLOT(onWriteNewType(QVariantMap)));
-  connect(this, SIGNAL(rlsInfoRead(QStringList, int)), &ws.ew, SLOT(newRecs(QStringList,int)));
+  connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &ws.ew, SLOT(newRecs(QStringList,int,int)));
+   connect(&ws.ew, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
 
   //инициализируем окно добавления нового полёта
   res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
@@ -128,8 +129,8 @@ void FlightDataArchive::init()
 
   connect(&wa, SIGNAL(onClose()), this, SLOT(closeAdd()));
   connect(&wa, SIGNAL(writeNewDB(QVariantMap)), this, SLOT(onWriteNewDB(QVariantMap)));
-  connect(this, SIGNAL(rlsInfoRead(QStringList, int)), &wa, SLOT(newRecs(QStringList,int)));
-  connect(&wa, SIGNAL(updateFromMain(QString)), this, SLOT(updateTS(QString)));
+  connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &wa, SLOT(newRecs(QStringList,int,int)));
+  connect(&wa, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
 
   //заполним главную таблицу
   emit updateView();
@@ -158,13 +159,13 @@ void FlightDataArchive::init()
 }
 
 //а если из других форм пришел запрос, то другой сигнал
-void FlightDataArchive::updateTS(QString txt)
+void FlightDataArchive::updateTS(QString txt, int w)
 {
-    ///@todo - связать с функцией ниже!!! - изменить немного сигнал rlsInfoRead (чтобы он обрабатывался в других формах тоже по другому)
+    return onCurrentTextChanged(txt, w);
 }
 
 //изменили позицию, а значит и ТС
-void FlightDataArchive::onCurrentTextChanged(QString txt)
+void FlightDataArchive::onCurrentTextChanged(QString txt, int w)
 {
     if (!txt.isEmpty())
     {
@@ -174,12 +175,13 @@ void FlightDataArchive::onCurrentTextChanged(QString txt)
         QVariantMap WhereParams;
         WhereParams.clear();
         WhereParams["parentPlace"] = txt;
+
         if (m_db.selectParamsFromTableWhereParams("name_coords", STATE_POINTS_DATABASE_NAME, WhereParams, &q))
         {
             while (q.next())
                 nameCoords.append(q.value(0).toString());
 
-            emit rlsInfoRead(nameCoords, COORDS);
+            emit rlsInfoRead(nameCoords, COORDS, w);
         }
         else
         {
@@ -203,12 +205,17 @@ void FlightDataArchive::onUpdateView()
     result.clear();
     resPlaces.clear();
 
+    QVector<int>who;
+    who.clear();
+    who.append(MAIN_WINDOW);
+    who.append(ADD_WINDOW);
+    who.append(SETTINGS_WINDOW);
+
     if (m_db.selectParamsFromTable("type", RLS_TYPE_DATABASE_NAME, &q))
     {
         while (q.next())
             result.append(q.value(0).toString());
-
-        emit rlsInfoRead(result, TYPE);
+        emitAll(result, TYPE, who);
     }
     else
     {
@@ -220,8 +227,7 @@ void FlightDataArchive::onUpdateView()
     {
         while (q.next())
             resPlaces.append(q.value(0).toString());
-
-        emit rlsInfoRead(resPlaces, PLACE);
+        emitAll(resPlaces, PLACE, who);
     }
     else
     {
@@ -231,9 +237,40 @@ void FlightDataArchive::onUpdateView()
     if (!resPlaces.isEmpty())
     {
         //первый параметр по умолчанию
-        onCurrentTextChanged(resPlaces.at(0));
+        foreach (int i, who)
+        {
+            if (i == SETTINGS_WINDOW)
+            {
+                q.clear();
+                QStringList coords;
+                coords.clear();
+                if (m_db.selectParamsFromTable("name_coords", STATE_POINTS_DATABASE_NAME, &q))
+                {
+                    while (q.next())
+                        coords.append(q.value(0).toString());
+                    emit rlsInfoRead(coords, COORDS, i);
+                }
+                else
+                {
+                    ///@todo - error not opened!!!
+
+                }
+            }
+            else
+                onCurrentTextChanged(resPlaces.at(0), who.at(i));
+        }
     }
 
+    return;
+}
+
+//отправить сигнал нужным абонентам
+void FlightDataArchive::emitAll(QStringList l, int t, QVector<int> who)
+{
+    if (who.isEmpty() || l.isEmpty())
+        return;
+    for (int j = 0; j < who.count(); j++)
+        emit rlsInfoRead(l, t, who.at(j));
     return;
 }
 
@@ -302,6 +339,8 @@ int FlightDataArchive::onWriteNewType(QVariantMap _map)
             newWrite["parentPlace"] = _map.value("place").toString();
             id_name = "id_coords";
             nn = "name_coords";
+            break;
+        default:
             break;
         }
 

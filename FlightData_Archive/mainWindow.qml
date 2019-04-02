@@ -172,7 +172,7 @@ Image {
             ComboBox {
                 id: place;
                 width: 130;
-                onCurrentTextChanged: window.onCurrentTextChanged(place.currentText);
+                onCurrentTextChanged: window.onCurrentTextChanged(place.currentText, 0);
                 model: myModelPlace;
             }
 
@@ -290,11 +290,14 @@ Image {
 
     Connections {
         target: window;
-        onRlsInfoRead: infoCh(s, t);
+        onRlsInfoRead: infoCh(s, t, w);
     }
 
-    function infoCh(s, t)
+    function infoCh(s, t, w)
     {
+        if (w !== 0)
+            return;
+
         var i = 0;
         switch (t)
         {

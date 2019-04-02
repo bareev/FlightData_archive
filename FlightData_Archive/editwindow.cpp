@@ -67,12 +67,19 @@ int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QStrin
 }
 
 //в combo-box'ы
-void EditWindow::newRecs(QStringList s, int t)
+void EditWindow::newRecs(QStringList s, int t, int w)
 {
     WhoEdit type = WhoEdit(t);
-    if ((type != noneEdit) && (type != tsEdit))
+    if (type != noneEdit && w == SETTINGS_WINDOW)
         setCB(type, s);
 
+    return;
+}
+
+void EditWindow::loadNewCB(QString txt)
+{
+    if (!txt.isEmpty() && getEdit() == tsEdit)
+        emit updateFromMain(txt, SETTINGS_WINDOW);
     return;
 }
 

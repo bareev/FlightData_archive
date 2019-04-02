@@ -18,7 +18,7 @@ public:
     Q_INVOKABLE void quit();
     Q_INVOKABLE void showSets();
     Q_INVOKABLE void showAdd();
-    Q_INVOKABLE void onCurrentTextChanged(QString txt);
+    Q_INVOKABLE void onCurrentTextChanged(QString txt, int w);
     ~FlightDataArchive();
 
 private:
@@ -30,6 +30,7 @@ private:
     dbManager m_db;
     tableModel m_tbl;
     int checkTablesDB(QString *res);
+    void emitAll(QStringList l, int t, QVector<int>who);
 
 public slots:
     void closeSets();
@@ -40,13 +41,14 @@ public slots:
     int onWriteNewDB(QVariantMap _map);
     int onWriteNewType(QVariantMap _map);
     void onUpdateView();
-    void updateTS(QString);
+    void updateTS(QString, int w);
 
 signals:
     void iChanged(QString s);
     void oChanged(QString s);
     void updateView();
-    void rlsInfoRead(QStringList s, int t);
+    void rlsInfoRead(QStringList s, int t, int w);
+
 };
 
 #endif // FLIGHTDATAARCHIVE_H
