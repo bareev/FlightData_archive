@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     addwindow.cpp \
     descriptionfiles.cpp \
     wcore.cpp \
-    editwindow.cpp
+    editwindow.cpp \
+    initialdialog.cpp
 
 HEADERS  += flightdataarchive.h \
     settings.h \
@@ -34,7 +35,8 @@ HEADERS  += flightdataarchive.h \
     addwindow.h \
     descriptionfiles.h \
     wcore.h \
-    editwindow.h
+    editwindow.h \
+    initialdialog.h
 
 OTHER_FILES += \
     mainWindow.qml \
@@ -44,7 +46,8 @@ OTHER_FILES += \
     TextEditWidget.qml \
     windowAddNew.qml \
     tableModelDescription.qml \
-    editObjectWindow.qml
+    editObjectWindow.qml \
+    progressBar.qml
 
 RESOURCES += \
     resource.qrc

@@ -7,6 +7,7 @@
 #include <dbmanager.h>
 #include <tablemodel.h>
 #include <addwindow.h>
+#include <initialdialog.h>
 
 class FlightDataArchive : public QQuickView//, public Message
 {
@@ -25,6 +26,7 @@ private:
     void slCloseOrEnable(closeEnable);
     SettingsWindow ws;
     AddWindow wa;
+    InitialDialog winitial;
     bool checkAllQMlFiles(QString dir, int* idx);
     QStringList qmlFiles;
     dbManager m_db;
@@ -38,6 +40,7 @@ public slots:
     void closeAdd();
     void closeWi();
     void closeWo();
+    void closeIW();
     int onWriteNewDB(QVariantMap _map);
     int onWriteNewType(QVariantMap _map);
     void onUpdateView();
@@ -48,6 +51,7 @@ signals:
     void oChanged(QString s);
     void updateView();
     void rlsInfoRead(QStringList s, int t, int w);
+    void setEnabled(bool e);
 
 };
 

@@ -3,6 +3,8 @@ import QtQuick.Controls 1.0
 import QtQuick.Window 2.0
 
 Image {
+
+    enabled: false;
     // Идентификатор, по нему будет происходить
     // обращение к свойствам этого элемента
     id: canvas;
@@ -326,6 +328,11 @@ Image {
             break;
 
         }
+    }
+
+    Connections {
+        target: window;
+        onSetEnabled: canvas.enabled = e;
     }
 
 

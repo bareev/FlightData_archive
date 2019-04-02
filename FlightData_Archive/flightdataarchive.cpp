@@ -17,6 +17,7 @@ FlightDataArchive::FlightDataArchive()
     qmlFiles.append("windowAddNew.qml");
     qmlFiles.append("tableModelDescription.qml");
     qmlFiles.append("editObjectWindow.qml");
+    qmlFiles.append("progressBar.qml");
 
     init();
 }
@@ -69,6 +70,36 @@ void FlightDataArchive::init()
   int res = ws.initSets();
   if (res != SUCCESS)
       ::exit(0);
+
+  ///блок с прогресс баром
+  //инициализируем окно настроек
+  res = winitial.init(contentPath, "/progressBar.qml", "initialW");
+  if (res == SUCCESS)
+  {
+      winitial.show();
+      connect(&winitial, SIGNAL(onClose()), this, SLOT(closeIW()));
+      winitial.setCopy(ws.getValue().dbFile, contentPath);
+      res = winitial.getBytesCopy();
+      if (res == SUCCESS)
+      {
+          winitial.closeSets();
+          QString nf = winitial.getNewFileName();
+          //переназначаем файл базы данных
+          GenSet s = ws.getValue();
+          s.database_param.dbName = nf;
+          ws.setValue(s);
+      }
+      else
+      {
+          slCloseOrEnable(nonecl);
+          ///@todo - no copy
+      }
+  }
+  else
+  {
+      slCloseOrEnable(nonecl);
+      ///@todo - no init pb
+  }
 
   ///блок с базами данных
 
@@ -652,6 +683,13 @@ void FlightDataArchive::closeAdd()
     wa.hide();
 }
 
+//загрытие прогресс-бара
+void FlightDataArchive::closeIW()
+{
+    slCloseOrEnable(nonecl);
+    winitial.hide();
+}
+
 //закрыть или сделать неактивным
 void FlightDataArchive::slCloseOrEnable(closeEnable t)
 {
@@ -660,13 +698,13 @@ void FlightDataArchive::slCloseOrEnable(closeEnable t)
     switch (t)
     {
     case nonecl:
-        //setEnabled(true);
+        emit setEnabled(true);
         break;
     case closeT:
         quit();
         break;
     case enableT:
-        //setEnabled(false);
+        emit setEnabled(false);
         break;
     default:
         break;
