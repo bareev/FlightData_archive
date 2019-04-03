@@ -5,6 +5,7 @@
 #include <QTableView>
 #include <QtQml/QQmlContext>
 #include <QDateTime>
+#include <QFileInfo>
 
 FlightDataArchive::FlightDataArchive()
 {
@@ -18,6 +19,10 @@ FlightDataArchive::FlightDataArchive()
     qmlFiles.append("tableModelDescription.qml");
     qmlFiles.append("editObjectWindow.qml");
     qmlFiles.append("progressBar.qml");
+
+    //а внесли ли мы изменения?
+    currentDB.clear();
+    connect(this, SIGNAL(newWriteDel()), this, SLOT(isSave()));
 
     init();
 }
@@ -52,7 +57,6 @@ void FlightDataArchive::init()
       ::exit(0);
   }
 
- // setFocusPolicy(Qt::StrongFocus);
   // Изменять размеры QML объекта под размеры окна
   // Возможно делать и наоборот,
   // передавая QDeclarativeView::SizeViewToRootObject
@@ -62,8 +66,6 @@ void FlightDataArchive::init()
   setSource(QUrl::fromLocalFile(contentPath + "/mainWindow.qml"));
 
   rootContext()->setContextProperty("window", this);
-
-  //setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
 
   //читаем настройки, если что жёстко закрываем
   ws.setFileName(contentPath + QString("\\config\\config.ini"));
@@ -101,6 +103,11 @@ void FlightDataArchive::init()
       ///@todo - no init pb
   }
 
+  ///размеры и текущая базза данных!!!
+  currentDB = ws.getValue().database_param.dbName;
+  initialSize = QFileInfo(currentDB);
+
+
   ///блок с базами данных
 
   //после инициализации устанавливаем настройки базы данных
@@ -127,6 +134,8 @@ void FlightDataArchive::init()
   {
       //ShowMessageBox(9, critical);
   }
+  //проверим размер (надо ли сохранять?)
+  emit newWriteDel();
 
   rootContext()->setContextProperty("table", &m_tbl);
 
@@ -151,7 +160,7 @@ void FlightDataArchive::init()
   connect(&ws.ew, SIGNAL(onClose()), this, SLOT(closeSetsE()));
   connect(&ws.ew, SIGNAL(newRec(QVariantMap)), this, SLOT(onWriteNewType(QVariantMap)));
   connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &ws.ew, SLOT(newRecs(QStringList,int,int)));
-   connect(&ws.ew, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
+  connect(&ws.ew, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
 
   //инициализируем окно добавления нового полёта
   res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
@@ -193,6 +202,30 @@ void FlightDataArchive::init()
 void FlightDataArchive::updateTS(QString txt, int w)
 {
     return onCurrentTextChanged(txt, w);
+}
+
+
+//а надо ли сохранять базу данных?
+void FlightDataArchive::isSave()
+{
+    bool res = changed();
+    if (res)
+    {
+        setTitle(QString(MAIN_TITLE).append("*"));
+    }
+    else
+    {
+        setTitle(QString(MAIN_TITLE));
+    }
+}
+
+bool FlightDataArchive::changed()
+{
+    QFileInfo ic = QFileInfo(currentDB);
+    if ((ic.size() == initialSize.size()) && (ic.lastModified() == initialSize.lastModified()))
+        return false;
+
+    return true;
 }
 
 //изменили позицию, а значит и ТС
@@ -423,6 +456,9 @@ int FlightDataArchive::onWriteNewType(QVariantMap _map)
     else
         return -10;
 
+    //проверим размер (надо ли сохранять?)
+    emit newWriteDel();
+
     return SUCCESS;
 }
 
@@ -503,6 +539,9 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
             emit iChanged(nameInput);
             emit oChanged(nameOutput);
             emit updateView();
+
+            //проверим размер (надо ли сохранять?)
+            emit newWriteDel();
             ///@warning  - message;
         }
 

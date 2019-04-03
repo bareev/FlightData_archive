@@ -156,15 +156,20 @@ Image {
                 width: 260;
                 height: 130;
                 wrapMode: Text.WordWrap;
+                text: "";
 
-                Keys.onPressed:
-                {
-                    if (event.key === Qt.Key_Tab)
-                    {
-                        insert(cursorPosition, "\t");
-                        event.accepted = true;
-                    }
-                }
+//                Keys.onPressed:
+//                {
+//                    if (event.key === Qt.Key_Tab)
+//                    {
+//                        insert(cursorPosition, "\t");
+//                        event.accepted = true;
+//                    }
+//                    else if ((event.key === Qt.Key_Backspace) && (textArea.text.length === 0))
+//                    {
+//                        event.accepted = false;
+//                    }
+//                }
             }
 
             Connections {

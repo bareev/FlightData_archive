@@ -8,6 +8,7 @@
 #include <tablemodel.h>
 #include <addwindow.h>
 #include <initialdialog.h>
+#include <QFileInfo>
 
 class FlightDataArchive : public QQuickView//, public Message
 {
@@ -33,6 +34,9 @@ private:
     tableModel m_tbl;
     int checkTablesDB(QString *res);
     void emitAll(QStringList l, int t, QVector<int>who);
+    bool changed();
+    QString currentDB;
+    QFileInfo initialSize;
 
 public slots:
     void closeSets();
@@ -45,6 +49,7 @@ public slots:
     int onWriteNewType(QVariantMap _map);
     void onUpdateView();
     void updateTS(QString, int w);
+    void isSave();
 
 signals:
     void iChanged(QString s);
@@ -52,6 +57,7 @@ signals:
     void updateView();
     void rlsInfoRead(QStringList s, int t, int w);
     void setEnabled(bool e);
+    void newWriteDel();
 
 };
 
