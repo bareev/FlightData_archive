@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE void showSets();
     Q_INVOKABLE void showAdd();
     Q_INVOKABLE void onCurrentTextChanged(QString txt, int w);
+    Q_INVOKABLE void saveDB();
     ~FlightDataArchive();
 
 private:
@@ -57,6 +58,7 @@ signals:
     void updateView();
     void rlsInfoRead(QStringList s, int t, int w);
     void setEnabled(bool e);
+    void saveEnabled(bool e);
     void newWriteDel();
 
 };

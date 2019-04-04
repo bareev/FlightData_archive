@@ -10,15 +10,15 @@
 FlightDataArchive::FlightDataArchive()
 {
     qmlFiles.clear();
-    qmlFiles.append("mainWindow.qml");
-    qmlFiles.append("settingsWindow.qml");
-    qmlFiles.append("WindowButton.qml");
-    qmlFiles.append("WindowButtonText.qml");
-    qmlFiles.append("TextEditWidget.qml");
-    qmlFiles.append("windowAddNew.qml");
-    qmlFiles.append("tableModelDescription.qml");
-    qmlFiles.append("editObjectWindow.qml");
-    qmlFiles.append("progressBar.qml");
+    qmlFiles.append("/qml/mainWindow.qml");
+    qmlFiles.append("/qml/settingsWindow.qml");
+    qmlFiles.append("/qml/WindowButton.qml");
+    qmlFiles.append("/qml/WindowButtonText.qml");
+    qmlFiles.append("/qml/TextEditWidget.qml");
+    qmlFiles.append("/qml/windowAddNew.qml");
+    qmlFiles.append("/qml/tableModelDescription.qml");
+    qmlFiles.append("/qml/editObjectWindow.qml");
+    qmlFiles.append("/qml/progressBar.qml");
 
     //а внесли ли мы изменения?
     currentDB.clear();
@@ -63,7 +63,7 @@ void FlightDataArchive::init()
   setResizeMode(QQuickView::SizeRootObjectToView);
 
   // Загрузить QML файл
-  setSource(QUrl::fromLocalFile(contentPath + "/mainWindow.qml"));
+  setSource(QUrl::fromLocalFile(QString(contentPath).append(qmlFiles.at(0))));
 
   rootContext()->setContextProperty("window", this);
 
@@ -75,7 +75,7 @@ void FlightDataArchive::init()
 
   ///блок с прогресс баром
   //инициализируем окно настроек
-  res = winitial.init(contentPath, "/progressBar.qml", "initialW");
+  res = winitial.init(contentPath, qmlFiles.at(8), "initialW");
   if (res == SUCCESS)
   {
       winitial.show();
@@ -142,14 +142,14 @@ void FlightDataArchive::init()
   ///конец блока с базами данных
 
   //инициализируем окно настроек
-  res = ws.init(contentPath, "/settingsWindow.qml", "windowSets");
+  res = ws.init(contentPath, qmlFiles.at(1), "windowSets");
   if (res == SUCCESS)
   {
       ws.settingsToWindow(ws.getValue());
       hide();
   }
 
-  res = ws.ew.init(contentPath, "/editObjectWindow.qml", "windowSetsType");
+  res = ws.ew.init(contentPath, qmlFiles.at(7), "windowSetsType");
   if (res == SUCCESS)
   {
       ws.ew.hide();
@@ -163,7 +163,7 @@ void FlightDataArchive::init()
   connect(&ws.ew, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
 
   //инициализируем окно добавления нового полёта
-  res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
+  res = wa.init(contentPath, qmlFiles.at(5), "windowAdd");
   if (res == SUCCESS)
       hide();
 
@@ -176,14 +176,14 @@ void FlightDataArchive::init()
   emit updateView();
 
   //инициализация окна добавления и описания входных и выходных файлов
-  res = wa.w_dsc_input.init(contentPath, "/tableModelDescription.qml", "tableModelDesc");
+  res = wa.w_dsc_input.init(contentPath, qmlFiles.at(6), "tableModelDesc");
   if (res == SUCCESS)
   {
       wa.w_dsc_input.hide();
       wa.w_dsc_input.setInputOutput(INPUT_FILES);
   }
 
-  res = wa.w_dsc_output.init(contentPath, "/tableModelDescription.qml", "tableModelDesc");
+  res = wa.w_dsc_output.init(contentPath, qmlFiles.at(6), "tableModelDesc");
   if (res == SUCCESS)
   {
       wa.w_dsc_output.hide();
@@ -217,6 +217,14 @@ void FlightDataArchive::isSave()
     {
         setTitle(QString(MAIN_TITLE));
     }
+    //подсветим кнопку сохранить
+    emit saveEnabled(res);
+}
+
+//сохранить БД
+void FlightDataArchive::saveDB()
+{
+    return;
 }
 
 bool FlightDataArchive::changed()

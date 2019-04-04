@@ -5,8 +5,6 @@
         <file alias="help">help.jpg</file>
         <file alias="settings">settings.png</file>
         <file alias="openDir">openDir.jpg</file>
-        <file alias="apply">cancel.png</file>
-        <file>ok.png</file>
-        <file>apply.jpg</file>
+        <file alias="save">save.jpg</file>
     </qresource>
 </RCC>
