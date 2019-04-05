@@ -30,8 +30,10 @@ private:
     quint64 fsize;
 public slots:
     void emitbytes(quint64 b);
+    void chText(bool);
 signals:
     void getbytes(float b);
+    void saveCopyText(bool e);
 
 };
 

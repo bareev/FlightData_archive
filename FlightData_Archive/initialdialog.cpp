@@ -59,3 +59,9 @@ void InitialDialog::emitbytes(quint64 bytes)
         b = bytes / fsize;
     emit getbytes(b);
 }
+
+void InitialDialog::chText(bool e)
+{
+    emit saveCopyText(e);
+    return;
+}

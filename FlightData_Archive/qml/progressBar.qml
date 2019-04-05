@@ -2,8 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 
 Image {
-    width: 100;
-    height: 50;
+    width: 200;
+    height: 100;
     source: "qrc:///res/canvas";
     id: canvas;
 
@@ -11,8 +11,8 @@ Image {
         id:col;
         spacing: 4;
         anchors.margins: 4;
-        anchors.top: parent.top;
-        anchors.left: parent.left;
+        anchors.top: canvas.top;
+        anchors.left: canvas.left;
 
         Text {
             id: txt;
@@ -20,6 +20,7 @@ Image {
             text: qsTr("Копирование базы данных...");
             height: 20;
         }
+    }
 
         /*ProgressBar {
             id: pb;
@@ -32,5 +33,16 @@ Image {
                 onGetbytes: pb.value = b;
             }*/
         //}
+
+
+    Connections {
+        target: initialW;
+        onSaveCopyText: whoIs(e);
+    }
+
+    function whoIs(e)
+    {
+        var s = (e?qsTr("Копирование базы данных на локальный компьютер"):qsTr("Сохранение базы данных в сеть"));
+        txt.text = s;
     }
 }

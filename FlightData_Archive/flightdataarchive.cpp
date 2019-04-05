@@ -6,6 +6,7 @@
 #include <QtQml/QQmlContext>
 #include <QDateTime>
 #include <QFileInfo>
+#include <QDir>
 
 FlightDataArchive::FlightDataArchive()
 {
@@ -76,25 +77,15 @@ void FlightDataArchive::init()
   ///блок с прогресс баром
   //инициализируем окно настроек
   res = winitial.init(contentPath, qmlFiles.at(8), "initialW");
+  connect(&winitial, SIGNAL(onClose()), this, SLOT(closeIW()));
+  connect(this, SIGNAL(initialText(bool)), &winitial, SLOT(chText(bool)));
+
   if (res == SUCCESS)
   {
-      winitial.show();
-      connect(&winitial, SIGNAL(onClose()), this, SLOT(closeIW()));
-      winitial.setCopy(ws.getValue().dbFile, contentPath);
-      res = winitial.getBytesCopy();
-      if (res == SUCCESS)
+      bool res = TryCopyDB(false, ws.getValue().dbFile, contentPath);
+      if (!res)
       {
-          winitial.closeSets();
-          QString nf = winitial.getNewFileName();
-          //переназначаем файл базы данных
-          GenSet s = ws.getValue();
-          s.database_param.dbName = nf;
-          ws.setValue(s);
-      }
-      else
-      {
-          slCloseOrEnable(nonecl);
-          ///@todo - no copy
+          ///@todo - continue with current
       }
   }
   else
@@ -102,11 +93,6 @@ void FlightDataArchive::init()
       slCloseOrEnable(nonecl);
       ///@todo - no init pb
   }
-
-  ///размеры и текущая базза данных!!!
-  currentDB = ws.getValue().database_param.dbName;
-  initialSize = QFileInfo(currentDB);
-
 
   ///блок с базами данных
 
@@ -224,7 +210,56 @@ void FlightDataArchive::isSave()
 //сохранить БД
 void FlightDataArchive::saveDB()
 {
+    if (currentDB != ws.getValue().dbFile && !currentDB.isEmpty())
+    {
+        QString dir = QFileInfo(ws.getValue().dbFile).absoluteDir().absolutePath();
+        bool res = TryCopyDB(true, currentDB, dir);
+        if (!res)
+        {
+            ///@todo - error while save
+        }
+    }
     return;
+}
+
+
+bool FlightDataArchive::TryCopyDB(bool save, QString input_f, QString out_d)
+{
+    if (input_f.isEmpty() || out_d.isEmpty())
+        return false;
+
+    //инициализируем окно настроек
+    emit initialText(save);
+    winitial.show();
+    winitial.setCopy(input_f, out_d);
+    int res = winitial.getBytesCopy();
+    winitial.closeSets();
+    if (res == SUCCESS)
+    {
+        if (!save)
+        {
+            QString nf = winitial.getNewFileName();
+            //переназначаем файл базы данных
+            GenSet s = ws.getValue();
+            s.database_param.dbName = nf;
+            ws.setValue(s);
+
+            ///размеры и текущая базза данных!!!
+            currentDB = ws.getValue().database_param.dbName;
+        }
+
+        initialSize = QFileInfo(currentDB);
+
+        //если мы сохранили базу, возможно её не надо уже сохранять
+        if (save)
+            isSave();
+    }
+    else
+    {
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
 bool FlightDataArchive::changed()

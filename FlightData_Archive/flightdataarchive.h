@@ -38,6 +38,7 @@ private:
     bool changed();
     QString currentDB;
     QFileInfo initialSize;
+    bool TryCopyDB(bool save, QString input_f, QString out_d);
 
 public slots:
     void closeSets();
@@ -60,6 +61,7 @@ signals:
     void setEnabled(bool e);
     void saveEnabled(bool e);
     void newWriteDel();
+    void initialText(bool t);
 
 };
 
