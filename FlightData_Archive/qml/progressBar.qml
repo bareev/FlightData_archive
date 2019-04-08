@@ -2,47 +2,40 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 
 Image {
-    width: 200;
-    height: 100;
+    id: canvasInitial;
+    width: 270;
+    height: 50;
     source: "qrc:///res/canvas";
-    id: canvas;
+    focus: true;
 
     Column {
         id:col;
         spacing: 4;
         anchors.margins: 4;
-        anchors.top: canvas.top;
-        anchors.left: canvas.left;
+        anchors.top: canvasInitial.top;
+        anchors.left: canvasInitial.left;
 
         Text {
             id: txt;
-            width: canvas.width - 15;
+            width: canvasInitial.width - 15;
             text: qsTr("Копирование базы данных...");
             height: 20;
         }
     }
-
-        /*ProgressBar {
-            id: pb;
-            width: canvas.width - 15;
-            height: 20;
-            value: 0;
-
-            /*Connections {
-                target: initialW;
-                onGetbytes: pb.value = b;
-            }*/
-        //}
-
 
     Connections {
         target: initialW;
         onSaveCopyText: whoIs(e);
     }
 
+    Connections {
+        target: initialW;
+        onWinEnabled: canvasInitial.enabled = e;
+    }
+
     function whoIs(e)
     {
-        var s = (e?qsTr("Копирование базы данных на локальный компьютер"):qsTr("Сохранение базы данных в сеть"));
+        var s = (e?qsTr("Сохранение базы данных в сеть"):qsTr("Копирование базы данных на локальный компьютер"));
         txt.text = s;
     }
 }

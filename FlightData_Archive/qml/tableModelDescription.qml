@@ -132,6 +132,11 @@ Image {
         onIochange: changeText(p);
     }
 
+    Connections {
+        target: tableModelDesc;
+        onWinEnabled: canvas_set.enabled = e;
+    }
+
     function newItems(qlist)
     {
         listModel_i.clear();

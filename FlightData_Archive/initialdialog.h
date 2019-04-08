@@ -1,8 +1,6 @@
 #ifndef INITIALDIALOG_H
 #define INITIALDIALOG_H
 
-#include <QtQuick/QQuickView>
-#include <descriptionfiles.h>
 #include <wcore.h>
 
 namespace Ui {

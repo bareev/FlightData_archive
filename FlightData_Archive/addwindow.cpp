@@ -10,6 +10,7 @@ AddWindow::AddWindow()
 void AddWindow::showDescription(int idx, QStringList list)
 {
     (idx == INPUT_FILES?w_dsc_input.showResize(list, getftype()):w_dsc_output.showResize(list, getftype()));
+    emit winEnabled(false);
 }
 
 int AddWindow::waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, QString inf, QString ouf, QString mes)

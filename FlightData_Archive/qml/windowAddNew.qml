@@ -225,6 +225,11 @@ Image {
             onParamTextChanged: txtFunc(ft);
         }
 
+        Connections {
+            target: windowAdd;
+            onWinEnabled: addNew.enabled = e;
+        }
+
 
     }
 

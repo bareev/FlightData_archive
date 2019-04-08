@@ -40,8 +40,10 @@ void SettingsWindow::saveSettings(QString _s, QString _s_dbFile)
 
 void SettingsWindow::openButtonSets(int n)
 {
+    emit winEnabled(false);
+
     ew.setEdit((WhoEdit)n);
     ew.text();
-    ew.show();
+    ew.showE();
     return;
 }

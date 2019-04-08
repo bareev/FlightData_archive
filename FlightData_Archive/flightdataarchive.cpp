@@ -79,7 +79,6 @@ void FlightDataArchive::init()
   res = winitial.init(contentPath, qmlFiles.at(8), "initialW");
   connect(&winitial, SIGNAL(onClose()), this, SLOT(closeIW()));
   connect(this, SIGNAL(initialText(bool)), &winitial, SLOT(chText(bool)));
-
   if (res == SUCCESS)
   {
       bool res = TryCopyDB(false, ws.getValue().dbFile, contentPath);
@@ -230,7 +229,8 @@ bool FlightDataArchive::TryCopyDB(bool save, QString input_f, QString out_d)
 
     //инициализируем окно настроек
     emit initialText(save);
-    winitial.show();
+    slCloseOrEnable(enableT);
+    winitial.showE();
     winitial.setCopy(input_f, out_d);
     int res = winitial.getBytesCopy();
     winitial.closeSets();
@@ -732,7 +732,7 @@ void FlightDataArchive::quit()
 void FlightDataArchive::showSets()
 {
     slCloseOrEnable(enableT);
-    ws.show();
+    ws.showE();
 }
 
 //показываем добавить новый полёт
@@ -740,7 +740,7 @@ void FlightDataArchive::showAdd()
 {
     slCloseOrEnable(enableT);
     wa.setftype(newRecord);
-    wa.show();
+    wa.showE();
 }
 
 //закрытие настроек

@@ -20,6 +20,6 @@ void descriptionFiles::showResize(QStringList s, formType ft)
     setftype(ft);
     emit paramTextChanged((int)ft);
     readyWrite = false;
-    show();
+    showE();
 }
 

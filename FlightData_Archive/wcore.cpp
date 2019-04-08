@@ -43,3 +43,9 @@ void Wcore::closeSets()
     emit onClose();
     return;
 }
+
+void Wcore::showE()
+{
+    emit winEnabled(true);
+    show();
+}
