@@ -5,18 +5,25 @@
 #include <QTableView>
 #include <QtQml/QQmlContext>
 #include <QDateTime>
+#include <QFileInfo>
+#include <QDir>
 
 FlightDataArchive::FlightDataArchive()
 {
     qmlFiles.clear();
-    qmlFiles.append("mainWindow.qml");
-    qmlFiles.append("settingsWindow.qml");
-    qmlFiles.append("WindowButton.qml");
-    qmlFiles.append("WindowButtonText.qml");
-    qmlFiles.append("TextEditWidget.qml");
-    qmlFiles.append("windowAddNew.qml");
-    qmlFiles.append("tableModelDescription.qml");
-    qmlFiles.append("editObjectWindow.qml");
+    qmlFiles.append("/qml/mainWindow.qml");
+    qmlFiles.append("/qml/settingsWindow.qml");
+    qmlFiles.append("/qml/WindowButton.qml");
+    qmlFiles.append("/qml/WindowButtonText.qml");
+    qmlFiles.append("/qml/TextEditWidget.qml");
+    qmlFiles.append("/qml/windowAddNew.qml");
+    qmlFiles.append("/qml/tableModelDescription.qml");
+    qmlFiles.append("/qml/editObjectWindow.qml");
+    qmlFiles.append("/qml/progressBar.qml");
+
+    //а внесли ли мы изменения?
+    currentDB.clear();
+    connect(this, SIGNAL(newWriteDel()), this, SLOT(isSave()));
 
     init();
 }
@@ -37,7 +44,7 @@ void FlightDataArchive::init()
 
 #ifdef QT_DEBUG
   // В отладочной версии это абсолютный путь к папке проекта
-  contentPath = "D:\\progs_git\\FlightData_database_FB032019\\FlightData_Archive";
+  contentPath = "D:\\progs_git\\FlightData_database_FB042019\\FlightData_Archive";
 #else
   // В релизе это путь к папке, в которой расположено приложение
   contentPath = QApplication::applicationDirPath();
@@ -51,24 +58,40 @@ void FlightDataArchive::init()
       ::exit(0);
   }
 
- // setFocusPolicy(Qt::StrongFocus);
   // Изменять размеры QML объекта под размеры окна
   // Возможно делать и наоборот,
   // передавая QDeclarativeView::SizeViewToRootObject
   setResizeMode(QQuickView::SizeRootObjectToView);
 
   // Загрузить QML файл
-  setSource(QUrl::fromLocalFile(contentPath + "/mainWindow.qml"));
+  setSource(QUrl::fromLocalFile(QString(contentPath).append(qmlFiles.at(0))));
 
   rootContext()->setContextProperty("window", this);
-
-  //setWindowFlags(Qt::CustomizeWindowHint |  Qt::WindowMinMaxButtonsHint);
 
   //читаем настройки, если что жёстко закрываем
   ws.setFileName(contentPath + QString("\\config\\config.ini"));
   int res = ws.initSets();
   if (res != SUCCESS)
       ::exit(0);
+
+  ///блок с прогресс баром
+  //инициализируем окно настроек
+  res = winitial.init(contentPath, qmlFiles.at(8), "initialW");
+  connect(&winitial, SIGNAL(onClose()), this, SLOT(closeIW()));
+  connect(this, SIGNAL(initialText(bool)), &winitial, SLOT(chText(bool)));
+  if (res == SUCCESS)
+  {
+      bool res = TryCopyDB(false, ws.getValue().dbFile, contentPath);
+      if (!res)
+      {
+          ///@todo - continue with current
+      }
+  }
+  else
+  {
+      slCloseOrEnable(nonecl);
+      ///@todo - no init pb
+  }
 
   ///блок с базами данных
 
@@ -96,20 +119,22 @@ void FlightDataArchive::init()
   {
       //ShowMessageBox(9, critical);
   }
+  //проверим размер (надо ли сохранять?)
+  emit newWriteDel();
 
   rootContext()->setContextProperty("table", &m_tbl);
 
   ///конец блока с базами данных
 
   //инициализируем окно настроек
-  res = ws.init(contentPath, "/settingsWindow.qml", "windowSets");
+  res = ws.init(contentPath, qmlFiles.at(1), "windowSets");
   if (res == SUCCESS)
   {
       ws.settingsToWindow(ws.getValue());
       hide();
   }
 
-  res = ws.ew.init(contentPath, "/editObjectWindow.qml", "windowSetsType");
+  res = ws.ew.init(contentPath, qmlFiles.at(7), "windowSetsType");
   if (res == SUCCESS)
   {
       ws.ew.hide();
@@ -119,29 +144,31 @@ void FlightDataArchive::init()
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
   connect(&ws.ew, SIGNAL(onClose()), this, SLOT(closeSetsE()));
   connect(&ws.ew, SIGNAL(newRec(QVariantMap)), this, SLOT(onWriteNewType(QVariantMap)));
-  connect(this, SIGNAL(rlsInfoRead(QStringList, int)), &ws.ew, SLOT(newRecs(QStringList,int)));
+  connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &ws.ew, SLOT(newRecs(QStringList,int,int)));
+  connect(&ws.ew, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
 
   //инициализируем окно добавления нового полёта
-  res = wa.init(contentPath, "/windowAddNew.qml", "windowAdd");
+  res = wa.init(contentPath, qmlFiles.at(5), "windowAdd");
   if (res == SUCCESS)
       hide();
 
   connect(&wa, SIGNAL(onClose()), this, SLOT(closeAdd()));
   connect(&wa, SIGNAL(writeNewDB(QVariantMap)), this, SLOT(onWriteNewDB(QVariantMap)));
-  connect(this, SIGNAL(rlsInfoRead(QStringList, int)), &wa, SLOT(newRecs(QStringList,int)));
+  connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &wa, SLOT(newRecs(QStringList,int,int)));
+  connect(&wa, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
 
   //заполним главную таблицу
   emit updateView();
 
   //инициализация окна добавления и описания входных и выходных файлов
-  res = wa.w_dsc_input.init(contentPath, "/tableModelDescription.qml", "tableModelDesc");
+  res = wa.w_dsc_input.init(contentPath, qmlFiles.at(6), "tableModelDesc");
   if (res == SUCCESS)
   {
       wa.w_dsc_input.hide();
       wa.w_dsc_input.setInputOutput(INPUT_FILES);
   }
 
-  res = wa.w_dsc_output.init(contentPath, "/tableModelDescription.qml", "tableModelDesc");
+  res = wa.w_dsc_output.init(contentPath, qmlFiles.at(6), "tableModelDesc");
   if (res == SUCCESS)
   {
       wa.w_dsc_output.hide();
@@ -156,6 +183,122 @@ void FlightDataArchive::init()
 
 }
 
+//а если из других форм пришел запрос, то другой сигнал
+void FlightDataArchive::updateTS(QString txt, int w)
+{
+    return onCurrentTextChanged(txt, w);
+}
+
+
+//а надо ли сохранять базу данных?
+void FlightDataArchive::isSave()
+{
+    bool res = changed();
+    if (res)
+    {
+        setTitle(QString(MAIN_TITLE).append("*"));
+    }
+    else
+    {
+        setTitle(QString(MAIN_TITLE));
+    }
+    //подсветим кнопку сохранить
+    emit saveEnabled(res);
+}
+
+//сохранить БД
+void FlightDataArchive::saveDB()
+{
+    if (currentDB != ws.getValue().dbFile && !currentDB.isEmpty())
+    {
+        QString dir = QFileInfo(ws.getValue().dbFile).absoluteDir().absolutePath();
+        bool res = TryCopyDB(true, currentDB, dir);
+        if (!res)
+        {
+            ///@todo - error while save
+        }
+    }
+    return;
+}
+
+
+bool FlightDataArchive::TryCopyDB(bool save, QString input_f, QString out_d)
+{
+    if (input_f.isEmpty() || out_d.isEmpty())
+        return false;
+
+    //инициализируем окно настроек
+    emit initialText(save);
+    slCloseOrEnable(enableT);
+    winitial.showE();
+    winitial.setCopy(input_f, out_d);
+    int res = winitial.getBytesCopy();
+    winitial.closeSets();
+    if (res == SUCCESS)
+    {
+        if (!save)
+        {
+            QString nf = winitial.getNewFileName();
+            //переназначаем файл базы данных
+            GenSet s = ws.getValue();
+            s.database_param.dbName = nf;
+            ws.setValue(s);
+
+            ///размеры и текущая базза данных!!!
+            currentDB = ws.getValue().database_param.dbName;
+        }
+
+        initialSize = QFileInfo(currentDB);
+
+        //если мы сохранили базу, возможно её не надо уже сохранять
+        if (save)
+            isSave();
+    }
+    else
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+bool FlightDataArchive::changed()
+{
+    QFileInfo ic = QFileInfo(currentDB);
+    if ((ic.size() == initialSize.size()) && (ic.lastModified() == initialSize.lastModified()))
+        return false;
+
+    return true;
+}
+
+//изменили позицию, а значит и ТС
+void FlightDataArchive::onCurrentTextChanged(QString txt, int w)
+{
+    if (!txt.isEmpty())
+    {
+        QStringList nameCoords;
+        QSqlQuery q;
+        q.clear();
+        QVariantMap WhereParams;
+        WhereParams.clear();
+        WhereParams["parentPlace"] = txt;
+
+        if (m_db.selectParamsFromTableWhereParams("name_coords", STATE_POINTS_DATABASE_NAME, WhereParams, &q))
+        {
+            while (q.next())
+                nameCoords.append(q.value(0).toString());
+
+            emit rlsInfoRead(nameCoords, COORDS, w);
+        }
+        else
+        {
+            /// @todo - ошибка чтения
+        }
+    }
+
+    return;
+}
+
 //обновим таблицу
 void FlightDataArchive::onUpdateView()
 {
@@ -165,17 +308,21 @@ void FlightDataArchive::onUpdateView()
     QSqlQuery q;
     q.clear();
 
-    QStringList result, resPlaces, nameCoords;
+    QStringList result, resPlaces;
     result.clear();
     resPlaces.clear();
-    nameCoords.clear();
+
+    QVector<int>who;
+    who.clear();
+    who.append(MAIN_WINDOW);
+    who.append(ADD_WINDOW);
+    who.append(SETTINGS_WINDOW);
 
     if (m_db.selectParamsFromTable("type", RLS_TYPE_DATABASE_NAME, &q))
     {
         while (q.next())
             result.append(q.value(0).toString());
-
-        emit rlsInfoRead(result, TYPE);
+        emitAll(result, TYPE, who);
     }
     else
     {
@@ -187,27 +334,50 @@ void FlightDataArchive::onUpdateView()
     {
         while (q.next())
             resPlaces.append(q.value(0).toString());
-
-        emit rlsInfoRead(resPlaces, PLACE);
+        emitAll(resPlaces, PLACE, who);
     }
     else
     {
         /// @todo - ошибка чтения
     }
 
-    q.clear();
-    if (m_db.selectParamsFromTable("name_coords", STATE_POINTS_DATABASE_NAME, &q))
+    if (!resPlaces.isEmpty())
     {
-        while (q.next())
-            nameCoords.append(q.value(0).toString());
+        //первый параметр по умолчанию
+        foreach (int i, who)
+        {
+            if (i == SETTINGS_WINDOW)
+            {
+                q.clear();
+                QStringList coords;
+                coords.clear();
+                if (m_db.selectParamsFromTable("name_coords", STATE_POINTS_DATABASE_NAME, &q))
+                {
+                    while (q.next())
+                        coords.append(q.value(0).toString());
+                    emit rlsInfoRead(coords, COORDS, i);
+                }
+                else
+                {
+                    ///@todo - error not opened!!!
 
-        emit rlsInfoRead(nameCoords, COORDS);
-    }
-    else
-    {
-        /// @todo - ошибка чтения
+                }
+            }
+            else
+                onCurrentTextChanged(resPlaces.at(0), who.at(i));
+        }
     }
 
+    return;
+}
+
+//отправить сигнал нужным абонентам
+void FlightDataArchive::emitAll(QStringList l, int t, QVector<int> who)
+{
+    if (who.isEmpty() || l.isEmpty())
+        return;
+    for (int j = 0; j < who.count(); j++)
+        emit rlsInfoRead(l, t, who.at(j));
     return;
 }
 
@@ -277,6 +447,8 @@ int FlightDataArchive::onWriteNewType(QVariantMap _map)
             id_name = "id_coords";
             nn = "name_coords";
             break;
+        default:
+            break;
         }
 
         bool nw = _map.value("newWrite").toBool();
@@ -326,6 +498,9 @@ int FlightDataArchive::onWriteNewType(QVariantMap _map)
     }
     else
         return -10;
+
+    //проверим размер (надо ли сохранять?)
+    emit newWriteDel();
 
     return SUCCESS;
 }
@@ -407,6 +582,9 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
             emit iChanged(nameInput);
             emit oChanged(nameOutput);
             emit updateView();
+
+            //проверим размер (надо ли сохранять?)
+            emit newWriteDel();
             ///@warning  - message;
         }
 
@@ -554,7 +732,7 @@ void FlightDataArchive::quit()
 void FlightDataArchive::showSets()
 {
     slCloseOrEnable(enableT);
-    ws.show();
+    ws.showE();
 }
 
 //показываем добавить новый полёт
@@ -562,7 +740,7 @@ void FlightDataArchive::showAdd()
 {
     slCloseOrEnable(enableT);
     wa.setftype(newRecord);
-    wa.show();
+    wa.showE();
 }
 
 //закрытие настроек
@@ -587,6 +765,13 @@ void FlightDataArchive::closeAdd()
     wa.hide();
 }
 
+//загрытие прогресс-бара
+void FlightDataArchive::closeIW()
+{
+    slCloseOrEnable(nonecl);
+    winitial.hide();
+}
+
 //закрыть или сделать неактивным
 void FlightDataArchive::slCloseOrEnable(closeEnable t)
 {
@@ -595,13 +780,13 @@ void FlightDataArchive::slCloseOrEnable(closeEnable t)
     switch (t)
     {
     case nonecl:
-        //setEnabled(true);
+        emit setEnabled(true);
         break;
     case closeT:
         quit();
         break;
     case enableT:
-        //setEnabled(false);
+        emit setEnabled(false);
         break;
     default:
         break;

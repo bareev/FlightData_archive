@@ -39,9 +39,6 @@ Image {
 
         Row {
             id: r;
-            //anchors.margins: 4;
-            //anchors.top: parent.top;
-            //anchors.left: parent.left;
             spacing: 4;
 
             ComboBox {
@@ -65,7 +62,6 @@ Image {
         }
 
         Row {
-            //anchors.top:
             spacing: 4;
             id: rn;
 
@@ -122,13 +118,6 @@ Image {
                 width: 150;
                 text: qsTr("");
                 validator: DoubleValidator;
-                /*Keys.onPressed:
-                {
-                    if ((event.key !== Qt.Key_Period) || (event.key !== Qt.Key_NumberSign))
-                    {
-                        event.accepted = false;
-                    }
-                }*/
             }
 
             TextEditWidget {
@@ -139,7 +128,6 @@ Image {
         }
 
         Row {
-            //anchors.top:
             spacing: 4;
             id: rd;
 
@@ -237,14 +225,12 @@ Image {
             {
                 tp.append({"text":s[i]});
             }
-
-            if (t === 2)
+            break;
+        case 4:
+            pp.clear();
+            for (i = 0; i < s.length; i++)
             {
-                pp.clear();
-                for (i = 0; i < s.length; i++)
-                {
-                    pp.append({"text":s[i]});
-                }
+                pp.append({"text":s[i]});
             }
             break;
         default:

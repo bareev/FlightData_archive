@@ -265,4 +265,9 @@ Image {
 
     }
 
+    Connections {
+        target: windowSets;
+        onWinEnabled: canvas_set.enabled = e;
+    }
+
 }

@@ -19,7 +19,6 @@ public:
     void settingsToWindow(GenSet _s);
     Q_INVOKABLE void saveSettings(QString _s, QString _s2);
     EditWindow ew;
-
     Q_INVOKABLE void openButtonSets(int n);
 
 signals:

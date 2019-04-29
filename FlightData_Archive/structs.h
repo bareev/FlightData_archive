@@ -17,6 +17,13 @@
 #define PLACE 2
 #define COORDS 3
 
+#define MAIN_WINDOW 0
+#define ADD_WINDOW 1
+#define SETTINGS_WINDOW 2
+
+
+#define MAIN_TITLE "Архив полётных данных"
+
 //режим редактирования или записи нового
 enum formType
 {

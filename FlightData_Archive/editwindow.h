@@ -2,6 +2,8 @@
 #define EDITWINDOW_H
 #include <wcore.h>
 
+#define ADDITIONAL_COMBO_BOX 4
+
 namespace Ui {
 class EditWindow;
 }
@@ -18,9 +20,10 @@ public:
     void setCB(WhoEdit e, QStringList i){if (e != noneEdit) {comboboxes.replace(int(e), i);} return;}
     QStringList getCB(WhoEdit e){if (e != noneEdit) {return comboboxes.at(int(e));} else {return (QStringList(""));}}
     void text();
+    Q_INVOKABLE void loadNewCB(QString txt);
 
 public slots:
-    void newRecs(QStringList s, int t);
+    void newRecs(QStringList s, int t, int w);
 
 private:
     WhoEdit m_edit;
@@ -30,6 +33,7 @@ signals:
     void newState(int e);
     void newRec(QVariantMap _map);
     void sigNewRecs(QStringList s, int t);
+    void updateFromMain(QString txt, int w);
 };
 
 #endif // EDITWINDOW_H

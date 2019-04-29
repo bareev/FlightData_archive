@@ -11,7 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = FlightData_Archive
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         flightdataarchive.cpp \
     settings.cpp \
@@ -22,7 +21,8 @@ SOURCES += main.cpp\
     addwindow.cpp \
     descriptionfiles.cpp \
     wcore.cpp \
-    editwindow.cpp
+    editwindow.cpp \
+    initialdialog.cpp
 
 HEADERS  += flightdataarchive.h \
     settings.h \
@@ -34,17 +34,19 @@ HEADERS  += flightdataarchive.h \
     addwindow.h \
     descriptionfiles.h \
     wcore.h \
-    editwindow.h
+    editwindow.h \
+    initialdialog.h
 
 OTHER_FILES += \
-    mainWindow.qml \
-    WindowButton.qml \
-    settingsWindow.qml \
-    WindowButtonText.qml \
-    TextEditWidget.qml \
-    windowAddNew.qml \
-    tableModelDescription.qml \
-    editObjectWindow.qml
+    qml/WindowButtonText.qml \
+    qml/WindowButton.qml \
+    qml/windowAddNew.qml \
+    qml/TextEditWidget.qml \
+    qml/tableModelDescription.qml \
+    qml/settingsWindow.qml \
+    qml/progressBar.qml \
+    qml/mainWindow.qml \
+    qml/editObjectWindow.qml
 
 RESOURCES += \
     resource.qrc
