@@ -19,6 +19,7 @@ public:
     void setAbsDir(QString _absDir){absDir = _absDir; return;}
     Q_INVOKABLE void closeSets();
     void showE();
+    bool event(QEvent *event);
 
 private:
     QString absDir;

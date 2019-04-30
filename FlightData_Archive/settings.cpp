@@ -50,8 +50,8 @@ int Settings::initSets()
     fileSets->sync();
 
 
-    QString dataBasePath = readingParam("General/DBPath", QString::fromUtf8("N:/НПЦ Нижний Новгород/Общий обмен/_Отдел 104/Бареев/fly_data"), 1).toString();
-    QString dbFile = readingParam("General/DBFile", dataBasePath + QString::fromUtf8("/fly_data_archive.db"), 5).toString();
+    QString dataBasePath = readingParam("DBPath", QString::fromUtf8("N:/НПЦ Нижний Новгород/Общий обмен/_Отдел 104/Бареев/fly_data"), 1).toString();
+    QString dbFile = readingParam("DBFile", dataBasePath + QString::fromUtf8("/fly_data_archive.db"), 5).toString();
     QString dbType = readingParam("DataBase/Type", "QSQLITE", 6).toString();
     QString dbUserName = readingParam("DataBase/User", "user", 7).toString();
     QString dbPassword = readingParam("DataBase/Password", "12345678", 8).toString();
@@ -73,7 +73,7 @@ int Settings::initSets()
 void Settings::writeAll()
 {
     GenSet _s = getValue();
-    fileSets->setValue("General/DBPath", QString(_s.dataBasePath.toUtf8()));
-    fileSets->setValue("General/DBFile", QString(_s.dbFile.toUtf8()));
+    fileSets->setValue("DBPath", QString(_s.dataBasePath.toUtf8()));
+    fileSets->setValue("DBFile", QString(_s.dbFile.toUtf8()));
     return;
 }

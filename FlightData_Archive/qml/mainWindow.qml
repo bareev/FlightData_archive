@@ -345,7 +345,6 @@ Image {
         onSaveEnabled: saveButton.enabled = e;
     }
 
-
 }
 
 

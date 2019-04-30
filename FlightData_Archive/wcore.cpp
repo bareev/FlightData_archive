@@ -38,6 +38,15 @@ int Wcore::init(QString _absDir, QString qmlname, QString context)
     return init(qmlname, context);
 }
 
+bool Wcore::event(QEvent *event)
+{
+    if (event->type() == QEvent::Close)
+    {
+        closeSets();
+    }
+    return QQuickView::event(event);
+}
+
 void Wcore::closeSets()
 {
     emit onClose();

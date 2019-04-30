@@ -39,6 +39,7 @@ private:
     QString currentDB;
     QFileInfo initialSize;
     bool TryCopyDB(bool save, QString input_f, QString out_d);
+    bool event(QEvent *event);
 
 public slots:
     void closeSets();

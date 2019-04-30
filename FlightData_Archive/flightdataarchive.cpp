@@ -44,7 +44,7 @@ void FlightDataArchive::init()
 
 #ifdef QT_DEBUG
   // В отладочной версии это абсолютный путь к папке проекта
-  contentPath = "D:\\progs_git\\FlightData_database_FB042019\\FlightData_Archive";
+  contentPath = "D:\\progs_git\\FlightData_archive_FB052019\\FlightData_Archive";
 #else
   // В релизе это путь к папке, в которой расположено приложение
   contentPath = QApplication::applicationDirPath();
@@ -720,6 +720,16 @@ bool FlightDataArchive::checkAllQMlFiles(QString dir, int *idx)
             sets.close();
     }
     return op;
+}
+
+//переопределяем закрытие окна
+bool FlightDataArchive::event(QEvent *event)
+{
+    if (event->type() == QEvent::Close)
+    {
+        quit();
+    }
+    return QQuickView::event(event);
 }
 
 //закрытие приложения
