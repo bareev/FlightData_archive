@@ -256,6 +256,24 @@ Image {
             title: qsTr("Описание");
         }
 
+        Menu {
+            id: contextMenu
+            MenuItem {
+                text: qsTr("Просмотр");
+            }
+            MenuItem {
+                text: qsTr("Удалить");
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: {
+                contextMenu.popup();
+            }
+        }
+
         // Устанавливаем модель в TableView
         model: table;
     }
