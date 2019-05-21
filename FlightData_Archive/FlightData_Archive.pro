@@ -46,9 +46,7 @@ OTHER_FILES += \
     qml/settingsWindow.qml \
     qml/progressBar.qml \
     qml/mainWindow.qml \
-    qml/editObjectWindow.qml \
-    qml/ContextMenuItem.qml \
-    qml/ContextMenu.qml
+    qml/editObjectWindow.qml
 
 RESOURCES += \
     resource.qrc

@@ -71,6 +71,13 @@ struct GenSet
     sqlSets database_param;
 };
 
+enum action
+{
+    noneAct,
+    delAct,
+    dispAct
+};
+
 
 
 

@@ -1,7 +1,11 @@
 #include "tablemodel.h"
+#include <QSqlRecord>
+#include <QDateTime>
+#include <QSqlField>
 
 tableModel::tableModel()
 {
+    ac = noneAct;
 }
 
 // Метод для получения имен ролей через хешированную таблицу.
@@ -32,3 +36,21 @@ QVariant tableModel::data(const QModelIndex & index, int role) const {
      * */
     return QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
 }
+
+QVariantMap tableModel::getData(int row)
+{
+    QVariantMap res;
+    res.clear();
+    for (int col = 0; col < 4; col++)
+    {
+        QModelIndex currentIndex = QAbstractTableModel::index(row, col);
+        QVariant var = data(currentIndex, col + 1 + Qt::UserRole);
+        QString field = record(row).fieldName(col);
+        res[field] = var;
+    }
+
+    return res;
+}
+
+
+

@@ -233,6 +233,7 @@ Image {
         anchors.leftMargin: 4;
         anchors.rightMargin: 4;
         anchors.bottomMargin: 4;
+        id: tbl_v;
 
         //@todo - убрать лишний столбец справа
 
@@ -257,20 +258,27 @@ Image {
         }
 
         Menu {
-            id: contextMenu
+            id: contextMenu;
             MenuItem {
                 text: qsTr("Просмотр");
+                onTriggered: who(1, tbl_v.rowAt(m_a.mx, m_a.my));
             }
             MenuItem {
                 text: qsTr("Удалить");
+                onTriggered: who(-1, tbl_v.rowAt(m_a.mx, m_a.my));
             }
         }
 
         MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.RightButton
+            anchors.fill: parent;
+            acceptedButtons: Qt.RightButton;
+            id: m_a;
+            property int mx: 0;
+            property int my: 0;
             onClicked: {
                 contextMenu.popup();
+                mx = m_a.mouseX;
+                my = m_a.mouseY;
             }
         }
 
@@ -316,6 +324,21 @@ Image {
     Connections {
         target: window;
         onRlsInfoRead: infoCh(s, t, w);
+    }
+
+    function who(type, idx)
+    {
+        if (idx >= 0)
+        {
+            if (type > 0)
+            {
+                window.getData(idx);
+            }
+            else
+            {
+
+            }
+        }
     }
 
     function infoCh(s, t, w)

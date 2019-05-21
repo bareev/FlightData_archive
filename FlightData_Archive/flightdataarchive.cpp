@@ -299,6 +299,13 @@ void FlightDataArchive::onCurrentTextChanged(QString txt, int w)
     return;
 }
 
+//запрос данных по строке
+void FlightDataArchive::getData(int row)
+{
+    QVariantMap res = m_tbl.getData(row);
+    return;
+}
+
 //обновим таблицу
 void FlightDataArchive::onUpdateView()
 {

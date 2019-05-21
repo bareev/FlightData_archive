@@ -1,6 +1,7 @@
 #ifndef TABLEMODEL_H
 #define TABLEMODEL_H
 #include <QSqlQueryModel>
+#include "structs.h"
 
 class tableModel : public QSqlQueryModel
 {
@@ -17,6 +18,13 @@ public:
 
     // Переопределяем метод, который будет возвращать данные
     Q_INVOKABLE QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QVariantMap getData(int row);
+
+private:
+    action ac;
+
+public:
+    action getAc(){return ac;}
 
 protected:
     /* хешированная таблица ролей для колонок.
