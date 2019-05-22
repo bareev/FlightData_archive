@@ -33,6 +33,35 @@ int AddWindow::waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, 
     return SUCCESS;
 }
 
+void AddWindow::fillData(QVariantMap res)
+{
+    if (res.isEmpty())
+        return;
+
+    QStringList keys = res.keys();
+    updateInfo who = noneUpdate;
+    for (int i = 0; i < keys.length(); i++)
+    {
+        if (!keys.at(i).compare("date", Qt::CaseInsensitive))
+            who = dateUpdate;
+        else if (!keys.at(i).compare("placeStr", Qt::CaseInsensitive))
+            who = placeUpdate;
+        else if (!keys.at(i).compare("type", Qt::CaseInsensitive))
+            who = typeUpdate;
+        else if (!keys.at(i).compare("description", Qt::CaseInsensitive))
+            who = descriptionUpdate;
+        else if (!keys.at(i).compare("ifiles", Qt::CaseInsensitive))
+            who = inputUpdate;
+        else if (!keys.at(i).compare("ofiles", Qt::CaseInsensitive))
+            who = outputUpdate;
+        else if (!keys.at(i).compare("coord", Qt::CaseInsensitive))
+            who = coordUpdate;
+
+        emit updateInfoSignal(int(who), tr(res.value(keys.at(i)).toString().toUtf8()));
+    }
+
+}
+
 void AddWindow::loadNewCB(QString txt)
 {
     if (!txt.isEmpty())

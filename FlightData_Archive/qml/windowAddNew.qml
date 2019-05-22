@@ -230,7 +230,77 @@ Image {
             onWinEnabled: addNew.enabled = e;
         }
 
+        Connections {
+            target: windowAdd;
+            onUpdateInfoSignal: updateInfo(t, txt);
+        }
 
+
+    }
+
+    function updateInfo(t, txt)
+    {
+        var ci = -1;
+        var i = 0;
+        switch (t)
+        {
+        case 1:
+            timestart.text = qsTr(txt);
+            break;
+        case 2:
+            ci = -1;
+            for (i = 0; i < cb_1.count; i++)
+            {
+                typecb.currentIndex = i;
+                if (qsTr(typecb.currentText) === qsTr(txt))
+                {
+                    ci = i;
+                    break;
+                }
+            }
+            if (ci === -1)
+                typecb.currentIndex = 0;
+            break;
+        case 3:
+            ci = -1;
+            for (i = 0; i < cb_2.count; i++)
+            {
+                placecb.currentIndex = i;
+                if (qsTr(placecb.currentText) === qsTr(txt))
+                {
+                    ci = i;
+                    break;
+                }
+            }
+            if (ci === -1)
+                placecb.currentIndex = 0;
+            break;
+        case 4:
+            ci = -1;
+            for (i = 0; i < cb_3.count; i++)
+            {
+                coordCB.currentIndex = i;
+                if (qsTr(coordCB.currentText) === qsTr(txt))
+                {
+                    ci = i;
+                    break;
+                }
+            }
+            if (ci === -1)
+                coordCB.currentIndex = 0;
+            break;
+        case 5:
+            inputFilesT.text = qsTr(txt);
+            break;
+        case 6:
+            outputFilesT.text = qsTr(txt);
+            break;
+        case 7:
+            textArea.text = qsTr(txt);
+            break;
+        default:
+            break;
+        }
     }
 
     function txtFunc(ft)

@@ -24,6 +24,7 @@ public:
 
     formType getftype(){return f_type;}
     void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
+    void fillData(QVariantMap res);
 
 public slots:
     void newRecs(QStringList s, int t, int w);
@@ -36,6 +37,7 @@ signals:
     void writeNewDB(QVariantMap param);
     void sigNewRecs(QStringList s, int t);
     void updateFromMain(QString txt, int w);
+    void updateInfoSignal(int t, QString txt);
 };
 
 #endif // ADDWINDOW_H

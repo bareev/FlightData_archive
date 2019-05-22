@@ -303,6 +303,11 @@ void FlightDataArchive::onCurrentTextChanged(QString txt, int w)
 void FlightDataArchive::getData(int row)
 {
     QVariantMap res = m_tbl.getData(row);
+    slCloseOrEnable(enableT);
+    wa.setftype(updateRecord);
+    wa.fillData(res);
+    wa.showE();
+
     return;
 }
 

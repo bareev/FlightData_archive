@@ -78,6 +78,19 @@ enum action
     dispAct
 };
 
+//перечисление чего добавить-обновить
+enum updateInfo
+{
+    noneUpdate,
+    dateUpdate,
+    typeUpdate,
+    placeUpdate,
+    coordUpdate,
+    inputUpdate,
+    outputUpdate,
+    descriptionUpdate
+};
+
 
 
 
