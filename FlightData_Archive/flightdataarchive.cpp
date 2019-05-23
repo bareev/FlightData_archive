@@ -311,6 +311,14 @@ void FlightDataArchive::getData(int row)
     return;
 }
 
+//запрос на удаление данных из базы
+void FlightDataArchive::delData(int row)
+{
+    QVariantMap res = m_tbl.getData(row);
+
+    return;
+}
+
 //обновим таблицу
 void FlightDataArchive::onUpdateView()
 {

@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE void onCurrentTextChanged(QString txt, int w);
     Q_INVOKABLE void saveDB();
     Q_INVOKABLE void getData(int row);
+    Q_INVOKABLE void delData(int row);
     ~FlightDataArchive();
 
 private:

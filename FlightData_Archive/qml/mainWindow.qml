@@ -271,14 +271,26 @@ Image {
 
         MouseArea {
             anchors.fill: parent;
-            acceptedButtons: Qt.RightButton;
+            acceptedButtons: Qt.AllButtons;
             id: m_a;
             property int mx: 0;
             property int my: 0;
             onClicked: {
-                contextMenu.popup();
-                mx = m_a.mouseX;
-                my = m_a.mouseY;
+                if (mouse.button & Qt.RightButton)
+                {
+                    mx = m_a.mouseX;
+                    my = m_a.mouseY;
+                    contextMenu.popup();
+                }
+            }
+            onDoubleClicked: {
+                if (mouse.button & Qt.LeftButton)
+                {
+                    mx = m_a.mouseX;
+                    my = m_a.mouseY;
+                    who(1, tbl_v.rowAt(m_a.mx, m_a.my))
+                }
+
             }
         }
 
@@ -331,13 +343,9 @@ Image {
         if (idx >= 0)
         {
             if (type > 0)
-            {
                 window.getData(idx);
-            }
             else
-            {
-
-            }
+                window.delData(idx);
         }
     }
 
@@ -352,23 +360,17 @@ Image {
         case 1:
             myModelType.clear();
             for (i = 0; i < s.length; i++)
-            {
                 myModelType.append({"text":s[i]});
-            }
             break;
         case 2:
             myModelPlace.clear();
             for (i = 0; i < s.length; i++)
-            {
                 myModelPlace.append({"text":s[i]});
-            }
             break;
         case 3:
             myModelCoords.clear();
             for (i = 0; i < s.length; i++)
-            {
                 myModelCoords.append({"text":s[i]});
-            }
             break;
         default:
             break;
