@@ -303,6 +303,67 @@ void FlightDataArchive::onCurrentTextChanged(QString txt, int w)
 void FlightDataArchive::getData(int row)
 {
     QVariantMap res = m_tbl.getData(row);
+
+    //запрос остальных параметров, не видных в таблице
+    QStringList otherParam;
+    otherParam.clear();
+    otherParam.append("id_table");
+    otherParam.append("input_files_table");
+    otherParam.append("output_files_table");
+    otherParam.append("latitude");
+    otherParam.append("longitude");
+
+    int id = -1;
+    QString i, o;
+    i.clear();
+    o.clear();
+    float lat, lon;
+    lat = lon = -1;
+    QSqlQuery q;
+    q.clear();
+
+    m_db.selectParamsFromTableWhereParams(otherParam, GENERAL_DATABASE_NAME, res, &q);
+    while (q.next())
+    {
+        id = q.value("id_table").toUInt();
+        i = q.value("input_files_table").toString();
+        o = q.value("output_files_table").toString();
+        lat = q.value("latitude").toFloat();
+        lon = q.value("longitude").toFloat();
+    }
+
+    //запрос информации о входных и выходных файлах
+    for (int s = 0; s < 2; s++)
+    {
+        q.clear();
+        otherParam.clear();
+        (s == 0?otherParam.append("input_files"):otherParam.append("output_files"));
+        QString resFiles = (s == 0?i:o);
+        m_db.selectParamsFromTable(otherParam, resFiles, &q);
+        QStringList files;
+        files.clear();
+        while (q.next())
+            files = q.value(0).toStringList();
+        resFiles.clear();
+        for (int count = 0; count < files.length(); count++)
+            resFiles.append(QString("%1;").arg(files.at(count)));
+        resFiles.chop(1);
+        QString key = (s == 0?"ifiles":"ofiles");
+        res[key] = resFiles;
+    }
+
+    //запрос информации об имени точки стояния
+    q.clear();
+    otherParam.clear();
+    otherParam.append("name_coords");
+    QVariantMap latlon;
+    latlon.clear();
+    latlon["latitude"] = lat;
+    latlon["longitude"] = lon;
+    m_db.selectParamsFromTableWhereParams(otherParam, STATE_POINTS_DATABASE_NAME, latlon, &q);
+    while (q.next())
+        res["coord"] = q.value(0).toString();
+
     slCloseOrEnable(enableT);
     wa.setftype(updateRecord);
     wa.fillData(res);
@@ -565,10 +626,8 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         {
             while (q.next())
             {
-                if (ii > 1)
-                    break;
-                geo.replace(ii, q.value(0).toFloat());
-                ii++;
+                for (ii; ii < 2; ii++)
+                    (ii == 0?geo.replace(ii, q.value("latitude").toFloat()):geo.replace(ii, q.value("longitude").toFloat()));
             }
         }
         else
