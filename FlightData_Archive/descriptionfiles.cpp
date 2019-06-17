@@ -23,3 +23,12 @@ void descriptionFiles::showResize(QStringList s, formType ft)
     showE();
 }
 
+void descriptionFiles::writeNewDB(QString filesAndMessage)
+{
+    if (f_type != noneRecord && !filesAndMessage.isEmpty())
+    {
+        QStringList separatString = filesAndMessage.split("%");
+        emit recOrUp(int(f_type), basename, separatString);
+    }
+}
+

@@ -36,6 +36,7 @@ public:
     bool selectParamsFromTable(QString params, QString tableName, QSqlQuery *q);
     bool insertParamsInTable(QVariantMap _map, QString tableName);
     bool updateParamsInTable(QVariantMap _map, QString tableName, QVariantMap id);
+    bool clearAllRows(QString tableName);
 
 private:
     bool loadDrive();

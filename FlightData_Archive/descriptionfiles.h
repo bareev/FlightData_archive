@@ -18,6 +18,7 @@ public:
     void setftype(formType ft){f_type = ft; return;}
     void setInputOutput(int p){input_output = p; emit iochange(p); return;}
     int getInputOutput(){return input_output;}
+    Q_INVOKABLE void writeNewDB(QString filesAndMessage);
 
 public slots:
     void onNewDBName(QString name);
@@ -32,7 +33,7 @@ signals:
     void addNewRow(QStringList s);
     void iochange(int p);
     void paramTextChanged(int ft);
-
+    void recOrUp(int type, QString basename, QStringList param);
 };
 
 #endif // DESCRIPTIONFILES_H

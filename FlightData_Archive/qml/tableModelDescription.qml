@@ -63,6 +63,8 @@ Image {
             text: qsTr("Нет действия");
             function callback()
             {
+                var strList = readfromform();
+                tableModelDesc.writeNewDB(strList);
                 tableModelDesc.closeSets();
             }
         }
@@ -82,6 +84,24 @@ Image {
         }
 
 
+    }
+
+    function readfromform()
+    {
+        var fromlist = new String;
+        for (var i = 0; i < listView1.count; i++)
+        {
+            var s1 = listModel_i.get(i).filename;
+            s1 += ";";
+            s1 += listModel_i.get(i).filename;
+            //var s = String(listModel_i.get(i).txt1.text).append(";").append(listModel_i.get(i).txtEdit1.text);
+            fromlist += s1;
+            fromlist += "%";
+        }
+        if (fromlist.length > 0)
+            return fromlist.slice(0, fromlist.length - 1);
+        else
+            return fromlist;
     }
 
     function txtFunc(ft)

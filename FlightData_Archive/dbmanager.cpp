@@ -233,6 +233,22 @@ bool dbManager::updateParamsInTable(QVariantMap _map, QString tableName, QVarian
     return runSqlQuerry(q);
 }
 
+bool dbManager::clearAllRows(QString tableName)
+{
+    if (tableName.isEmpty())
+        return false;
+
+    QString runquery;
+    runquery.clear();
+    runquery.append("DELETE FROM ").append(tableName);
+
+    QSqlQuery q(dataBase_users);
+    q.clear();
+    q.prepare(runquery);
+
+    return runSqlQuerry(q);
+}
+
 
 bool dbManager::runSqlQuerry(QSqlQuery querryStr)
 {

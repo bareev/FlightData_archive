@@ -175,11 +175,15 @@ void FlightDataArchive::init()
       wa.w_dsc_output.setInputOutput(OUTPUT_FILES);
   }
 
+  //все связи таблицы со входными и выходными файлами
   connect(&wa.w_dsc_input, SIGNAL(onClose()), this, SLOT(closeWi()));
   connect(&wa.w_dsc_output, SIGNAL(onClose()), this, SLOT(closeWo()));
 
   connect(this, SIGNAL(iChanged(QString)), &wa.w_dsc_input, SLOT(onNewDBName(QString)));
   connect(this, SIGNAL(oChanged(QString)), &wa.w_dsc_output, SLOT(onNewDBName(QString)));
+
+  connect(&wa.w_dsc_input, SIGNAL(recOrUp(int, QString, QStringList)), this, SLOT(onRecOtUpIO(int, QString, QStringList)));
+  connect(&wa.w_dsc_output, SIGNAL(recOrUp(int, QString, QStringList)), this, SLOT(onRecOtUpIO(int, QString, QStringList)));
 
 }
 
@@ -197,10 +201,12 @@ void FlightDataArchive::isSave()
     if (res)
     {
         setTitle(QString(MAIN_TITLE).append("*"));
+        setColor(Qt::red);
     }
     else
     {
         setTitle(QString(MAIN_TITLE));
+        setColor(Qt::gray);
     }
     //подсветим кнопку сохранить
     emit saveEnabled(res);
@@ -219,6 +225,75 @@ void FlightDataArchive::saveDB()
         }
     }
     return;
+}
+
+
+//запись или создание таблицы входных (выходных) файлов
+void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList params)
+{
+    switch (type)
+    {
+    case newRecord:
+        if (m_db.checkTable(table_name) != SUCCESS)
+        {
+            int res = -1;
+            QVariantMap _map;
+            _map.clear();
+            _map["id_table"] = "INTEGER";
+            _map["files_name"] = "NVARCHAR";
+            _map["description"] = "NVARCHAR";
+
+            QStringList autoInc;
+            autoInc.clear();
+            autoInc.append("id_table");
+
+            res = m_db.createTableIfNeed(table_name, _map, autoInc);
+            if (res != SUCCESS)
+            {
+                ///@todo - не удается создать таблицу ...
+                return;
+            }
+        }
+        break;
+    case updateRecord:
+        if (m_db.checkTable(table_name) != SUCCESS)
+        {
+            ///@todo - обращение к несуществующей таблице ...
+            return;
+        }
+        //очистили, чтобы записать заново
+        if (!m_db.clearAllRows(table_name))
+        {
+            ///@todo - ошибка очистки ...
+        }
+        break;
+    default:
+        return;
+        break;
+    }
+
+    QVariantMap _map;
+    bool res = true;
+
+    for (int i = 0; i < params.length(); i++)
+    {
+        _map.clear();
+        QStringList files = params.at(i).split(";");
+        if (files.length() > 0)
+        {
+            _map["files_name"] = files.at(0);
+            if (files.length() > 1)
+                _map["description"] = files.at(1);
+            else
+                _map["description"] = "";
+        }
+        res &= m_db.insertParamsInTable(_map, table_name);
+
+    }
+    if (!res)
+    {
+        ///@todo - error while writting
+    }
 }
 
 

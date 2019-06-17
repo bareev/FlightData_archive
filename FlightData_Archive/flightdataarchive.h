@@ -55,6 +55,7 @@ public slots:
     void onUpdateView();
     void updateTS(QString, int w);
     void isSave();
+    void onRecOtUpIO(int, QString, QStringList);
 
 signals:
     void iChanged(QString s);
