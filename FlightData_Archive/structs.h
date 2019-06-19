@@ -69,6 +69,7 @@ struct GenSet
     QString dataBasePath;
     QString dbFile;
     sqlSets database_param;
+    QString fileCyril;
 };
 
 enum action

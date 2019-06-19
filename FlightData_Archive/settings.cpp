@@ -1,6 +1,7 @@
 #include "settings.h"
 #include <QFile>
 #include <QObject>
+#include <QStringList>
 
 Settings::Settings()
 { 
@@ -55,7 +56,7 @@ int Settings::initSets()
     QString dbType = readingParam("DataBase/Type", "QSQLITE", 6).toString();
     QString dbUserName = readingParam("DataBase/User", "user", 7).toString();
     QString dbPassword = readingParam("DataBase/Password", "12345678", 8).toString();
-
+    QString fileCyril = readingParam("FileCyril/path", "/config/CyrilToLatin.txt", 9).toString();
 
     generalSet.dataBasePath = dataBasePath;
     generalSet.dbFile = dbFile;
@@ -63,6 +64,7 @@ int Settings::initSets()
     generalSet.database_param.password = dbPassword;
     generalSet.database_param.type = dbType;
     generalSet.database_param.user = dbUserName;
+    generalSet.fileCyril = fileCyril;
 
     //setState(nonecl);
     return SUCCESS;
@@ -76,4 +78,41 @@ void Settings::writeAll()
     fileSets->setValue("DBPath", QString(_s.dataBasePath.toUtf8()));
     fileSets->setValue("DBFile", QString(_s.dbFile.toUtf8()));
     return;
+}
+
+QString Settings::cyrilToLatin(QString symbol)
+{
+    QString res;
+    res.clear();
+    for (int i = 0; i < symbol.length(); i++)
+        res.append(cyrilic(QString(symbol.at(i)).toUtf8().constData()));
+    return res;
+}
+
+const char *Settings::cyrilic(const char *symbol)
+{
+    const char* res = symbol;
+    QFile f(generalSet.fileCyril);
+    if (f.open(QIODevice::ReadOnly))
+    {
+        while (!f.atEnd())
+        {
+            QString read = f.readLine();
+            QStringList listRead = read.split(";");
+            if (listRead.length() > 0)
+            {
+                if (!QString(res).compare(listRead.at(0)))
+                {
+                    if (listRead.length() > 1)
+                        res = listRead.at(1).toUtf8().constData();
+                    else
+                        res = "";
+                    break;
+                }
+            }
+        }
+        f.close();
+    }
+
+    return res;
 }

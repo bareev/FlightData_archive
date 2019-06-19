@@ -17,8 +17,10 @@ public:
     GenSet getValue(){return generalSet;}
     void setValue(GenSet _s){generalSet = _s; return;}
     void writeAll();
+    QString cyrilToLatin(QString symbol);
     
 private:
+    const char* cyrilic(const char* symbol);
     QString fileNameSetts;
     QSettings* fileSets;
     GenSet generalSet;

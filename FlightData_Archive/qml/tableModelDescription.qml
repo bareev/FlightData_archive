@@ -93,8 +93,8 @@ Image {
         {
             var s1 = listModel_i.get(i).filename;
             s1 += ";";
-            s1 += listModel_i.get(i).filename;
-            //var s = String(listModel_i.get(i).txt1.text).append(";").append(listModel_i.get(i).txtEdit1.text);
+            s1 += listModel_i.get(i).descriptionFile;
+
             fromlist += s1;
             fromlist += "%";
         }
@@ -133,7 +133,7 @@ Image {
                 }
                 TextEditWidget {
                     id: txtEdit1;
-                    text: qsTr("Описание файла ") + filename;
+                    text: descriptionFile;
                     width: parent.width;
                 }
             }
@@ -162,7 +162,7 @@ Image {
         listModel_i.clear();
         for (var i = 0; i < qlist.length; i++)
         {
-            listModel_i.append({filename: qsTr(qlist[i])});
+            listModel_i.append({filename: qsTr(qlist[i]), descriptionFile: qsTr("Описание файла " + qlist[i])});
         }
     }
 

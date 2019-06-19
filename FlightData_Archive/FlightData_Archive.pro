@@ -46,7 +46,9 @@ OTHER_FILES += \
     qml/settingsWindow.qml \
     qml/progressBar.qml \
     qml/mainWindow.qml \
-    qml/editObjectWindow.qml
+    qml/editObjectWindow.qml \
+    config/CyrilToLatin.txt \
+    config/config.ini
 
 RESOURCES += \
     resource.qrc
