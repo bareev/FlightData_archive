@@ -85,26 +85,41 @@ QString Settings::cyrilToLatin(QString symbol)
     QString res;
     res.clear();
     for (int i = 0; i < symbol.length(); i++)
-        res.append(cyrilic(QString(symbol.at(i)).toUtf8().constData()));
+        res.append(cyrilic(symbol.at(i)));
     return res;
 }
 
-const char *Settings::cyrilic(const char *symbol)
+QString Settings::cyrilic(QChar symbol)
 {
-    const char* res = symbol;
+    QString res = QString(symbol);
     QFile f(generalSet.fileCyril);
     if (f.open(QIODevice::ReadOnly))
     {
         while (!f.atEnd())
         {
             QString read = f.readLine();
+
+            //убираем лишние символы
+            int pos1 = read.indexOf("\r");
+            int pos2 = read.indexOf("\n");
+
+            if (pos1 > -1 && pos2 > pos1)
+                read = read.left(pos1);
+            else if (pos1 == -1 && pos2 > 0)
+                read = read.left(pos2);
+            else if (pos2 > -1 && pos1 > pos2)
+                read = read.left(pos2);
+            else if (pos2 == -1 && pos1 > 0)
+                read = read.left(pos1);
+            //end - убираем лишние символы
+
             QStringList listRead = read.split(";");
             if (listRead.length() > 0)
             {
-                if (!QString(res).compare(listRead.at(0)))
+                if (!res.compare(listRead.at(0)))
                 {
                     if (listRead.length() > 1)
-                        res = listRead.at(1).toUtf8().constData();
+                        res = listRead.at(1);
                     else
                         res = "";
                     break;

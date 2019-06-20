@@ -230,7 +230,7 @@ void FlightDataArchive::saveDB()
 
 //запись или создание таблицы входных (выходных) файлов
 void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList params)
-{
+{    
     switch (type)
     {
     case newRecord:
@@ -679,6 +679,7 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         }
         else
             dateIO = _map.value("date").toString().left(10);
+        dateIO.replace("-", "_");
 
         QSqlQuery q;
         q.clear();
@@ -715,6 +716,9 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         QString nameInput = QString("i_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
         QString nameOutput = QString("o_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
 
+        //переделаем в латиницу
+        nameInput = ws.cyrilToLatin(nameInput);
+        nameOutput = ws.cyrilToLatin(nameOutput);
 
         //формируем окончательный запрос
         newWrite["date"] = QDateTime::fromString(_map.value("date").toString(), "yyyy-MM-dd hh:mm:ss");

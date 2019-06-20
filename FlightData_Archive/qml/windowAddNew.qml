@@ -140,14 +140,48 @@ Image {
                 }
             }
 
-            TextEditWidget {
-                id: inputFilesT;
-                width: 130;
+            Row {
+
+                spacing: 4;
+
+                TextEditWidget {
+                    id: inputFilesT;
+                    width: 130;
+                }
+
+                WindowButton {
+                    height: 20;
+                    width: 20;
+                    id: openFileDialogI;
+                    source: "qrc:///res/openDir";
+                    function callback()
+                    {
+                        //windowSets.openDir();
+                    }
+                }
+
             }
 
-            TextEditWidget {
-                id: outputFilesT;
-                width: 130;
+            Row {
+
+                spacing: 4;
+
+                TextEditWidget {
+                    id: outputFilesT;
+                    width: 130;
+                }
+
+                WindowButton {
+                    height: 20;
+                    width: 20;
+                    id: openFileDialogO;
+                    source: "qrc:///res/openDir";
+                    function callback()
+                    {
+                        //windowSets.openDir();
+                    }
+                }
+
             }
 
             TextArea

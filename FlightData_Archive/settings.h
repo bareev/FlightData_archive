@@ -20,7 +20,7 @@ public:
     QString cyrilToLatin(QString symbol);
     
 private:
-    const char* cyrilic(const char* symbol);
+    QString cyrilic(QChar symbol);
     QString fileNameSetts;
     QSettings* fileSets;
     GenSet generalSet;
