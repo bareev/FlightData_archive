@@ -5,6 +5,7 @@
 AddWindow::AddWindow()
 {
     f_type = noneRecord;
+    id_table = -1;
 }
 
 void AddWindow::showDescription(int idx, QStringList list)
@@ -29,7 +30,7 @@ int AddWindow::waitForWritetoDB(QString dt, QString tp, QString pl, QString ts, 
     _map["ts"] = ts;
     _map["message"] = mes;
 
-    emit writeNewDB(_map);
+    emit writeNewDB(_map, (int)f_type);
     return SUCCESS;
 }
 

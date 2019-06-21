@@ -50,7 +50,7 @@ public slots:
     void closeWi();
     void closeWo();
     void closeIW();
-    int onWriteNewDB(QVariantMap _map);
+    int onWriteNewDB(QVariantMap _map, int f_type);
     int onWriteNewType(QVariantMap _map);
     void onUpdateView();
     void updateTS(QString, int w);

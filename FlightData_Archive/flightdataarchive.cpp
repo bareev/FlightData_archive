@@ -153,7 +153,7 @@ void FlightDataArchive::init()
       hide();
 
   connect(&wa, SIGNAL(onClose()), this, SLOT(closeAdd()));
-  connect(&wa, SIGNAL(writeNewDB(QVariantMap)), this, SLOT(onWriteNewDB(QVariantMap)));
+  connect(&wa, SIGNAL(writeNewDB(QVariantMap, int)), this, SLOT(onWriteNewDB(QVariantMap, int)));
   connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &wa, SLOT(newRecs(QStringList,int,int)));
   connect(&wa, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
 
@@ -440,7 +440,7 @@ void FlightDataArchive::getData(int row)
         res["coord"] = q.value(0).toString();
 
     slCloseOrEnable(enableT);
-    wa.setftype(updateRecord);
+    wa.setftype(updateRecord, id);
     wa.fillData(res);
     wa.showE();
 
@@ -663,7 +663,7 @@ int FlightDataArchive::onWriteNewType(QVariantMap _map)
 
 
 //запись новой строки в основную базу!!!
-int FlightDataArchive::onWriteNewDB(QVariantMap _map)
+int FlightDataArchive::onWriteNewDB(QVariantMap _map, int f_type)
 {
     if (m_db.checkTable(GENERAL_DATABASE_NAME) == SUCCESS)
     {
@@ -730,12 +730,31 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map)
         newWrite["longitude"] = geo.at(1);
         newWrite["description"] = _map.value("message").toString();
 
-        if (!m_db.insertParamsInTable(newWrite, GENERAL_DATABASE_NAME))
+        bool ok(false);
+        if (f_type == newRecord)
         {
-            return -2;
-            ///@todo - error;
+            if (!m_db.insertParamsInTable(newWrite, GENERAL_DATABASE_NAME))
+            {
+                return -2;
+                ///@todo - error;
+            }
+            else
+                ok = true;
         }
-        else
+        else if (f_type == updateRecord && wa.getId() > -1)
+        {
+            QVariantMap id;
+            id.clear();
+            id["id_table"] = wa.getId();
+            if (!m_db.updateParamsInTable(newWrite, GENERAL_DATABASE_NAME, id))
+            {
+                return -2;
+                ///@todo - error;
+            }
+            else
+                ok = true;
+        }
+        if (ok)
         {
             emit iChanged(nameInput);
             emit oChanged(nameOutput);

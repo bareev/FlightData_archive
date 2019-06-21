@@ -23,7 +23,9 @@ public:
     descriptionFiles w_dsc_output;
 
     formType getftype(){return f_type;}
-    void setftype(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
+    void setftypeOnly(formType ft){f_type = ft; emit paramTextChanged((int)ft); return;}
+    void setftype(formType ft, int id = -1){setftypeOnly(ft); id_table = id;}
+    int getId(){return id_table;}
     void fillData(QVariantMap res);
 
 public slots:
@@ -31,10 +33,11 @@ public slots:
 
 private:
     formType f_type;
+    int id_table;
 
 signals:
     void paramTextChanged(int ft);
-    void writeNewDB(QVariantMap param);
+    void writeNewDB(QVariantMap param, int t);
     void sigNewRecs(QStringList s, int t);
     void updateFromMain(QString txt, int w);
     void updateInfoSignal(int t, QString txt);
