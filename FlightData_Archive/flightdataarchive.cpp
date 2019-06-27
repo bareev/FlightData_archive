@@ -412,13 +412,17 @@ void FlightDataArchive::getData(int row)
     {
         q.clear();
         otherParam.clear();
-        (s == 0?otherParam.append("input_files"):otherParam.append("output_files"));
+        otherParam.append("files_name");
+        otherParam.append("description");
         QString resFiles = (s == 0?i:o);
         m_db.selectParamsFromTable(otherParam, resFiles, &q);
         QStringList files;
         files.clear();
         while (q.next())
-            files = q.value(0).toStringList();
+        {
+            files.append(q.value("files_name").toString());
+            files.append(q.value("description").toString());
+        }
         resFiles.clear();
         for (int count = 0; count < files.length(); count++)
             resFiles.append(QString("%1;").arg(files.at(count)));
