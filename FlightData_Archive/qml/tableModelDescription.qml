@@ -143,7 +143,7 @@ Image {
     Connections {
         id: c1;
         target: tableModelDesc;
-        onAddNewRow: newItems(s);
+        onAddNewRow: newItems(ft, s);
     }
 
     Connections {
@@ -157,12 +157,18 @@ Image {
         onWinEnabled: canvas_set.enabled = e;
     }
 
-    function newItems(qlist)
+    function newItems(ft, qlist)
     {
         listModel_i.clear();
-        for (var i = 0; i < qlist.length; i++)
+        if (ft === 1)
         {
-            listModel_i.append({filename: qsTr(qlist[i]), descriptionFile: qsTr("Описание файла " + qlist[i])});
+            for (var i = 0; i < qlist.length; i++)
+                listModel_i.append({filename: qsTr(qlist[i]), descriptionFile: qsTr("Описание файла " + qlist[i])});
+        }
+        else if (ft === 2)
+        {
+            for (var j = 0; j < (qlist.length / 2); j++)
+                listModel_i.append({filename: qsTr(qlist[2 * j]), descriptionFile: qsTr(qlist[2 * j + 1])});
         }
     }
 

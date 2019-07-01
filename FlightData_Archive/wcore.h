@@ -20,6 +20,7 @@ public:
     Q_INVOKABLE void closeSets();
     void showE();
     bool event(QEvent *event);
+    void oddevenString(QStringList input, QString *odd, QString *even, int mod = -1, const char* symbol = ";");
 
 private:
     QString absDir;

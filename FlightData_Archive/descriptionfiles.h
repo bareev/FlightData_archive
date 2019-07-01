@@ -30,7 +30,7 @@ private:
     QString basename;
 
 signals:
-    void addNewRow(QStringList s);
+    void addNewRow(QStringList s, int ft);
     void iochange(int p);
     void paramTextChanged(int ft);
     void recOrUp(int type, QString basename, QStringList param);

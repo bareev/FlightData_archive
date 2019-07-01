@@ -47,6 +47,28 @@ bool Wcore::event(QEvent *event)
     return QQuickView::event(event);
 }
 
+void Wcore::oddevenString(QStringList input, QString *odd, QString *even, int mod, const char *symbol)
+{
+    odd->clear();
+    even->clear();
+    if (mod == -1)
+        mod = 2; //четные - нечетные
+
+    for (int i = 0; i < input.length(); i++)
+    {
+        if (i % mod == 0)
+            odd->append(input.at(i)).append(symbol);
+        else
+            even->append(input.at(i)).append(symbol);
+    }
+
+    if (odd->length() > 0)
+        odd->chop(1);
+
+    if (even->length() > 0)
+        even->chop(1);
+}
+
 void Wcore::closeSets()
 {
     emit onClose();

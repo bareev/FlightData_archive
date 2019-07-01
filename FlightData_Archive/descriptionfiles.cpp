@@ -16,7 +16,7 @@ void descriptionFiles::onNewDBName(QString name)
 
 void descriptionFiles::showResize(QStringList s, formType ft)
 {
-    emit addNewRow(s);
+    emit addNewRow(s, (int)ft);
     setftype(ft);
     emit paramTextChanged((int)ft);
     readyWrite = false;
