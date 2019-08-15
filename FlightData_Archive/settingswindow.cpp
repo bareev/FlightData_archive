@@ -44,6 +44,12 @@ void SettingsWindow::openButtonSets(int n)
 
     ew.setEdit((WhoEdit)n);
     ew.text();
-    ew.showE();
+    ew.showE(); 
     return;
 }
+
+void SettingsWindow::slotWinEnabled()
+{
+    emit winEnabled(true);
+}
+

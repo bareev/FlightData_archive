@@ -20,6 +20,7 @@ FlightDataArchive::FlightDataArchive()
     qmlFiles.append("/qml/tableModelDescription.qml");
     qmlFiles.append("/qml/editObjectWindow.qml");
     qmlFiles.append("/qml/progressBar.qml");
+    qmlFiles.append("/qml/FileDialogDef.qml");
 
     //а внесли ли мы изменения?
     currentDB.clear();
@@ -143,6 +144,7 @@ void FlightDataArchive::init()
 
   connect(&ws, SIGNAL(onClose()), this, SLOT(closeSets()));
   connect(&ws.ew, SIGNAL(onClose()), this, SLOT(closeSetsE()));
+  connect(&ws.ew, SIGNAL(onClose()), &ws, SLOT(slotWinEnabled()));
   connect(&ws.ew, SIGNAL(newRec(QVariantMap)), this, SLOT(onWriteNewType(QVariantMap)));
   connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &ws.ew, SLOT(newRecs(QStringList,int,int)));
   connect(&ws.ew, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
@@ -275,13 +277,32 @@ void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList pa
     QVariantMap _map;
     bool res = true;
 
+    //копирование файлов на сервер
+    QDir dir(ws.getValue().dataBasePath);
+    dir.mkdir(table_name);
+    dir.cd(table_name);
+    QString dirServer = dir.absolutePath();
     for (int i = 0; i < params.length(); i++)
     {
         _map.clear();
         QStringList files = params.at(i).split(";");
         if (files.length() > 0)
         {
-            _map["files_name"] = files.at(0);
+            QString fname = files.at(0);
+            int pos = fname.lastIndexOf("/");
+            if (pos > -1)
+                fname = fname.right(fname.length() - pos - 1);
+            if (!fname.isEmpty())
+            {
+                QString fwrite = dirServer;
+                fwrite.append("/").append(fname);
+                bool cop = QFile(files.at(0)).copy(fwrite);
+                if (!cop)
+                    fname = files.at(0);
+                else
+                    fname = fwrite;
+            }
+            _map["files_name"] = fname;
             if (files.length() > 1)
                 _map["description"] = files.at(1);
             else
@@ -706,7 +727,7 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map, int f_type)
         {
             while (q.next())
             {
-                for (ii; ii < 2; ii++)
+                for (; ii < 2; ii++)
                     (ii == 0?geo.replace(ii, q.value("latitude").toFloat()):geo.replace(ii, q.value("longitude").toFloat()));
             }
         }
@@ -923,6 +944,7 @@ void FlightDataArchive::quit()
 void FlightDataArchive::showSets()
 {
     slCloseOrEnable(enableT);
+    ws.initSets();
     ws.showE();
 }
 
@@ -944,7 +966,7 @@ void FlightDataArchive::closeSets()
 //закрытие настроек
 void FlightDataArchive::closeSetsE()
 {
-    slCloseOrEnable(nonecl);
+    //slCloseOrEnable(nonecl);
     ws.ew.hide();
 }
 

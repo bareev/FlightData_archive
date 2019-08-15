@@ -1,4 +1,5 @@
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Dialogs 1.0
 
 Image {
     // Идентификатор, по нему будет происходить
@@ -8,10 +9,33 @@ Image {
     height: 416;
     width: 720;
 
-    source: "qrc:///res/canvas"
+    source: "qrc:///res/canvas";
 
     // Будет получать фокус ввода
     focus: true;
+
+    //открытие файла базы данных
+    FileDialogDef {
+        id: fileDialog;
+        title: qsTr("Выберите файл базы данных");
+        nameFilters: qsTr("Файл базы данных (*.db)");
+        onNamefchanged: {
+            if (fileDialog.nameF.length > 0)
+                absDbInput.text = qsTr(fileDialog.nameF);
+        }
+    }
+
+    //открытие директории хранения архивных данных
+    FileDialogDef {
+        id: fileDialogFolder;
+        selectFolder: true;
+        title: qsTr("Выберите директорию хранения данных");
+        nameFilters: qsTr("Директории хранения данных");
+        onNamefchanged: {
+            if (fileDialogFolder.nameF.length > 0)
+                absDirInput.text = qsTr(fileDialogFolder.nameF);
+        }
+    }
 
     Column {
 
@@ -73,8 +97,8 @@ Image {
                 id: openFileDialog;
                 source: "qrc:///res/openDir";
                 function callback()
-                {
-                    windowSets.openDir();
+                {    
+                    fileDialogFolder.setVisible(true);
                 }
             }
 
@@ -117,7 +141,7 @@ Image {
                 source: "qrc:///res/openDir";
                 function callback()
                 {
-                    windowSets.openDirDB();
+                    fileDialog.setVisible(true);
                 }
             }
 

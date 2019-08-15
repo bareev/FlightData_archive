@@ -7,4 +7,7 @@
         <file alias="openDir">openDir.jpg</file>
         <file alias="save">save.jpg</file>
     </qresource>
+    <qresource prefix="/">
+        <file>qml/FileDialogDef.qml</file>
+    </qresource>
 </RCC>

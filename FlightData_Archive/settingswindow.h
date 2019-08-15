@@ -25,6 +25,9 @@ signals:
     void textChanged(const QString& s);
     void textChangedpath(const QString& s);
 
+public slots:
+    void slotWinEnabled();
+
 };
 
 #endif // SETTINGSWINDOW_H
