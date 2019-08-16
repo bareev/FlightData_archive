@@ -233,19 +233,21 @@ void FlightDataArchive::saveDB()
 //запись или создание таблицы входных (выходных) файлов
 void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList params)
 {    
+    QVariantMap _map;
+    QStringList autoInc;
     switch (type)
     {
     case newRecord:
         if (m_db.checkTable(table_name) != SUCCESS)
         {
             int res = -1;
-            QVariantMap _map;
+           // QVariantMap _map;
             _map.clear();
             _map["id_table"] = "INTEGER";
             _map["files_name"] = "NVARCHAR";
             _map["description"] = "NVARCHAR";
 
-            QStringList autoInc;
+            //QStringList autoInc;
             autoInc.clear();
             autoInc.append("id_table");
 
@@ -258,6 +260,7 @@ void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList pa
         }
         break;
     case updateRecord:
+    {
         if (m_db.checkTable(table_name) != SUCCESS)
         {
             ///@todo - обращение к несуществующей таблице ...
@@ -268,13 +271,33 @@ void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList pa
         {
             ///@todo - ошибка очистки ...
         }
+
+        int res = -1;
+        // QVariantMap _map;
+        _map.clear();
+        _map["id_table"] = "INTEGER";
+        _map["files_name"] = "NVARCHAR";
+        _map["description"] = "NVARCHAR";
+
+        //QStringList autoInc;
+        autoInc.clear();
+        autoInc.append("id_table");
+
+        res = m_db.createTableIfNeed(table_name, _map, autoInc);
+        if (res != SUCCESS)
+        {
+            ///@todo - не удается создать таблицу ...
+            return;
+        }
+    }
         break;
+
     default:
         return;
         break;
     }
 
-    QVariantMap _map;
+    //_map.clear();
     bool res = true;
 
     //копирование файлов на сервер

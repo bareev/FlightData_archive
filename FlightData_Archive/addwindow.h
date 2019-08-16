@@ -34,6 +34,8 @@ public slots:
 private:
     formType f_type;
     int id_table;
+    QStringList textinput;
+    QStringList textoutput;
 
 signals:
     void paramTextChanged(int ft);

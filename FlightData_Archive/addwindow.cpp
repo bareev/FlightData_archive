@@ -14,8 +14,17 @@ void AddWindow::showDescription(int idx, QStringList list)
         (idx == INPUT_FILES?w_dsc_input.showResize(list, getftype()):w_dsc_output.showResize(list, getftype()));
     else if (getftype() == updateRecord)
     {
+        QStringList tmp = (idx == INPUT_FILES?textinput:textoutput);
+        QString odd("");
+        QString even("");
+        oddevenString(tmp, &odd, &even);
+        bool comp = stringListCompare(odd.split(";"), list);
+        if (comp)
+        {
+            list.clear();
+            list.append(tmp);
+        }
         (idx == INPUT_FILES?w_dsc_input.showResize(list, getftype()):w_dsc_output.showResize(list, getftype()));
-        ///list = ???; /// доделать!!!
     }
     emit winEnabled(false);
 }
@@ -63,14 +72,18 @@ void AddWindow::fillData(QVariantMap res)
             who = descriptionUpdate;
         else if (!keys.at(i).compare("ifiles", Qt::CaseInsensitive))
         {
+            textinput.clear();
+            textinput.append(text.split(";"));
             who = inputUpdate;
-            oddevenString(text.split(";"), &odd, &even);
+            oddevenString(textinput, &odd, &even);
             text = odd;
         }
         else if (!keys.at(i).compare("ofiles", Qt::CaseInsensitive))
         {
+            textoutput.clear();
+            textoutput.append(text.split(";"));
             who = outputUpdate;
-            oddevenString(text.split(";"), &odd, &even);
+            oddevenString(textoutput, &odd, &even);
             text = odd;
         }
         else if (!keys.at(i).compare("coord", Qt::CaseInsensitive))

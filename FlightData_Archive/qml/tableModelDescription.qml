@@ -92,9 +92,8 @@ Image {
         for (var i = 0; i < listView1.count; i++)
         {
             var s1 = listModel_i.get(i).filename;
-            s1 += ";";
+            s1 += ";";           
             s1 += listModel_i.get(i).descriptionFile;
-
             fromlist += s1;
             fromlist += "%";
         }
@@ -135,6 +134,10 @@ Image {
                     id: txtEdit1;
                     text: descriptionFile;
                     width: parent.width;
+                    onTextChanged: function ch()
+                    {
+                        descriptionFile = txtEdit1.text;
+                    }
                 }
             }
         }

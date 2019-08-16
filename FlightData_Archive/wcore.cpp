@@ -69,6 +69,30 @@ void Wcore::oddevenString(QStringList input, QString *odd, QString *even, int mo
         even->chop(1);
 }
 
+bool Wcore::stringListCompare(QStringList input, QStringList output, Qt::CaseSensitivity par)
+{
+    bool res(false);
+
+    if (input.length() == output.length())
+    {
+        for (int i = 0; i < input.length(); i++)
+        {
+            QString in = input.at(i);
+            QString ot = output.at(i);
+            int r = in.compare(ot, par);
+            if (r)
+            {
+                res = false;
+                break;
+            }
+            else
+                res = true;
+        }
+    }
+
+    return res;
+}
+
 void Wcore::closeSets()
 {
     emit onClose();
