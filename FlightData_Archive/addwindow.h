@@ -27,6 +27,10 @@ public:
     void setftype(formType ft, int id = -1){setftypeOnly(ft); id_table = id;}
     int getId(){return id_table;}
     void fillData(QVariantMap res);
+    void setIfile(QString i){ifile = i;}
+    void setOfile(QString o){ofile = o;}
+    QString getIfile(){return ifile;}
+    QString getOfile(){return ofile;}
 
 public slots:
     void newRecs(QStringList s, int t, int w);
@@ -36,6 +40,8 @@ private:
     int id_table;
     QStringList textinput;
     QStringList textoutput;
+    QString ifile;
+    QString ofile;
 
 signals:
     void paramTextChanged(int ft);

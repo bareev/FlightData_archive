@@ -184,8 +184,8 @@ void FlightDataArchive::init()
   connect(this, SIGNAL(iChanged(QString)), &wa.w_dsc_input, SLOT(onNewDBName(QString)));
   connect(this, SIGNAL(oChanged(QString)), &wa.w_dsc_output, SLOT(onNewDBName(QString)));
 
-  connect(&wa.w_dsc_input, SIGNAL(recOrUp(int, QString, QStringList)), this, SLOT(onRecOtUpIO(int, QString, QStringList)));
-  connect(&wa.w_dsc_output, SIGNAL(recOrUp(int, QString, QStringList)), this, SLOT(onRecOtUpIO(int, QString, QStringList)));
+  connect(&wa.w_dsc_input, SIGNAL(recOrUp(int, QString, QStringList, int)), this, SLOT(onRecOtUpIO(int, QString, QStringList, int)));
+  connect(&wa.w_dsc_output, SIGNAL(recOrUp(int, QString, QStringList, int)), this, SLOT(onRecOtUpIO(int, QString, QStringList, int)));
 
 }
 
@@ -231,7 +231,7 @@ void FlightDataArchive::saveDB()
 
 
 //запись или создание таблицы входных (выходных) файлов
-void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList params)
+void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList params, int io)
 {    
     QVariantMap _map;
     QStringList autoInc;
@@ -261,15 +261,21 @@ void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList pa
         break;
     case updateRecord:
     {
+        if (io == INPUT_FILES)
+            table_name = wa.getIfile();
+        else if (io == OUTPUT_FILES)
+            table_name = wa.getOfile();
+
         if (m_db.checkTable(table_name) != SUCCESS)
         {
             ///@todo - обращение к несуществующей таблице ...
             return;
         }
         //очистили, чтобы записать заново
-        if (!m_db.clearAllRows(table_name))
+        if (m_db.dropTable(table_name) != SUCCESS)
         {
             ///@todo - ошибка очистки ...
+            return;
         }
 
         int res = -1;
@@ -488,6 +494,9 @@ void FlightDataArchive::getData(int row)
         res["coord"] = q.value(0).toString();
 
     slCloseOrEnable(enableT);
+    //сюда ещё запрос о таблице входных и выходных имён!!!
+    wa.setIfile(i);
+    wa.setOfile(o);
     wa.setftype(updateRecord, id);
     wa.fillData(res);
     wa.showE();
@@ -760,13 +769,23 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map, int f_type)
             ///@todo - error
         }
 
-        srand((unsigned int)QDateTime::currentDateTime().toTime_t());
-        QString nameInput = QString("i_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
-        QString nameOutput = QString("o_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
+        QString nameInput, nameOutput;
 
-        //переделаем в латиницу
-        nameInput = ws.cyrilToLatin(nameInput);
-        nameOutput = ws.cyrilToLatin(nameOutput);
+        if (f_type == newRecord)
+        {
+            srand((unsigned int)QDateTime::currentDateTime().toTime_t());
+            nameInput = QString("i_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
+            nameOutput = QString("o_%1_%2_%3").arg(dateIO).arg(_map.value("type").toString()).arg(rand());
+
+            //переделаем в латиницу
+            nameInput = ws.cyrilToLatin(nameInput);
+            nameOutput = ws.cyrilToLatin(nameOutput);
+        }
+        else if (f_type == updateRecord)
+        {
+            nameInput = wa.getIfile();
+            nameOutput = wa.getOfile();
+        }
 
         //формируем окончательный запрос
         newWrite["date"] = QDateTime::fromString(_map.value("date").toString(), "yyyy-MM-dd hh:mm:ss");

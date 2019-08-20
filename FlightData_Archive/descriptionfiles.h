@@ -33,7 +33,7 @@ signals:
     void addNewRow(QStringList s, int ft);
     void iochange(int p);
     void paramTextChanged(int ft);
-    void recOrUp(int type, QString basename, QStringList param);
+    void recOrUp(int type, QString basename, QStringList param, int input_output);
 };
 
 #endif // DESCRIPTIONFILES_H

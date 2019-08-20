@@ -47,6 +47,7 @@ OTHER_FILES += \
     qml/progressBar.qml \
     qml/mainWindow.qml \
     qml/editObjectWindow.qml \
+    qml/FileDialogDef.qml \
     config/CyrilToLatin.txt \
     config/config.ini
 

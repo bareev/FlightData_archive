@@ -28,7 +28,7 @@ void descriptionFiles::writeNewDB(QString filesAndMessage)
     if (f_type != noneRecord && !filesAndMessage.isEmpty())
     {
         QStringList separatString = filesAndMessage.split("%");
-        emit recOrUp(int(f_type), basename, separatString);
+        emit recOrUp(int(f_type), basename, separatString, input_output);
     }
 }
 

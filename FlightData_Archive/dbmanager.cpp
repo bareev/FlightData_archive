@@ -275,6 +275,21 @@ bool dbManager::runSqlQuerry(QString querryStr)
     return true;
 }
 
+int dbManager::dropTable(QString nameTable)
+{
+    if (!isActive() || nameTable.isEmpty())
+        return -1;
+
+    QString sqlquery;
+    sqlquery.clear();
+    sqlquery = QString("DROP TABLE %1").arg(nameTable);
+
+    if (!runSqlQuerry(sqlquery))
+        return -1;
+
+    return SUCCESS;
+}
+
 int dbManager::checkTable(QString nameTable)
 {
     if (!isActive() || nameTable.isEmpty())

@@ -24,6 +24,17 @@ void AddWindow::showDescription(int idx, QStringList list)
             list.clear();
             list.append(tmp);
         }
+        else
+        {
+            tmp.clear();
+            tmp.append(list);
+            list.clear();
+            for (int sz = 0; sz < tmp.length(); sz++)
+            {
+                list.append(tmp.at(sz));
+                list.append(QString("Описание файла %1").arg(tmp.at(sz)));
+            }
+        }
         (idx == INPUT_FILES?w_dsc_input.showResize(list, getftype()):w_dsc_output.showResize(list, getftype()));
     }
     emit winEnabled(false);
