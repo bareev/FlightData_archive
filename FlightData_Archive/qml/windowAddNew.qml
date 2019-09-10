@@ -108,7 +108,7 @@ Image {
 
             TextEditWidget {
                 id: timestart;
-                width: 130;
+                width: 236;
                 inputMethodHints: Qt.ImhDigitsOnly;
                 inputMask: "9999-99-99 99:99:99";
                 text: Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss");
@@ -117,7 +117,7 @@ Image {
 
             ComboBox {
                 id: typecb;
-                width: 130;
+                width: 236;
                 model: ListModel {
                     id: cb_1;
                 }
@@ -125,7 +125,7 @@ Image {
 
             ComboBox {
                 id: placecb;
-                width: 130;
+                width: 236;
                 model: ListModel {
                     id: cb_2;
                 }
@@ -134,7 +134,7 @@ Image {
 
             ComboBox {
                 id: coordCB;
-                width: 130;
+                width: 236;
                 model: ListModel {
                     id: cb_3;
                 }
@@ -146,7 +146,7 @@ Image {
 
                 TextEditWidget {
                     id: inputFilesT;
-                    width: 130;
+                    width: 236;
                 }
 
                 WindowButton {
@@ -156,7 +156,7 @@ Image {
                     source: "qrc:///res/openDir";
                     function callback()
                     {
-                        //windowSets.openDir();
+                        fileDialogOpen.setVisible(true);
                     }
                 }
 
@@ -168,7 +168,7 @@ Image {
 
                 TextEditWidget {
                     id: outputFilesT;
-                    width: 130;
+                    width: 236;
                 }
 
                 WindowButton {
@@ -178,7 +178,7 @@ Image {
                     source: "qrc:///res/openDir";
                     function callback()
                     {
-                        //windowSets.openDir();
+                        fileDialogOpenOut.setVisible(true);
                     }
                 }
 
@@ -209,6 +209,34 @@ Image {
             Connections {
                 target: windowAdd;
                 onSigNewRecs: infoCh(s, t);
+            }
+        }
+    }
+
+    //открытие файла входных или выходных файлов
+    FileDialogDef {
+        id: fileDialogOpen;
+        title: qsTr("Выберите исходные файлы");
+        nameFilters: [qsTr("Файлы регистрации (*.vreg *.breg)"), qsTr("Файлы GPS (*.gpx *.kml *.map *.txt *.csv)"), qsTr("Все файлы (*)")];
+        selectMultiple: true;
+        onNamefchanged: {
+            if (fileDialogOpen.nameF.length > 0)
+            {
+                inputFilesT.text = qsTr(fileDialogOpen.nameF);
+            }
+        }
+    }
+
+    //открытие файла выходных или выходных файлов
+    FileDialogDef {
+        id: fileDialogOpenOut;
+        title: qsTr("Выберите выходные файлы");
+        nameFilters: qsTr("Все файлы (*)");
+        selectMultiple: true;
+        onNamefchanged: {
+            if (fileDialogOpenOut.nameF.length > 0)
+            {
+                outputFilesT.text = qsTr(fileDialogOpenOut.nameF);
             }
         }
     }
