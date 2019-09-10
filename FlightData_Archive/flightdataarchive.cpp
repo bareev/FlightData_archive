@@ -995,6 +995,7 @@ void FlightDataArchive::showAdd()
 {
     slCloseOrEnable(enableT);
     wa.setftype(newRecord);
+    wa.clearForm();
     wa.showE();
 }
 

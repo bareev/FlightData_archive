@@ -297,6 +297,11 @@ Image {
             onUpdateInfoSignal: updateInfo(t, txt);
         }
 
+        Connections {
+            target: windowAdd;
+            onClearText: clearAllBeforeShow();
+        }
+
 
     }
 
@@ -365,12 +370,23 @@ Image {
         }
     }
 
+    function clearAllBeforeShow()
+    {
+        coordCB.currentIndex = 0;
+        placecb.currentIndex = 0;
+        typecb.currentIndex = 0;
+        textArea.text = "";
+        inputFilesT.text = "";
+        outputFilesT.text = "";
+    }
+
     function txtFunc(ft)
     {
         okSets.enabled = true;
         if (ft === 1)
         {
             captionTextAdd.text = qsTr("НОВАЯ ЗАПИСЬ");
+            timestart.text = Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss");
             okSets.text = qsTr("Записать");
         }
         else if (ft === 2)

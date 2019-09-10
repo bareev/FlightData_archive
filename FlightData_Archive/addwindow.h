@@ -31,6 +31,7 @@ public:
     void setOfile(QString o){ofile = o;}
     QString getIfile(){return ifile;}
     QString getOfile(){return ofile;}
+    void clearForm(){emit clearText();}
 
 public slots:
     void newRecs(QStringList s, int t, int w);
@@ -49,6 +50,7 @@ signals:
     void sigNewRecs(QStringList s, int t);
     void updateFromMain(QString txt, int w);
     void updateInfoSignal(int t, QString txt);
+    void clearText();
 };
 
 #endif // ADDWINDOW_H
