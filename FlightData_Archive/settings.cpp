@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QObject>
 #include <QStringList>
+#include <QFileInfo>
+#include <QDir>
 
 Settings::Settings()
 { 
@@ -130,4 +132,24 @@ QString Settings::cyrilic(QChar symbol)
     }
 
     return res;
+}
+
+bool Settings::removePath(const QString &path)
+{
+    bool result = true;
+    QFileInfo info(path);
+    if (info.isDir())
+    {
+        QDir dir(path);
+        foreach (const QString &entry, dir.entryList(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot)) {
+            result &= removePath(dir.absoluteFilePath(entry));
+        }
+        if (!info.dir().rmdir(info.fileName()))
+            return false;
+    }
+    else
+    {
+        result = QFile::remove(path);
+    }
+    return result;
 }

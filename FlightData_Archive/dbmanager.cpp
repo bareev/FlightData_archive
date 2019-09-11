@@ -249,6 +249,35 @@ bool dbManager::clearAllRows(QString tableName)
     return runSqlQuerry(q);
 }
 
+bool dbManager::clearRowWhere(QString tableName, QVariantMap _map)
+{
+    if (tableName.isEmpty())
+        return false;
+
+    if (_map.isEmpty())
+        return clearAllRows(tableName);
+
+    QString runquery;
+    runquery.clear();
+    runquery.append("DELETE FROM ").append(tableName).append(" WHERE ");
+
+    QStringList keys = _map.keys();
+    for (int s = 0; s < _map.size(); s++)
+    {
+        runquery.append(keys.at(s)).append(" = ?, ");
+    }
+    runquery.chop(2);
+
+    QSqlQuery q(dataBase_users);
+    q.clear();
+    q.prepare(runquery);
+
+    for (int bv = 0; bv < keys.length(); bv++)
+        q.addBindValue(_map.value(keys.at(bv)));
+
+    return runSqlQuerry(q);
+}
+
 
 bool dbManager::runSqlQuerry(QSqlQuery querryStr)
 {

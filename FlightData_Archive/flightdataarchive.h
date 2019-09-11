@@ -42,6 +42,7 @@ private:
     QFileInfo initialSize;
     bool TryCopyDB(bool save, QString input_f, QString out_d);
     bool event(QEvent *event);
+    void updateWithFilter(QVariantMap whereParams);
 
 public slots:
     void closeSets();

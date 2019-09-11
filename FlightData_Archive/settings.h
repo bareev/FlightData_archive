@@ -17,8 +17,8 @@ public:
     GenSet getValue(){return generalSet;}
     void setValue(GenSet _s){generalSet = _s; return;}
     void writeAll();
-    QString cyrilToLatin(QString symbol);
-    
+    QString cyrilToLatin(QString symbol); 
+    bool removePath(const QString &path);
 private:
     QString cyrilic(QChar symbol);
     QString fileNameSetts;

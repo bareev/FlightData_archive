@@ -508,8 +508,56 @@ void FlightDataArchive::getData(int row)
 void FlightDataArchive::delData(int row)
 {
     QVariantMap res = m_tbl.getData(row);
+    QVariantMap map;
+    map.clear();
+    QStringList otherParam;
+    otherParam.clear();
+    otherParam.append("id_table");
+    otherParam.append("input_files_table");
+    otherParam.append("output_files_table");
+    QSqlQuery q;
+    q.clear();
+    QString i, o;
+
+    m_db.selectParamsFromTableWhereParams(otherParam, GENERAL_DATABASE_NAME, res, &q);
+    while (q.next())
+    {
+        map["id_table"] = q.value("id_table").toUInt();
+        i = q.value("input_files_table").toString();
+        o = q.value("output_files_table").toString();
+    }
+
+    m_db.clearRowWhere(GENERAL_DATABASE_NAME, map);
+    m_db.dropTable(i);
+    m_db.dropTable(o);
+
+    i = ws.getValue().dataBasePath + tr("/") + i;
+    o = ws.getValue().dataBasePath + tr("/") + o;
+
+    bool s1 = ws.removePath(i);
+    bool s2 = ws.removePath(o);
+
+    if (!s1)
+    {
+        ///@todo - warning;
+    }
+
+    if (!s2)
+    {
+        ///@todo - warning;
+    }
+
+    emit updateView();
+    //проверим размер (надо ли сохранять?)
+    emit newWriteDel();
 
     return;
+}
+
+//для фильтрации
+void FlightDataArchive::updateWithFilter(QVariantMap whereParams)
+{
+
 }
 
 //обновим таблицу
