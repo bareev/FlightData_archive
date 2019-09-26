@@ -25,7 +25,7 @@ int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QStrin
     if (currentN.isEmpty() && newR)
         return -2;
 
-    float lat, lon;
+    double lat, lon;
     if (getEdit() == tsEdit)
     {
 
@@ -33,11 +33,11 @@ int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QStrin
             return -3;
 
         bool ok = false;
-        lat = currLat.toFloat(&ok);
+        lat = currLat.toDouble(&ok);
         if (!ok)
             return -4;
 
-        lon = currLon.toFloat(&ok);
+        lon = currLon.toDouble(&ok);
         if (!ok)
             return -4;
     }

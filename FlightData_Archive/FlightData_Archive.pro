@@ -55,3 +55,6 @@ RESOURCES += \
     resource.qrc
 
 FORMS +=
+
+DISTFILES += \
+    qml/errorMessage.qml

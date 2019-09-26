@@ -442,8 +442,8 @@ void FlightDataArchive::getData(int row)
     QString i, o;
     i.clear();
     o.clear();
-    float lat, lon;
-    lat = lon = -1;
+    double lat, lon;
+    lat = lon = -1.0;
     QSqlQuery q;
     q.clear();
 
@@ -453,8 +453,8 @@ void FlightDataArchive::getData(int row)
         id = q.value("id_table").toUInt();
         i = q.value("input_files_table").toString();
         o = q.value("output_files_table").toString();
-        lat = q.value("latitude").toFloat();
-        lon = q.value("longitude").toFloat();
+        lat = q.value("latitude").toDouble();
+        lon = q.value("longitude").toDouble();
     }
 
     //запрос информации о входных и выходных файлах
@@ -554,9 +554,82 @@ void FlightDataArchive::delData(int row)
     return;
 }
 
+void FlightDataArchive::createFilterRequest(int time, int type, int place, int coord, QString timeS, QString timeEnd, QString typeS, QString placeS, QString coordS)
+{
+    QVariantMap map;
+    map.clear();
+
+    if (time != Qt::Unchecked)
+    {
+        map["date_s"] = timeS;
+        map["date_e"] = timeEnd;
+    }
+
+    if (type != Qt::Unchecked)
+    {
+        map["type"] = typeS;
+    }
+
+    if (place != Qt::Unchecked)
+    {
+        map["placeStr"] = placeS;
+    }
+
+    if (coord != Qt::Unchecked)
+    {
+        QStringList params;
+        params.clear();
+        params.append("latitude");
+        params.append("longitude");
+        QVariantMap where;
+        where.clear();
+        where["name_coords"] = coordS;
+        QSqlQuery qq;
+        qq.clear();
+        m_db.selectParamsFromTableWhereParams(params, STATE_POINTS_DATABASE_NAME, where, &qq);
+        while (qq.next())
+        {
+            map["latitude"] = qq.value("latitude");
+            map["longitude"] = qq.value("longitude");
+        }
+    }
+
+    updateWithFilter(map);
+}
+
 //для фильтрации
 void FlightDataArchive::updateWithFilter(QVariantMap whereParams)
 {
+    if (whereParams.isEmpty())
+        return onUpdateView();
+
+    QString sqlQ = QString("SELECT date, type, placeStr, description FROM %1 WHERE ( ").arg(GENERAL_DATABASE_NAME);
+    QStringList keys = whereParams.keys();
+    QString timeSql;
+    timeSql.clear();
+
+    for (int i = 0; i < keys.length(); i++)
+    {
+        if (keys.at(i) == "date_s")
+        {
+            timeSql.append(QString("date>='%1' AND ").arg(whereParams.value(keys.at(i)).toDateTime().toString("yyyy-MM-ddThh:mm:ss")));
+        }
+        else if (keys.at(i) == "date_e")
+        {
+            timeSql.append(QString("date<='%1' AND ").arg(whereParams.value(keys.at(i)).toDateTime().toString("yyyy-MM-ddThh:mm:ss")));
+        }
+        else
+            sqlQ.append(keys.at(i)).append(QString("='%1' AND ").arg(whereParams.value(keys.at(i)).toString()));
+    }
+    if (!timeSql.isEmpty())
+        sqlQ.append(timeSql);
+
+    sqlQ.chop(5);
+    sqlQ.append(" )");
+
+    QSqlQuery q = QSqlQuery(sqlQ);
+
+    m_tbl.setQuery(q);
 
 }
 
@@ -702,8 +775,8 @@ int FlightDataArchive::onWriteNewType(QVariantMap _map)
             break;
         case tsEdit:
             newWrite["name_coords"] = name;
-            newWrite["latitude"] = _map.value("latitude").toFloat();
-            newWrite["longitude"] = _map.value("longitude").toFloat();
+            newWrite["latitude"] = _map.value("latitude").toDouble();
+            newWrite["longitude"] = _map.value("longitude").toDouble();
             newWrite["parentPlace"] = _map.value("place").toString();
             id_name = "id_coords";
             nn = "name_coords";
@@ -799,7 +872,7 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map, int f_type)
         coords.clear();
         coords.append("latitude");
         coords.append("longitude");
-        QVector<float> geo;
+        QVector<double> geo;
         geo.clear();
         geo.resize(2);
         int ii = 0;
@@ -808,7 +881,7 @@ int FlightDataArchive::onWriteNewDB(QVariantMap _map, int f_type)
             while (q.next())
             {
                 for (; ii < 2; ii++)
-                    (ii == 0?geo.replace(ii, q.value("latitude").toFloat()):geo.replace(ii, q.value("longitude").toFloat()));
+                    (ii == 0?geo.replace(ii, q.value("latitude").toDouble()):geo.replace(ii, q.value("longitude").toDouble()));
             }
         }
         else
@@ -904,8 +977,8 @@ int FlightDataArchive::checkTablesDB(QString *resName)
         _map["input_files_table"] = "NVARCHAR(60)";
         _map["output_files_table"] = "NVARCHAR(60)";
         _map["placeStr"] = "NVARCHAR(20)";
-        _map["latitude"] = "FLOAT";
-        _map["longitude"] = "FLOAT";
+        _map["latitude"] = "DOUBLE";
+        _map["longitude"] = "DOUBLE";
         _map["description"] = "NVARCHAR";
 
         QStringList autoInc;

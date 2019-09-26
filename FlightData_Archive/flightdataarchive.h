@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE void saveDB();
     Q_INVOKABLE void getData(int row);
     Q_INVOKABLE void delData(int row);
+    Q_INVOKABLE void createFilterRequest(int time, int type, int place, int coord, QString timeS, QString timeEnd, QString typeS, QString placeS, QString coordS);
     ~FlightDataArchive();
 
 private:

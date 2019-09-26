@@ -216,6 +216,18 @@ Image {
                 id: buttonFilter;
                 function callback()
                 {
+                    var chTime = timeFilter.checkedState;
+                    var chType = typeFilter.checkedState;
+                    var chPlace = placeFilter.checkedState;
+                    var chCoord = coordFilter.checkedState;
+
+                    var TimeLow = timestart.text;
+                    var TimeHigh = timeend.text;
+                    var Type = type.currentText;
+                    var Place = place.currentText;
+                    var Coord = coords.currentText;
+
+                    window.createFilterRequest(chTime, chType, chPlace, chCoord, TimeLow, TimeHigh, Type, Place, Coord);
                 }
             }
         }
