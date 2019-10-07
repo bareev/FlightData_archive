@@ -53,6 +53,7 @@ Image {
                 id: isNew;
                 width: 150;
                 text: qsTr("ВВЕСТИ НОВУЮ ЗАПИСЬ");
+                onCheckedChanged: windowSetsType.loadFromDB(isNew.checked, cb.currentText);
             }
 
             ListModel {
@@ -212,6 +213,45 @@ Image {
         onSigNewRecs: infoCh(s, t);
     }
 
+    Connections {
+        target: windowSetsType;
+        onFillCurrentInfo: fillInfo(w, desr, parentPl, lat, lon);
+    }
+
+    function fillInfo(w, desr, parentPl, lat, lon)
+    {
+        tad.text = qsTr(desr);
+        twla.text = qsTr("");
+        twlo.text = qsTr("");
+        ptscb.currentIndex = 0;
+
+        switch (w)
+        {
+        case 3:
+            twla.text = qsTr(lat);
+            twlo.text = qsTr(lon);
+            var idx = ptscb.find(parentPl);
+            if (idx > -1)
+            {
+                ptscb.currentIndex = idx;
+            }
+            else
+                ptscb.currentIndex = 0;
+
+            break;
+        default:
+            break;
+        }
+    }
+
+    function clearAllBeforeFill()
+    {
+        twn.text = qsTr("");
+        tad.text = qsTr("");
+        twla.text = qsTr("");
+        twlo.text  =qsTr("");
+    }
+
     function infoCh(s, t)
     {
         var i = 0;
@@ -246,6 +286,8 @@ Image {
 
     function generalf(e)
     {
+        //сначала всё подчистим
+        clearAllBeforeFill();
         switch (e)
         {
 

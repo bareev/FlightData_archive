@@ -66,6 +66,21 @@ int EditWindow::newDBWrite(bool newR, QString currentR, QString currentN, QStrin
     return SUCCESS;
 }
 
+void EditWindow::loadFromDB(bool newR, QString name)
+{
+    WhoEdit p = getEdit();
+    if (p != noneEdit && newR)
+    {
+        emit loadCurrentInfoFromDB((int)p, name);
+    }
+}
+
+void EditWindow::fillInfo(QString desr, QString parentPl, float lat, float lon)
+{
+    int w = (int)getEdit();
+    emit fillCurrentInfo(w, desr, parentPl, lat, lon);
+}
+
 //в combo-box'ы
 void EditWindow::newRecs(QStringList s, int t, int w)
 {

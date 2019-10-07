@@ -148,6 +148,7 @@ void FlightDataArchive::init()
   connect(&ws.ew, SIGNAL(newRec(QVariantMap)), this, SLOT(onWriteNewType(QVariantMap)));
   connect(this, SIGNAL(rlsInfoRead(QStringList, int, int)), &ws.ew, SLOT(newRecs(QStringList,int,int)));
   connect(&ws.ew, SIGNAL(updateFromMain(QString, int)), this, SLOT(updateTS(QString, int)));
+  connect(&ws.ew, SIGNAL(loadCurrentInfoFromDB(int, QString)), this, SLOT(onUpdateInfoForSettings(int, QString)));
 
   //инициализируем окно добавления нового полёта
   res = wa.init(contentPath, qmlFiles.at(5), "windowAdd");
@@ -344,6 +345,65 @@ void FlightDataArchive::onRecOtUpIO(int type, QString table_name, QStringList pa
     {
         ///@todo - error while writting
     }
+}
+
+//запрос настроек
+void FlightDataArchive::onUpdateInfoForSettings(int type, QString name)
+{
+    QString dbName("");
+    QStringList params;
+    params.clear();
+    QSqlQuery q;
+    q.clear();
+    QVariantMap whereParams;
+    whereParams.clear();
+    switch (type)
+    {
+    case rlsEdit:
+        whereParams["type"] = name;
+        params.append("description");
+        dbName = RLS_TYPE_DATABASE_NAME;
+        break;
+    case tsEdit:
+        whereParams["name_coords"] = name;
+        params.append("parentPlace");
+        params.append("latitude");
+        params.append("longitude");
+        params.append("description");
+        dbName = STATE_POINTS_DATABASE_NAME;
+        break;
+    case placeEdit:
+        whereParams["place"] = name;
+        params.append("description");
+        dbName = PLACE_DATABASE_NAME;
+        break;
+    default:
+        return;
+    }
+
+    bool res = m_db.selectParamsFromTableWhereParams(params, dbName, whereParams, &q);
+
+    QString descr("");
+    double lat = 0;
+    double lon = 0;
+    QString parent("");
+    if (res)
+    {
+        while (q.next())
+        {
+            descr = q.value("description").toString();
+            lat = q.value("latitude").toDouble();
+            lon = q.value("longitude").toDouble();
+            parent = q.value("parentPlace").toString();
+        }
+        ws.ew.fillInfo(descr, parent, lat, lon);
+    }
+    else
+    {
+        //Вывести ошибку!!!
+        return;
+    }
+
 }
 
 

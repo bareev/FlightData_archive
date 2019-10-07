@@ -58,6 +58,7 @@ public slots:
     void updateTS(QString, int w);
     void isSave();
     void onRecOtUpIO(int, QString, QStringList, int);
+    void onUpdateInfoForSettings(int type, QString name);
 
 signals:
     void iChanged(QString s);
