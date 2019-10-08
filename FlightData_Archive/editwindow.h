@@ -36,7 +36,7 @@ signals:
     void sigNewRecs(QStringList s, int t);
     void updateFromMain(QString txt, int w);
     void loadCurrentInfoFromDB(int t, QString name);
-    void fillCurrentInfo(int, QString, QString, double, double);
+    void fillCurrentInfo(int w, QString desr, QString parentPl, double lat, double lon);
 };
 
 #endif // EDITWINDOW_H

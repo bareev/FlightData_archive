@@ -46,6 +46,7 @@ Image {
                 enabled: !(isNew.checked);
                 width: 150;
                 model: tp;
+                onCurrentIndexChanged: windowSetsType.loadFromDB(!isNew.checked, cb.currentText);
             }
 
             CheckBox {
@@ -53,7 +54,7 @@ Image {
                 id: isNew;
                 width: 150;
                 text: qsTr("ВВЕСТИ НОВУЮ ЗАПИСЬ");
-                onCheckedChanged: windowSetsType.loadFromDB(isNew.checked, cb.currentText);
+                onCheckedChanged: windowSetsType.loadFromDB(!isNew.checked, cb.currentText);
             }
 
             ListModel {
@@ -228,8 +229,8 @@ Image {
         switch (w)
         {
         case 3:
-            twla.text = qsTr(lat);
-            twlo.text = qsTr(lon);
+            twla.text = qsTr(String(lat));
+            twlo.text = qsTr(String(lon));
             var idx = ptscb.find(parentPl);
             if (idx > -1)
             {

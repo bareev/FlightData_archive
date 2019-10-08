@@ -73,6 +73,10 @@ void EditWindow::loadFromDB(bool newR, QString name)
     {
         emit loadCurrentInfoFromDB((int)p, name);
     }
+    else
+    {
+        ///@todo -  а вот здесь очистить
+    }
 }
 
 void EditWindow::fillInfo(QString desr, QString parentPl, float lat, float lon)
