@@ -75,7 +75,7 @@ void EditWindow::loadFromDB(bool newR, QString name)
     }
     else
     {
-        ///@todo -  а вот здесь очистить
+        emit newState((int) p);
     }
 }
 

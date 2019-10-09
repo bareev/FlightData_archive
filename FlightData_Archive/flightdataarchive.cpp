@@ -825,7 +825,7 @@ int FlightDataArchive::onWriteNewType(QVariantMap _map)
         {
         case rlsEdit:
             newWrite["type"] = name;
-            id_name = "id_types";
+            id_name = "id_type";
             nn = "type";
             break;
         case placeEdit:

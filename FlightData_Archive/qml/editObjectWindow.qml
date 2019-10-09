@@ -170,7 +170,7 @@ Image {
             text: qsTr("Применить");
             function callback()
             {
-                var res = windowSetsType.newDBWrite(isNew.checked, cb.currentText, twn.text, ptscb.currentText, twla.text, twlo.text, newDesc.text);
+                var res = windowSetsType.newDBWrite(isNew.checked, cb.currentText, twn.text, ptscb.currentText, twla.text, twlo.text, tad.text);
                 if (res === 0)
                 {
                     windowSetsType.closeSets();
@@ -183,7 +183,7 @@ Image {
             text: qsTr("OK");
             function callback()
             {
-                var res = windowSetsType.newDBWrite(isNew.checked, cb.currentText, twn.text, ptscb.currentText, twla.text, twlo.text, newDesc.text);
+                var res = windowSetsType.newDBWrite(isNew.checked, cb.currentText, twn.text, ptscb.currentText, twla.text, twlo.text, tad.text);
             }
         }
 
